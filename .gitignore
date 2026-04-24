@@ -1,0 +1,8 @@
+dist
+dist-app
+node_modules
+.DS_Store
+.idea
+vue-extension
+.env
+.npmrc
