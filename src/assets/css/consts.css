@@ -1,0 +1,62 @@
+* {
+  /* colors */
+
+  --white: #ffffff;
+  --black: #000000;
+  --red-90: #331010;
+  --red-80: #662121;
+  --red-70: #993131;
+  --red-60: #cc4242;
+  --red-50: #ff5252;
+  --red-40: #ff7575;
+  --red-30: #ff9797;
+  --red-20: #ffbaba;
+  --red-10: #ffdcdc;
+  --gray-90: #181818;
+  --gray-80: #313131;
+  --gray-70: #494949;
+  --gray-60: #626262;
+  --gray-50: #7a7a7a;
+  --gray-40: #959595;
+  --gray-30: #afafaf;
+  --gray-20: #cacaca;
+  --gray-10: #e4e4e4;
+
+  /* colors with opacity */
+
+  --gray-a-10: rgb(24 24 24 / 10%);
+  --gray-a-25: rgb(24 24 24 / 25%);
+  --gray-a-50: rgb(24 24 24 / 50%);
+
+  /* font */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+  --font-size-s: 14px;
+  --font-size-m: 16px;
+  --font-size-l: 20px;
+  --font-size-xl: 32px;
+
+  /* shadows */
+
+  --shadow: 4px 4px 12px rgb(0 0 0 / 15%), -2px -2px 8px rgb(0 0 0 / 10%);
+  --shadow-l:
+    8px 8px 32px rgb(0 0 0 / 65%), -2px -2px 24px rgb(0 0 0 / 30%),
+    -2px -2px 64px rgba(43, 42, 42, 0.09);
+
+  /* transitions */
+
+  --transition-color-100: color 0.1s ease-in-out;
+  --transition-color-300: color 0.3s ease-in-out;
+  --transition-scale-100: scale 0.1s ease-in-out;
+  --transition-opacity-100: opacity 0.1s ease-in-out;
+  --transition-bg-color-100: background-color 0.1s ease-in-out;
+
+  /* sizes */
+
+  --max-width: 1280px;
+}
