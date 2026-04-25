@@ -1,9 +1,9 @@
 <template>
   <article class="catalog-item" :style="styles">
-    <Tag>{{ furnitureName[props.type] }}</Tag>
+    <Tag class="catalog-item__type">{{ furnitureName[props.type] }}</Tag>
     <footer class="catalog-item__footer">
       <Tag type="red">{{ props.title }}</Tag>
-      <Tag type="red">{{ props.price }}</Tag>
+      <Tag v-if="props.price" type="red">{{ props.price }}</Tag>
     </footer>
   </article>
 </template>
@@ -39,18 +39,39 @@ const styles = computed<CSSProperties>(() => {
   cursor: pointer;
   background-color: var(--red-90);
   transition: var(--transition-scale-100);
+  position: relative;
+  overflow: hidden;
 
-  &:hover {
-    scale: 0.99;
+  &::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--red-50);
+    z-index: 0;
+    opacity: 0;
+    transition: var(--transition-opacity-100);
   }
 
-  &:active {
-    scale: 0.95;
+  &:hover::before {
+    opacity: 0.2;
   }
+
+  &:active::before {
+    opacity: 0.4;
+  }
+}
+.catalog-item__type {
+  z-index: 1;
 }
 .catalog-item__footer {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   justify-content: space-between;
+  z-index: 1;
 }
 </style>

@@ -20,7 +20,8 @@ export namespace UIComponentsNS {
       | "phone"
       | "delivery"
       | "catalog"
-      | "logo-outline";
+      | "logo-outline"
+      | "chevron";
 
     export type Props = {
       size?: number;
@@ -46,20 +47,38 @@ export namespace UIComponentsNS {
     };
   }
 
-  export namespace ScrollContainer {
-    export type Props = {
-      customClass?: string;
-    };
-  }
-
   export namespace Popup {
     export type Props = {
       visible: boolean;
       customClass?: string;
       size?: Size;
+      loading?: boolean;
     };
     export type Emits = {
       (e: "close"): void;
+    };
+  }
+
+  export namespace ImagePreviewer {
+    export type Props = {
+      images: string[];
+      loading?: boolean;
+    };
+  }
+
+  export namespace Selector {
+    export type Option<T> = {
+      id: T;
+      name: string;
+    };
+    export type Props<T> = {
+      disabled?: boolean;
+      placeholder?: string;
+      modelValue: T;
+      options: Option<T>[];
+    };
+    export type Emits<T> = {
+      (e: "update:modelValue", value: T): void;
     };
   }
 }

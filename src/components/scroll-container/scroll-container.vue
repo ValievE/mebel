@@ -1,19 +1,14 @@
 <template>
   <OverlayScrollbarsComponent
     class="scroll-container"
-    :options="{ scrollbars: { theme: 'default-theme' } }"
+    :options="{ scrollbars: { theme: 'default-theme', autoHide: 'leave' } }"
   >
-    <div class="scroll-container__custom-class" :class="customClass">
-      <slot />
-    </div>
+    <slot />
   </OverlayScrollbarsComponent>
 </template>
 
 <script lang="ts" setup>
 import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
-import { type UIComponentsNS } from "@/types/types.ts";
-
-defineProps<UIComponentsNS.ScrollContainer.Props>();
 </script>
 
 <style>
@@ -24,10 +19,6 @@ defineProps<UIComponentsNS.ScrollContainer.Props>();
   [data-overlayscrollbars-viewport~="overflowYScroll"] {
     overscroll-behavior: auto;
   }
-}
-
-.scroll-container__custom-class {
-  overscroll-behavior: auto;
 }
 
 .default-theme {

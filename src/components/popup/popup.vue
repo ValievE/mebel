@@ -19,7 +19,12 @@
             size="s"
             @click="$emit('close')"
           />
-          <slot />
+          <Transition name="fade-100">
+            <Loader v-if="loading" class="popup__loader" />
+            <div v-else class="popup__content">
+              <slot />
+            </div>
+          </Transition>
         </div>
       </div>
     </transition>
@@ -29,9 +34,13 @@
 <script setup lang="ts">
 import { type UIComponentsNS } from "@/types/types.ts";
 import ButtonComponent from "@/components/button-component/button-component.vue";
+import Loader from "@/components/loader/loader.vue";
+import { useUiStore } from "@/stores/use-ui-store.ts";
 
 defineProps<UIComponentsNS.Popup.Props>();
 defineEmits<UIComponentsNS.Popup.Emits>();
+
+const uiStore = useUiStore();
 </script>
 
 <style lang="css">
@@ -60,6 +69,7 @@ defineEmits<UIComponentsNS.Popup.Emits>();
   border-radius: 24px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .popup__close-button {
@@ -69,12 +79,22 @@ defineEmits<UIComponentsNS.Popup.Emits>();
   z-index: 10;
 }
 
-@media screen and (max-width: 920px) {
+.popup__loader,
+.popup__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (max-width: 768px) {
   .popup {
     width: 100%;
     height: 100%;
     min-height: 0;
     max-height: 100%;
+    border-radius: 0;
   }
 }
 </style>

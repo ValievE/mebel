@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="60" viewBox="0 0 180 60">
+<circle cx="30" cy="30" r="25" fill="#FF9969">
+  <animate
+    attributeName="r"
+    values="25;30;25"
+    dur="1s"
+    repeatCount="indefinite"
+    begin="0s"
+    calcMode="spline"
+    keySplines="0.5 0 0.5 1; 0.5 0 0.5 1"
+  />
+</circle>
+<circle cx="90" cy="30" r="30" fill="#FF5252">
+  <animate
+    attributeName="r"
+    values="30;25;30"
+    dur="1s"
+    repeatCount="indefinite"
+    begin="0s"
+    calcMode="spline"
+    keySplines="0.5 0 0.5 1; 0.5 0 0.5 1"
+  />
+</circle>
+<circle cx="150" cy="30" r="25" fill="#B3B3B3">
+  <animate
+    attributeName="r"
+    values="25;30;25"
+    dur="1s"
+    repeatCount="indefinite"
+    begin="0s"
+    calcMode="spline"
+    keySplines="0.5 0 0.5 1; 0.5 0 0.5 1"
+  />
+</circle>
+</svg>
