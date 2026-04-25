@@ -1,13 +1,10 @@
 <template>
   <div class="wide-layout">
-    <HeaderComponent class="wide-layout__header" />
     <RouterView />
   </div>
 </template>
 
-<script lang="ts" setup>
-import HeaderComponent from "@/components/header-component/header-component.vue";
-</script>
+<script lang="ts" setup></script>
 
 <style lang="css">
 .wide-layout {
@@ -17,9 +14,5 @@ import HeaderComponent from "@/components/header-component/header-component.vue"
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.wide-layout__header {
-  max-width: var(--max-width);
 }
 </style>

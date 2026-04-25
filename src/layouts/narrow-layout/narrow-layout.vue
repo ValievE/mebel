@@ -1,13 +1,10 @@
 <template>
   <div class="narrow-layout">
-    <HeaderComponent />
     <RouterView />
   </div>
 </template>
 
-<script lang="ts" setup>
-import HeaderComponent from "@/components/header-component/header-component.vue";
-</script>
+<script lang="ts" setup></script>
 
 <style lang="css">
 .narrow-layout {
@@ -16,5 +13,7 @@ import HeaderComponent from "@/components/header-component/header-component.vue"
   height: 100%;
   display: flex;
   flex-direction: column;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 </style>

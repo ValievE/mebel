@@ -2,7 +2,7 @@
   "arrowParens": "avoid",
   "trailingComma": "none",
   "singleQuote": false,
-  "bracketSameLine": true,
+  "bracketSameLine": false,
   "endOfLine": "lf",
   "htmlWhitespaceSensitivity": "css"
 }

@@ -1,0 +1,70 @@
+.fade-100-enter-active,
+.fade-100-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.fade-100-enter-from,
+.fade-100-leave-to {
+  opacity: 0;
+}
+
+.fade-300-enter-active,
+.fade-300-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-300-enter-from,
+.fade-300-leave-to {
+  opacity: 0;
+}
+
+.swipe-left-enter-active {
+  transform: translateX(0);
+  transition: transform 0.5s ease;
+}
+
+.swipe-left-enter-from {
+  transform: translateX(-100%);
+}
+
+.swipe-left-leave-to,
+.swipe-left-leave-active {
+  opacity: 0;
+}
+
+.swipe-right-enter-active {
+  transform: translateX(0);
+  transition: transform 0.5s ease;
+}
+
+.swipe-right-enter-from {
+  transform: translateX(100%);
+}
+
+.swipe-right-leave-to,
+.swipe-right-leave-active {
+  opacity: 0;
+}
+
+.slide-upside-down-enter-active,
+.slide-upside-down-leave-active {
+  transition-property: opacity, transform;
+  transition-duration: 0.1s;
+  transition-timing-function: ease;
+}
+
+.slide-upside-down-enter-from {
+  opacity: 0;
+  transform: translateY(-24px);
+}
+
+.slide-upside-down-leave-from,
+.slide-upside-down-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-upside-down-leave-to {
+  opacity: 0;
+  transform: translateY(-24px);
+}

@@ -1,5 +1,6 @@
 export namespace UIComponentsNS {
   export type Size = "s" | "m" | "l" | "xl";
+  export type Style = "red" | "white";
 
   export namespace Icon {
     export type Names =
@@ -37,4 +38,37 @@ export namespace UIComponentsNS {
       (e: "click"): void;
     };
   }
+
+  export namespace Tag {
+    export type Props = {
+      size?: Size;
+      type?: Style;
+    };
+  }
+
+  export namespace ScrollContainer {
+    export type Props = {
+      customClass?: string;
+    };
+  }
+
+  export namespace Popup {
+    export type Props = {
+      visible: boolean;
+      customClass?: string;
+      size?: Size;
+    };
+    export type Emits = {
+      (e: "close"): void;
+    };
+  }
+}
+
+export enum FurnitureType {
+  Kitchen = "Kitchen",
+  LivingRoom = "LivingRoom",
+  Bathroom = "Bathroom",
+  Bedroom = "Bedroom",
+  Wardrobe = "Wardrobe",
+  Other = "Other"
 }
