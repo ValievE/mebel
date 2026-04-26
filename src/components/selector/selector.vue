@@ -73,6 +73,7 @@ const toggleSelector = () => {
 <style lang="css">
 .selector {
   position: relative;
+  height: fit-content;
 }
 .selector__value {
   background-color: var(--red-60);

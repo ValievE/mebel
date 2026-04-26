@@ -1,5 +1,6 @@
 <template>
-  <article class="catalog-item" :style="styles">
+  <article class="catalog-item">
+    <ImagePreviewer class="catalog-item__img" :images="[props.image]" />
     <Tag class="catalog-item__type">{{ furnitureName[props.type] }}</Tag>
     <footer class="catalog-item__footer">
       <Tag type="red">{{ props.title }}</Tag>
@@ -12,15 +13,9 @@
 import { type CatalogItemNS } from "@/pages/catalog/components/catalog-item/types.ts";
 import Tag from "@/components/tag/tag.vue";
 import { furnitureName } from "@/common/consts.ts";
-import { computed, type CSSProperties } from "vue";
+import ImagePreviewer from "@/components/image-previewer/image-previewer.vue";
 
 const { props } = defineProps<{ props: CatalogItemNS.Props }>();
-
-const styles = computed<CSSProperties>(() => {
-  return {
-    backgroundImage: `url(${props.image})`
-  };
-});
 </script>
 
 <style lang="css">
@@ -62,6 +57,13 @@ const styles = computed<CSSProperties>(() => {
   &:active::before {
     opacity: 0.4;
   }
+}
+.catalog-item__img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .catalog-item__type {
   z-index: 1;

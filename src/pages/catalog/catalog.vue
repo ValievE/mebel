@@ -160,7 +160,7 @@ const getItem = async (id: string) => {
 }
 
 @media screen and (max-width: 768px) {
-  .catalog__header-title {
+  .catalog__header {
     margin-top: 128px;
   }
   .catalog__list-scroll {
