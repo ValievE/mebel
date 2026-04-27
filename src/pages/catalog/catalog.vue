@@ -56,7 +56,7 @@ import WarningBadge from "@/components/warning-badge/warning-badge.vue";
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
 const error = ref<string>("");
 
-const { loaders } = useUiStore();
+const { loaders, addToast } = useUiStore();
 
 const itemPopup: ItemPopupObject = reactive({
   data: {
@@ -118,6 +118,7 @@ const getList = async (payload?: GetListRequest) => {
     catalogItems.value = getListAdapter(await infrastructure.getList(payload));
   } catch {
     error.value = "Не удалось получить список предметов";
+    addToast("Произошла ошибка при загрузке каталога", "error");
   } finally {
     loaders.itemList = false;
   }
@@ -127,6 +128,8 @@ const getItem = async (id: string) => {
   try {
     itemPopup.data.data = getItemAdapter(await infrastructure.getItem(id));
   } catch {
+    addToast("Произошла ошибка при загрузке информации о предмете", "error");
+    itemPopup.functions.close();
   } finally {
     itemPopup.data.loading = false;
   }

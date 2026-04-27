@@ -1,5 +1,6 @@
 <template>
   <div class="overlay"></div>
+  <Toaster :toasts="uiStore.toasts" @delete="uiStore.removeToast" />
   <HeaderComponent />
   <RouterView />
   <MobileNavBar />
@@ -9,6 +10,7 @@ import { useUiStore } from "@/stores/use-ui-store.ts";
 import { onMounted } from "vue";
 import MobileNavBar from "@/components/mobile-nav-bar/mobile-nav-bar.vue";
 import HeaderComponent from "@/components/header-component/header-component.vue";
+import Toaster from "@/components/toaster/toaster.vue";
 
 const uiStore = useUiStore();
 

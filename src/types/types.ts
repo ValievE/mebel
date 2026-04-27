@@ -89,6 +89,28 @@ export namespace UIComponentsNS {
       (e: "update:modelValue", value: T): void;
     };
   }
+
+  export namespace Toaster {
+    export type Props = {
+      toasts: Toast.Props[];
+    };
+
+    export type Emits = {
+      (e: "delete", id: string): void;
+    };
+  }
+
+  export namespace Toast {
+    export type Type = "error" | "success";
+    export type Emits = {
+      (e: "close", id: string): void;
+    };
+    export type Props = {
+      id: string;
+      message: string;
+      type: Type;
+    };
+  }
 }
 
 export enum FurnitureType {
