@@ -3,7 +3,7 @@
     <img
       :class="{ homepage__image_hidden: !imgReady }"
       class="homepage__image"
-      src="/images/home_bg_horizontal.jpg"
+      :src="uiStore.isMobile ? vertical : horizontal"
       alt="bg"
       @load="loadHandler"
     />
@@ -20,6 +20,11 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useUiStore } from "@/stores/use-ui-store.ts";
+import horizontal from "/images/home_bg_horizontal.jpg";
+import vertical from "/images/home_bg_vertical.jpg";
+
+const uiStore = useUiStore();
 
 const imgReady = ref<boolean>(false);
 const loadHandler = () => {
@@ -81,9 +86,6 @@ const loadHandler = () => {
 }
 
 @media screen and (max-width: 768px) {
-  .homepage {
-    background-image: url("/images/home_bg_vertical.jpg");
-  }
   .homepage__title {
     font-size: 42px;
     line-height: 42px;
