@@ -11,7 +11,7 @@ export type ItemPopupObject = {
 };
 
 export type SortSelector = {
-  items: UIComponentsNS.Selector.Option[];
+  items: UIComponentsNS.Selector.Option<GetListField>[];
   value: GetListField;
   functions: {
     updateValue(id: GetListField): Promise<void>;

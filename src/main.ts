@@ -14,7 +14,7 @@ const app = createApp(App);
 
 app.use(
   createYmaps({
-    apikey: "55f21058-2946-4002-8256-5f8a300d1834"
+    apikey: import.meta.env.VITE_YANDEX_KEY
   })
 );
 app.use(createPinia());
