@@ -1,5 +1,12 @@
 <template>
   <div class="homepage">
+    <img
+      :class="{ homepage__image_hidden: !imgReady }"
+      class="homepage__image"
+      src="/images/home_bg_horizontal.jpg"
+      alt="bg"
+      @load="loadHandler"
+    />
     <h1 class="homepage__title">
       КОРПУСНАЯ И МЯГКАЯ <br />
       МЕБЕЛЬ ПОД ЗАКАЗ
@@ -11,16 +18,33 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+
+const imgReady = ref<boolean>(false);
+const loadHandler = () => {
+  imgReady.value = true;
+};
+</script>
 
 <style lang="css">
 .homepage {
   width: 100%;
   height: 100%;
-  background-image: url("/images/home_bg_horizontal.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-color: var(--gray-90);
+}
+.homepage__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-opacity-300);
+  opacity: 1;
+}
+.homepage__image_hidden {
+  opacity: 0;
 }
 .homepage__title,
 .homepage__text {
@@ -36,6 +60,7 @@
   font-weight: var(--font-weight-bold);
   top: 44%;
   transform: translate(-50%, -50%);
+  padding: 48px 0;
   font-size: 80px;
   line-height: 72px;
   color: var(--white);
