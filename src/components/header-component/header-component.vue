@@ -3,11 +3,12 @@
     <Logo size="m" />
     <div class="header-component__links">
       <RouterLink
-        class="header-component__links-item"
-        exact-active-class="header-component__links-item_active"
         v-for="link in navBarLinks"
         :key="link.name"
-        :to="{ name: link.name }">
+        class="header-component__links-item"
+        exact-active-class="header-component__links-item_active"
+        :to="{ name: link.name }"
+      >
         {{ link.text }}
       </RouterLink>
     </div>
@@ -38,6 +39,7 @@ import { navBarLinks } from "@/common/consts.ts";
   color: var(--gray-40);
   font-weight: var(--font-weight-medium);
   z-index: 1;
+  user-select: none;
 }
 
 .header-component__links {

@@ -2,6 +2,9 @@
   <Carousel
     :enabled="images.length > 1"
     class="image-previewer"
+    :class="{
+      'image-previewer_single': images.length < 2
+    }"
     :wrap-around="images.length > 1"
   >
     <Slide v-for="slide in images" :key="slide">
@@ -33,7 +36,6 @@ import { ref } from "vue";
 defineProps<UIComponentsNS.ImagePreviewer.Props>();
 
 const loading = ref<boolean>(true);
-
 const handleLoad = () => {
   loading.value = false;
 };
@@ -46,8 +48,8 @@ const handleLoad = () => {
   overflow: hidden;
   background-color: var(--gray-40);
 }
-.image-previewer__slide {
-  position: relative;
+.image-previewer_single {
+  pointer-events: none;
 }
 .image-previewer__slide-loader {
   z-index: 1;

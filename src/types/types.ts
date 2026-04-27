@@ -21,7 +21,8 @@ export namespace UIComponentsNS {
       | "delivery"
       | "catalog"
       | "logo-outline"
-      | "chevron";
+      | "chevron"
+      | "warning";
 
     export type Props = {
       size?: number;
@@ -44,6 +45,13 @@ export namespace UIComponentsNS {
     export type Props = {
       size?: Size;
       type?: Style;
+    };
+  }
+
+  export namespace EmptyList {
+    export type Props = {
+      title?: string;
+      subtitle?: string;
     };
   }
 

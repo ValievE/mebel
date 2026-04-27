@@ -15,16 +15,19 @@
       <ScrollContainer class="item-popup__info-parameters">
         <p class="item-popup__info-parameters-list">
           <span
-            class="item-popup__info-parameters-list-item"
             v-for="(parameterValue, parameterKey) in props.data.parameters"
             :key="parameterKey"
+            class="item-popup__info-parameters-list-item"
           >
             {{ parameterKey }}: {{ parameterValue }}
           </span>
         </p>
       </ScrollContainer>
-      <ButtonComponent class="item-popup__info-button">
-        {{ props.data.price }}P
+      <ButtonComponent
+        :disabled="!props.data.price"
+        class="item-popup__info-button"
+      >
+        {{ buttonText }}
       </ButtonComponent>
     </div>
   </Popup>
@@ -36,9 +39,15 @@ import type { ItemPopupNS } from "@/pages/catalog/components/item-popup/types.ts
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import ImagePreviewer from "@/components/image-previewer/image-previewer.vue";
 import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
+import { computed } from "vue";
 
 const { props } = defineProps<{ props: ItemPopupNS.Props }>();
 defineEmits<ItemPopupNS.Emits>();
+
+const buttonText = computed<string>(() => {
+  if (props.data.price) return props.data.price + " Р";
+  return "Цена индивидуальная";
+});
 </script>
 
 <style lang="css">

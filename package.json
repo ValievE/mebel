@@ -29,6 +29,7 @@
     "vue3-carousel": "0.17.0"
   },
   "devDependencies": {
+    "@sctg/vite-plugin-github-pages-spa": "0.2.0",
     "@tsconfig/node24": "24.0.4",
     "@types/jsdom": "28.0.1",
     "@types/node": "24.12.2",

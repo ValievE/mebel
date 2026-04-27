@@ -15,6 +15,12 @@
     <div class="catalog__list">
       <ScrollContainer>
         <Loader v-if="loaders.itemList" />
+        <WarningBadge
+          v-else-if="error"
+          class="catalog__list-empty-list"
+          title="Список пуст"
+          :subtitle="error"
+        />
         <div v-else class="catalog__list-scroll">
           <CatalogItem
             v-for="item in catalogItems"
@@ -45,8 +51,10 @@ import {
   GetListField,
   type GetListRequest
 } from "@/infrastructure/get-list.ts";
+import WarningBadge from "@/components/warning-badge/warning-badge.vue";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
+const error = ref<string>("");
 
 const { loaders } = useUiStore();
 
@@ -77,7 +85,7 @@ const sortSelector: SortSelector = reactive({
   items: [
     {
       id: GetListField.PriceAsc,
-      name: "По убыванию цены"
+      name: "По возрастанию цены"
     },
     {
       id: GetListField.PriceDesc,
@@ -105,9 +113,11 @@ onMounted(() => {
 
 const getList = async (payload?: GetListRequest) => {
   loaders.itemList = true;
+  error.value = "";
   try {
     catalogItems.value = getListAdapter(await infrastructure.getList(payload));
   } catch {
+    error.value = "Не удалось получить список предметов";
   } finally {
     loaders.itemList = false;
   }
@@ -116,7 +126,6 @@ const getItem = async (id: string) => {
   itemPopup.data.loading = true;
   try {
     itemPopup.data.data = getItemAdapter(await infrastructure.getItem(id));
-    console.log(itemPopup.data.data);
   } catch {
   } finally {
     itemPopup.data.loading = false;
@@ -148,6 +157,10 @@ const getItem = async (id: string) => {
   overflow: hidden;
   flex-grow: 1;
   border-radius: 24px;
+}
+.catalog__list-empty-list {
+  margin: auto;
+  height: 100%;
 }
 .catalog__list-scroll {
   padding-top: 24px;
