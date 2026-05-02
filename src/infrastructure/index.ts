@@ -10,5 +10,10 @@ export default {
     return import("./get-item.ts").then(m => {
       return m.getItem(id);
     });
+  },
+  getCartItems(ids: string[]) {
+    return import("./get-cart-items.ts").then(m => {
+      return m.getCartItems(ids);
+    });
   }
 };

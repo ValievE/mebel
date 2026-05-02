@@ -1,9 +1,12 @@
 import type { GetListResponse } from "@/infrastructure/get-list.ts";
-import { type CatalogItemNS } from "@/pages/catalog/components/catalog-item/types.ts";
+import type { CatalogItemNS } from "@/pages/catalog/components/catalog-item/types.ts";
 import { FurnitureType } from "@/types/types.ts";
 import { ExtFurnitureType } from "@/infrastructure/types.ts";
 import type { GetItemResponse } from "@/infrastructure/get-item.ts";
 import type { ItemPopupNS } from "@/pages/catalog/components/item-popup/types.ts";
+import type { GetCartItemsResponse } from "@/infrastructure/get-cart-items.ts";
+import type { CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
+import { furnitureName } from "@/common/consts.ts";
 
 const adaptListType: Record<ExtFurnitureType, FurnitureType> = {
   [ExtFurnitureType.LivingRoom]: FurnitureType.LivingRoom,
@@ -36,4 +39,39 @@ export const getItemAdapter = (response: GetItemResponse): ItemPopupNS.Data => {
     id: String(response[0]?.id) || "",
     parameters: response[0]?.parameters || {}
   };
+};
+
+export const getCartItemsAdapter = (
+  response: GetCartItemsResponse
+): [CartPopupNS.Item[], number] => {
+  if (!response.length) throw new Error();
+
+  return response.reduce(
+    (acc: [CartPopupNS.Item[], number], item) => {
+      acc[1] += item.price || 0;
+
+      acc[0].push({
+        image: item.images?.[0] || "",
+        title: item.title || "",
+        id: String(item.id) || "",
+        tags: [
+          {
+            text: `${furnitureName[adaptListType[item.type || 0]]}`,
+            type: "white"
+          },
+          {
+            text: "Кол-во: 1",
+            type: "white"
+          },
+          {
+            text: (item.price || 0) + "Р",
+            type: "red"
+          }
+        ]
+      });
+
+      return acc;
+    },
+    [[], 0]
+  );
 };

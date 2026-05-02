@@ -8,6 +8,7 @@ export namespace ItemPopupNS {
     price: number;
     images: string[];
     type: FurnitureType;
+    isAdded?: boolean;
   };
   export type Props = {
     data: Data;
@@ -16,5 +17,6 @@ export namespace ItemPopupNS {
   };
   export type Emits = {
     (e: "close"): void;
+    (e: "addToCart"): void;
   };
 }

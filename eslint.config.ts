@@ -39,7 +39,8 @@ export default defineConfigWithVueTs(
           singleline: 3,
           multiline: 1
         }
-      ]
+      ],
+      "@typescript-eslint/unified-signatures": "off"
     }
   },
 

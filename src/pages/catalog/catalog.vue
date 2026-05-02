@@ -1,16 +1,34 @@
 <template>
   <div class="catalog">
-    <ItemPopup :props="itemPopup.data" @close="itemPopup.functions.close" />
+    <ItemPopup
+      :props="itemPopup.data"
+      @close="itemPopup.functions.close"
+      @addToCart="itemPopup.functions.addToCart"
+    />
+    <CartPopup :props="cart.popupData" @close="cart.functions.closePopup" />
     <header class="catalog__header">
       <h1 class="catalog__header-title">Каталог</h1>
-      <Selector
-        :disabled="loaders.itemList"
-        size="l"
-        :model-value="sortSelector.value"
-        placeholder="Сортировка"
-        :options="sortSelector.items"
-        @update:modelValue="sortSelector.functions.updateValue"
-      />
+      <div class="catalog__header-options">
+        <Transition name="slide-upside-down">
+          <ButtonComponent
+            v-if="cart.data.items.length"
+            type="red"
+            icon-name="cart"
+            size="m"
+            @click="cart.functions.openPopup"
+          >
+            Корзина {{ cart.data.items.length }}
+          </ButtonComponent>
+        </Transition>
+        <Selector
+          :disabled="loaders.itemList"
+          size="l"
+          :model-value="sortSelector.value"
+          placeholder="Сортировка"
+          :options="sortSelector.items"
+          @update:modelValue="sortSelector.functions.updateValue"
+        />
+      </div>
     </header>
     <div class="catalog__list">
       <ScrollContainer>
@@ -35,23 +53,35 @@
 </template>
 
 <script setup lang="ts">
-import { type CatalogItemNS } from "@/pages/catalog/components/catalog-item/types.ts";
-import { FurnitureType } from "@/types/types.ts";
-import CatalogItem from "@/pages/catalog/components/catalog-item/catalog-item.vue";
-import ItemPopup from "@/pages/catalog/components/item-popup/item-popup.vue";
-import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
 import { onMounted, reactive, ref } from "vue";
-import type { ItemPopupObject, SortSelector } from "@/pages/catalog/types.ts";
-import infrastructure from "@/infrastructure";
-import { getItemAdapter, getListAdapter } from "@/pages/catalog/adapters.ts";
+
+import ButtonComponent from "@/components/button-component/button-component.vue";
 import Loader from "@/components/loader/loader.vue";
-import { useUiStore } from "@/stores/use-ui-store.ts";
+import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
 import Selector from "@/components/selector/selector.vue";
+import WarningBadge from "@/components/warning-badge/warning-badge.vue";
+import infrastructure from "@/infrastructure";
 import {
   GetListField,
   type GetListRequest
 } from "@/infrastructure/get-list.ts";
-import WarningBadge from "@/components/warning-badge/warning-badge.vue";
+import {
+  getCartItemsAdapter,
+  getItemAdapter,
+  getListAdapter
+} from "@/pages/catalog/adapters.ts";
+import CatalogItem from "@/pages/catalog/components/catalog-item/catalog-item.vue";
+import { type CatalogItemNS } from "@/pages/catalog/components/catalog-item/types.ts";
+import { FurnitureType } from "@/types/types.ts";
+import ItemPopup from "@/pages/catalog/components/item-popup/item-popup.vue";
+
+import type {
+  CartObject,
+  ItemPopupObject,
+  SortSelector
+} from "@/pages/catalog/types.ts";
+import { useUiStore } from "@/stores/use-ui-store.ts";
+import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
 const error = ref<string>("");
@@ -78,6 +108,10 @@ const itemPopup: ItemPopupObject = reactive({
     },
     close() {
       itemPopup.data.visible = false;
+    },
+    addToCart() {
+      cart.functions.addItem(itemPopup.data.data.id);
+      itemPopup.functions.close();
     }
   }
 });
@@ -106,6 +140,48 @@ const sortSelector: SortSelector = reactive({
     }
   }
 });
+const cart: CartObject = reactive({
+  data: {
+    items: []
+  },
+  popupData: {
+    data: {
+      items: [],
+      sum: 0
+    },
+    visible: true,
+    get loading() {
+      return !!loaders.cart;
+    }
+  },
+  functions: {
+    async openPopup() {
+      if (!cart.data.items.length || loaders.cart) return;
+      loaders.cart = true;
+      cart.popupData.visible = true;
+      try {
+        [cart.popupData.data.items, cart.popupData.data.sum] =
+          getCartItemsAdapter(
+            await infrastructure.getCartItems(cart.data.items)
+          );
+      } catch {
+        error.value = "Не удалось получить список предметов";
+        addToast("Произошла ошибка при загрузке корзины", "error");
+      } finally {
+        loaders.cart = false;
+      }
+    },
+    closePopup() {
+      cart.popupData.visible = false;
+    },
+    addItem(id) {
+      cart.data.items.push(id);
+    },
+    hasItem(id) {
+      return cart.data.items.includes(id);
+    }
+  }
+});
 
 onMounted(() => {
   getList();
@@ -127,6 +203,7 @@ const getItem = async (id: string) => {
   itemPopup.data.loading = true;
   try {
     itemPopup.data.data = getItemAdapter(await infrastructure.getItem(id));
+    itemPopup.data.data.isAdded = cart.functions.hasItem(id);
   } catch {
     addToast("Произошла ошибка при загрузке информации о предмете", "error");
     itemPopup.functions.close();
@@ -154,6 +231,10 @@ const getItem = async (id: string) => {
   color: var(--gray-70);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-xl);
+}
+.catalog__header-options {
+  display: flex;
+  gap: 16px;
 }
 .catalog__list {
   width: 100%;

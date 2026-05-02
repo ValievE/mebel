@@ -9,7 +9,6 @@
         <div
           class="popup"
           :class="{
-            [`${customClass}`]: !!customClass,
             [`popup_${size}`]: size
           }"
         >
@@ -21,7 +20,13 @@
           />
           <Transition name="fade-100">
             <Loader v-if="loading" class="popup__loader" />
-            <div v-else class="popup__content">
+            <div
+              v-else
+              class="popup__content"
+              :class="{
+                [`${customClass}`]: !!customClass
+              }"
+            >
               <slot />
             </div>
           </Transition>
@@ -35,12 +40,9 @@
 import { type UIComponentsNS } from "@/types/types.ts";
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import Loader from "@/components/loader/loader.vue";
-import { useUiStore } from "@/stores/use-ui-store.ts";
 
 defineProps<UIComponentsNS.Popup.Props>();
 defineEmits<UIComponentsNS.Popup.Emits>();
-
-const uiStore = useUiStore();
 </script>
 
 <style lang="css">
