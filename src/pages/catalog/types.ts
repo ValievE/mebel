@@ -21,14 +21,12 @@ export type SortSelector = {
 };
 
 export type CartObject = {
-  data: {
-    items: string[];
-  };
   popupData: CartPopupNS.Props;
   functions: {
     openPopup(): Promise<void>;
     closePopup(): void;
-    addItem(id: string): void;
+    addItem(id: string, price: number): void;
     hasItem(id: string): boolean;
+    deleteItem(id: string): void;
   };
 };

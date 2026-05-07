@@ -2,7 +2,7 @@
   <teleport to=".overlay">
     <transition name="fade-100">
       <div
-        v-if="visible"
+        v-if="uiStore.isPopupOpened(id)"
         class="popup-overlay"
         @mousedown.self="$emit('close')"
       >
@@ -40,9 +40,12 @@
 import { type UIComponentsNS } from "@/types/types.ts";
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import Loader from "@/components/loader/loader.vue";
+import { useUiStore } from "@/stores/use-ui-store.ts";
 
 defineProps<UIComponentsNS.Popup.Props>();
 defineEmits<UIComponentsNS.Popup.Emits>();
+
+const uiStore = useUiStore();
 </script>
 
 <style lang="css">

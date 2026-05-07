@@ -1,7 +1,7 @@
 <template>
   <Popup
+    :id="props.id"
     custom-class="item-popup"
-    :visible="props.visible"
     :loading="props.loading"
     @close="$emit('close')"
   >

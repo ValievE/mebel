@@ -29,6 +29,7 @@ export default defineConfigWithVueTs(
     files: ["**/*.{vue,ts,mts,tsx}"],
     rules: {
       "@typescript-eslint/no-namespace": "off",
+      "@typescript-eslint/no-dynamic-delete": "off",
       "@typescript-eslint/no-explicit-any": "warn",
       "no-console": "error",
       "vue/multi-word-component-names": "off",

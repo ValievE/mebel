@@ -5,23 +5,28 @@
       @close="itemPopup.functions.close"
       @addToCart="itemPopup.functions.addToCart"
     />
-    <CartPopup :props="cart.popupData" @close="cart.functions.closePopup" />
+    <CartPopup
+      :props="cart.popupData"
+      @close="cart.functions.closePopup"
+      @delete="cart.functions.deleteItem"
+      @click:item="itemPopup.functions.open"
+    />
     <header class="catalog__header">
       <h1 class="catalog__header-title">Каталог</h1>
       <div class="catalog__header-options">
         <Transition name="slide-upside-down">
           <ButtonComponent
-            v-if="cart.data.items.length"
+            v-if="cartStore.itemIDs.length"
             type="red"
             icon-name="cart"
             size="m"
             @click="cart.functions.openPopup"
           >
-            Корзина {{ cart.data.items.length }}
+            Корзина {{ cartStore.itemIDs.length }}
           </ButtonComponent>
         </Transition>
         <Selector
-          :disabled="loaders.itemList"
+          :disabled="uiStore.loaders.itemList"
           size="l"
           :model-value="sortSelector.value"
           placeholder="Сортировка"
@@ -32,7 +37,7 @@
     </header>
     <div class="catalog__list">
       <ScrollContainer>
-        <Loader v-if="loaders.itemList" />
+        <Loader v-if="uiStore.loaders.itemList" />
         <WarningBadge
           v-else-if="error"
           class="catalog__list-empty-list"
@@ -82,15 +87,17 @@ import type {
 } from "@/pages/catalog/types.ts";
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
+import { useCartStore } from "@/stores/use-cart-store.ts";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
 const error = ref<string>("");
 
-const { loaders, addToast } = useUiStore();
+const uiStore = useUiStore();
+const cartStore = useCartStore();
 
 const itemPopup: ItemPopupObject = reactive({
   data: {
-    visible: false,
+    id: "item",
     loading: false,
     data: {
       title: "Название кухни 1234",
@@ -103,14 +110,14 @@ const itemPopup: ItemPopupObject = reactive({
   },
   functions: {
     open(id) {
-      itemPopup.data.visible = true;
+      uiStore.openPopup(itemPopup.data.id);
       getItem(id);
     },
     close() {
-      itemPopup.data.visible = false;
+      uiStore.closePopup(itemPopup.data.id);
     },
     addToCart() {
-      cart.functions.addItem(itemPopup.data.data.id);
+      cart.functions.addItem(itemPopup.data.data.id, itemPopup.data.data.price);
       itemPopup.functions.close();
     }
   }
@@ -141,44 +148,49 @@ const sortSelector: SortSelector = reactive({
   }
 });
 const cart: CartObject = reactive({
-  data: {
-    items: []
-  },
   popupData: {
     data: {
       items: [],
-      sum: 0
+      sum: cartStore.sum
     },
-    visible: true,
+    id: "cart",
     get loading() {
-      return !!loaders.cart;
+      return !!uiStore.loaders.cart;
     }
   },
   functions: {
     async openPopup() {
-      if (!cart.data.items.length || loaders.cart) return;
-      loaders.cart = true;
-      cart.popupData.visible = true;
+      if (!cartStore.itemIDs.length || uiStore.loaders.cart) return;
+      uiStore.loaders.cart = true;
+      uiStore.openPopup(cart.popupData.id);
+
       try {
         [cart.popupData.data.items, cart.popupData.data.sum] =
           getCartItemsAdapter(
-            await infrastructure.getCartItems(cart.data.items)
+            await infrastructure.getCartItems(cartStore.itemIDs)
           );
+        cartStore.sum = cart.popupData.data.sum;
       } catch {
         error.value = "Не удалось получить список предметов";
-        addToast("Произошла ошибка при загрузке корзины", "error");
+        uiStore.addToast("Произошла ошибка при загрузке корзины", "error");
       } finally {
-        loaders.cart = false;
+        uiStore.loaders.cart = false;
       }
     },
     closePopup() {
-      cart.popupData.visible = false;
+      uiStore.closePopup(cart.popupData.id);
     },
-    addItem(id) {
-      cart.data.items.push(id);
-    },
+    addItem: cartStore.addItem,
     hasItem(id) {
-      return cart.data.items.includes(id);
+      return cartStore.itemIDs.includes(id);
+    },
+    deleteItem(id) {
+      cartStore.deleteItem(id);
+      const index = cart.popupData.data.items.findIndex(i => i.id === id);
+      if (index === -1) return;
+      cart.popupData.data.items.splice(index, 1);
+      cart.popupData.data.sum = cartStore.sum;
+      if (!cart.popupData.data.items.length) cart.functions.closePopup();
     }
   }
 });
@@ -188,15 +200,15 @@ onMounted(() => {
 });
 
 const getList = async (payload?: GetListRequest) => {
-  loaders.itemList = true;
+  uiStore.loaders.itemList = true;
   error.value = "";
   try {
     catalogItems.value = getListAdapter(await infrastructure.getList(payload));
   } catch {
     error.value = "Не удалось получить список предметов";
-    addToast("Произошла ошибка при загрузке каталога", "error");
+    uiStore.addToast("Произошла ошибка при загрузке каталога", "error");
   } finally {
-    loaders.itemList = false;
+    uiStore.loaders.itemList = false;
   }
 };
 const getItem = async (id: string) => {
@@ -205,7 +217,10 @@ const getItem = async (id: string) => {
     itemPopup.data.data = getItemAdapter(await infrastructure.getItem(id));
     itemPopup.data.data.isAdded = cart.functions.hasItem(id);
   } catch {
-    addToast("Произошла ошибка при загрузке информации о предмете", "error");
+    uiStore.addToast(
+      "Произошла ошибка при загрузке информации о предмете",
+      "error"
+    );
     itemPopup.functions.close();
   } finally {
     itemPopup.data.loading = false;

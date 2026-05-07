@@ -14,7 +14,9 @@
         :images="[props.image]"
       />
       <div class="cart-item__wrapper-info">
-        <h2>{{ props.title }}</h2>
+        <h2 class="cart-item__wrapper-info-title" @click="$emit('click:item')">
+          {{ props.title }}
+        </h2>
         <div class="cart-item__wrapper-info-tags">
           <Tag v-for="tag in props.tags" :key="tag.text" :type="tag.type">
             {{ tag.text }}
@@ -32,7 +34,7 @@ import Tag from "@/components/tag/tag.vue";
 import ButtonComponent from "@/components/button-component/button-component.vue";
 
 const { props } = defineProps<{ props: CartPopupNS.Item }>();
-defineEmits<CartPopupNS.Emits>();
+defineEmits<CartPopupNS.ItemEmits>();
 </script>
 
 <style lang="css">
@@ -57,6 +59,7 @@ defineEmits<CartPopupNS.Emits>();
 }
 .cart-item__wrapper-image {
   width: 240px;
+  cursor: pointer;
 }
 .cart-item__wrapper-info {
   position: absolute;
@@ -75,7 +78,17 @@ defineEmits<CartPopupNS.Emits>();
   justify-content: center;
   gap: 8px;
 }
+.cart-item__wrapper-info-title {
+  cursor: pointer;
+  transition: var(--transition-color-100);
 
+  &:hover {
+    color: var(--gray-70);
+  }
+  &:active {
+    color: var(--gray-50);
+  }
+}
 .cart-item__wrapper-info-tags {
   display: flex;
   align-items: center;

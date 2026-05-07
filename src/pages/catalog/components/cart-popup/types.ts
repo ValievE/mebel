@@ -16,12 +16,17 @@ export namespace CartPopupNS {
   };
   export type Props = {
     data: Data;
+    id: string;
     loading: boolean;
-    visible: boolean;
   };
   export type Emits = {
     (e: "close"): void;
     (e: "accept"): void;
+    (e: "delete", id: string): void;
+    (e: "click:item", id: string): void;
+  };
+  export type ItemEmits = {
+    (e: "click:item"): void;
     (e: "delete", id: string): void;
   };
 }

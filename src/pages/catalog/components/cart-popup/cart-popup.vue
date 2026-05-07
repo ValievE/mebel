@@ -1,7 +1,7 @@
 <template>
   <Popup
+    :id="props.id"
     custom-class="cart-popup"
-    :visible="props.visible"
     :loading="props.loading"
     @close="$emit('close')"
   >
@@ -9,16 +9,25 @@
     <div class="cart-popup__list">
       <ScrollContainer>
         <div class="cart-popup__list-items">
-          <CartItem
-            v-for="item in props.data.items"
-            :key="item.id"
-            :props="item"
-          />
+          <TransitionGroup name="fade-100">
+            <CartItem
+              v-for="item in props.data.items"
+              :key="item.id"
+              :props="item"
+              @click:item="$emit('click:item', item.id)"
+              @delete="$emit('delete', item.id)"
+            />
+          </TransitionGroup>
         </div>
       </ScrollContainer>
     </div>
     <footer class="cart-popup__footer">
-      <p>Сумма: {{ props.data.sum }}</p>
+      <p class="cart-popup__footer-text">
+        Сумма:
+        <span class="cart-popup__footer-text-sum">
+          {{ props.data.sum }}
+        </span>
+      </p>
       <ButtonComponent type="red">Оплатить</ButtonComponent>
     </footer>
   </Popup>
@@ -60,6 +69,9 @@ defineEmits<CartPopupNS.Emits>();
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.cart-popup__footer-text-sum {
+  font-weight: var(--font-weight-semibold);
 }
 
 @media screen and (max-width: 768px) {

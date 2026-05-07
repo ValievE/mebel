@@ -59,7 +59,7 @@ export namespace UIComponentsNS {
 
   export namespace Popup {
     export type Props = {
-      visible: boolean;
+      id: string;
       customClass?: string;
       size?: Size;
       loading?: boolean;

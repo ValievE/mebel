@@ -13,7 +13,7 @@ export namespace ItemPopupNS {
   export type Props = {
     data: Data;
     loading: boolean;
-    visible: boolean;
+    id: string;
   };
   export type Emits = {
     (e: "close"): void;
