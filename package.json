@@ -18,7 +18,7 @@
   "dependencies": {
     "@supabase/supabase-js": "2.104.1",
     "@venegrad/vue3-click-outside": "1.0.2",
-    "axios": "1.15.2",
+    "axios": "1.16.0",
     "click-outside-vue3": "4.0.1",
     "overlayscrollbars": "2.15.1",
     "overlayscrollbars-vue": "0.5.9",
@@ -49,7 +49,7 @@
     "prettier": "3.8.3",
     "typescript": "6.0.3",
     "vite": "8.0.5",
-    "vite-plugin-vue-devtools": "8.1.1",
+    "vite-plugin-vue-devtools": "8.1.2",
     "vitest": "4.1.4",
     "vue-tsc": "3.2.6"
   }
