@@ -45,7 +45,7 @@ const { props } = defineProps<{ props: CatalogItemNS.Props }>();
     width: 100%;
     height: 100%;
     background-color: var(--red-50);
-    z-index: 0;
+    z-index: 2;
     opacity: 0;
     transition: var(--transition-opacity-100);
   }
