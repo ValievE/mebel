@@ -1,7 +1,7 @@
 <template>
   <Popup
+    :id="props.id"
     custom-class="item-popup"
-    :visible="props.visible"
     :loading="props.loading"
     @close="$emit('close')"
   >
@@ -24,8 +24,9 @@
         </p>
       </ScrollContainer>
       <ButtonComponent
-        :disabled="!props.data.price"
+        :disabled="!props.data.price || props.data.isAdded"
         class="item-popup__info-button"
+        @click="$emit('addToCart')"
       >
         {{ buttonText }}
       </ButtonComponent>
@@ -45,6 +46,7 @@ const { props } = defineProps<{ props: ItemPopupNS.Props }>();
 defineEmits<ItemPopupNS.Emits>();
 
 const buttonText = computed<string>(() => {
+  if (props.data.isAdded) return "Товар в корзине";
   if (props.data.price) return props.data.price + " Р";
   return "Цена индивидуальная";
 });

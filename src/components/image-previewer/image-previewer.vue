@@ -1,31 +1,33 @@
 <template>
-  <Carousel
-    :enabled="images.length > 1"
-    class="image-previewer"
-    :class="{
-      'image-previewer_single': images.length < 2
-    }"
-    :wrap-around="images.length > 1"
-  >
-    <Slide v-for="slide in images" :key="slide">
-      <Transition name="fade-300">
-        <div v-if="loading" class="image-previewer__slide-loader">
-          <div class="image-previewer__slide-loader-item"></div>
-        </div>
-      </Transition>
-      <img
-        v-show="!loading"
-        class="image-previewer__slide-item"
-        :src="slide"
-        alt="image"
-        @load="handleLoad"
-      />
-    </Slide>
-    <template v-if="images.length > 1" #addons>
-      <Navigation />
-      <Pagination />
-    </template>
-  </Carousel>
+  <div class="image-previewer">
+    <Carousel
+      :enabled="images.length > 1"
+      class="image-previewer__carousel"
+      :class="{
+        'image-previewer__carousel_single': images.length < 2
+      }"
+      :wrap-around="images.length > 1"
+    >
+      <Slide v-for="slide in images" :key="slide">
+        <Transition name="fade-300">
+          <div v-if="loading" class="image-previewer__carousel-slide-loader">
+            <div class="image-previewer__carousel-slide-loader-item"></div>
+          </div>
+        </Transition>
+        <img
+          v-show="!loading"
+          class="image-previewer__carousel-slide-item"
+          :src="slide"
+          alt="image"
+          @load="handleLoad"
+        />
+      </Slide>
+      <template v-if="images.length > 1" #addons>
+        <Navigation />
+        <Pagination />
+      </template>
+    </Carousel>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -48,25 +50,30 @@ const handleLoad = () => {
   overflow: hidden;
   background-color: var(--gray-40);
 }
-.image-previewer_single {
+.image-previewer__carousel {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.image-previewer__carousel_single {
   pointer-events: none;
 }
-.image-previewer__slide-loader {
+.image-previewer__carousel-slide-loader {
   z-index: 1;
   background-color: var(--gray-40);
 }
-.image-previewer__slide-loader,
-.image-previewer__slide-item {
+.image-previewer__carousel-slide-loader,
+.image-previewer__carousel-slide-item {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
 }
-.image-previewer__slide-item {
+.image-previewer__carousel-slide-item {
   object-fit: cover;
 }
-.image-previewer__slide-loader-item {
+.image-previewer__carousel-slide-loader-item {
   width: 50%;
   height: 100%;
   background-color: var(--white);

@@ -8,13 +8,15 @@ export namespace ItemPopupNS {
     price: number;
     images: string[];
     type: FurnitureType;
+    isAdded?: boolean;
   };
   export type Props = {
     data: Data;
     loading: boolean;
-    visible: boolean;
+    id: string;
   };
   export type Emits = {
     (e: "close"): void;
+    (e: "addToCart"): void;
   };
 }

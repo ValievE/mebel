@@ -20,6 +20,17 @@ body {
   color: var(--gray-90);
 }
 
+h1 {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
+  cursor: default;
+}
+h2 {
+  font-size: var(--font-size-l);
+  line-height: var(--line-height-l);
+  cursor: default;
+}
+
 #app {
   width: 100%;
   height: 100%;

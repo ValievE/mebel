@@ -22,7 +22,8 @@ export namespace UIComponentsNS {
       | "catalog"
       | "logo-outline"
       | "chevron"
-      | "warning";
+      | "warning"
+      | "close-square";
 
     export type Props = {
       size?: number;
@@ -35,6 +36,7 @@ export namespace UIComponentsNS {
       iconName?: Icon.Names;
       size?: Size;
       disabled?: boolean;
+      type?: Style;
     };
     export type Emits = {
       (e: "click"): void;
@@ -57,7 +59,7 @@ export namespace UIComponentsNS {
 
   export namespace Popup {
     export type Props = {
-      visible: boolean;
+      id: string;
       customClass?: string;
       size?: Size;
       loading?: boolean;

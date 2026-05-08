@@ -2,14 +2,13 @@
   <teleport to=".overlay">
     <transition name="fade-100">
       <div
-        v-if="visible"
+        v-if="uiStore.isPopupOpened(id)"
         class="popup-overlay"
         @mousedown.self="$emit('close')"
       >
         <div
           class="popup"
           :class="{
-            [`${customClass}`]: !!customClass,
             [`popup_${size}`]: size
           }"
         >
@@ -21,7 +20,13 @@
           />
           <Transition name="fade-100">
             <Loader v-if="loading" class="popup__loader" />
-            <div v-else class="popup__content">
+            <div
+              v-else
+              class="popup__content"
+              :class="{
+                [`${customClass}`]: !!customClass
+              }"
+            >
               <slot />
             </div>
           </Transition>
