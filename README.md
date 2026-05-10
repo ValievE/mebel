@@ -45,6 +45,4 @@ npm run lint
 
 | Название               |   Тип    | Обязательность | Описание                       |
 |:-----------------------|:--------:|:--------------:|:-------------------------------|
-| VITE_SUPABASE_URL      | `string` |       Да       | URL для подключения к supabase |
 | VITE_YANDEX_KEY        | `string` |       Да       | APIKey для карт Яндекса        |
-| VITE_SUPABASE_ANON_KEY | `string` |       Да       | Access key для supabase        |
