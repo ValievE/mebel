@@ -133,6 +133,22 @@ const sortSelector: SortSelector = reactive({
       name: "По убыванию цены"
     },
     {
+      id: GetListField.TitleAsc,
+      name: "По названию (А–Я)"
+    },
+    {
+      id: GetListField.TitleDesc,
+      name: "По названию (Я–А)"
+    },
+    {
+      id: GetListField.TypeAsc,
+      name: "По типу комнаты (возр.)"
+    },
+    {
+      id: GetListField.TypeDesc,
+      name: "По типу комнаты (убыв.)"
+    },
+    {
       id: GetListField.Default,
       name: "По-умолчанию"
     }

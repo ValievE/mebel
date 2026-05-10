@@ -10,14 +10,13 @@ async function query<T = any>(
 ): Promise<AxiosResponse<T>> {
   try {
     const config = payload.config;
+    const apiURL = import.meta.env.VITE_API_URL;
 
-    const sbKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    if (!apiURL) throw new Error("Missing API URL");
 
-    config.headers = {
-      apikey: sbKey,
-      Authorization: `Bearer ${sbKey}`
-    };
-    config.baseURL = import.meta.env.VITE_SUPABASE_URL;
+    if (apiURL) {
+      config.baseURL = apiURL.replace(/\/$/, "");
+    }
 
     return await axios(payload.point, config);
   } catch (e) {

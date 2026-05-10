@@ -5,6 +5,10 @@ import type { FurnitureType } from "@/types/types.ts";
 export enum GetListField {
   PriceAsc = "price.asc",
   PriceDesc = "price.desc",
+  TitleAsc = "title.asc",
+  TitleDesc = "title.desc",
+  TypeAsc = "type.asc",
+  TypeDesc = "type.desc",
   Default = "id.asc"
 }
 export type GetListRequest = {
@@ -27,12 +31,13 @@ export async function getList(
   payload?: GetListRequest
 ): Promise<GetListResponse> {
   const params: Record<string, string> = {
-    select: "id,title,type,images,price",
-    order: payload?.sort || GetListField.Default
+    sort: payload?.sort || GetListField.Default
   };
-
+  if (payload?.filter?.type !== undefined) {
+    params.type = String(payload.filter.type);
+  }
   return query<GetListResponse>({
-    point: `/rest/v1/items`,
+    point: `/api/v1/catalog`,
     config: {
       method: "GET",
       params

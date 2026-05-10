@@ -17,9 +17,10 @@ export async function getCartItems(
   ids: string[]
 ): Promise<GetCartItemsResponse> {
   return query<GetCartItemsResponse>({
-    point: `/rest/v1/items?id=in.(${ids.join(",")})`,
+    point: `/api/v1/cart`,
     config: {
-      method: "GET"
+      method: "GET",
+      params: { ids: ids.join(",") }
     }
   }).then(res => res?.data);
 }
