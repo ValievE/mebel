@@ -29,15 +29,16 @@ export const getListAdapter = (
   }));
 
 export const getItemAdapter = (response: GetItemResponse): ItemPopupNS.Data => {
-  if (!response.length) throw new Error();
+  if (response == null || Array.isArray(response)) throw new Error();
+  if (response.id === undefined) throw new Error();
 
   return {
-    type: adaptListType[response[0]?.type || 0],
-    images: response[0]?.images || [],
-    title: response[0]?.title || "",
-    price: response[0]?.price || 0,
-    id: String(response[0]?.id) || "",
-    parameters: response[0]?.parameters || {}
+    type: adaptListType[response.type || 0],
+    images: response.images || [],
+    title: response.title || "",
+    price: response.price || 0,
+    id: String(response.id) || "",
+    parameters: response.parameters || {}
   };
 };
 

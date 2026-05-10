@@ -16,7 +16,6 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
-    "@supabase/supabase-js": "2.104.1",
     "@venegrad/vue3-click-outside": "1.0.2",
     "axios": "1.16.0",
     "click-outside-vue3": "4.0.1",
