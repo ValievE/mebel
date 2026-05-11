@@ -11,13 +11,42 @@
       >
         {{ link.text }}
       </RouterLink>
+      <ButtonComponent
+        v-if="!auth.isAuthenticated"
+        class="header-component__cabinet-btn"
+        type="white"
+        size="m"
+        @click="openAccount"
+      >
+        Личный кабинет
+      </ButtonComponent>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import Logo from "@/components/logo/logo.vue";
-import { navBarLinks } from "@/common/consts.ts";
+import ButtonComponent from "@/components/button-component/button-component.vue";
+import { useAuthStore } from "@/stores/use-auth-store.ts";
+import { useUiStore } from "@/stores/use-ui-store.ts";
+import { PageName } from "@/router/consts.ts";
+import { getNavBarLinks } from "@/common/consts.ts";
+import { computed } from "vue";
+
+const auth = useAuthStore();
+const ui = useUiStore();
+const router = useRouter();
+
+const navBarLinks = computed(() => getNavBarLinks(auth.isAuthenticated));
+
+function openAccount() {
+  if (auth.isAuthenticated) {
+    router.push({ name: PageName.Orders });
+    return;
+  }
+  ui.openPopup("login");
+}
 </script>
 
 <style lang="css">
@@ -45,7 +74,12 @@ import { navBarLinks } from "@/common/consts.ts";
 .header-component__links {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 32px;
+}
+
+.header-component__cabinet-btn {
+  flex-shrink: 0;
 }
 
 .header-component__links-item {
@@ -69,10 +103,10 @@ import { navBarLinks } from "@/common/consts.ts";
 
 @media screen and (max-width: 768px) {
   .header-component {
-    justify-content: center;
-    padding: 16px 48px;
+    justify-content: space-between;
+    padding: 16px 24px;
     box-shadow: none;
-    width: fit-content;
+    width: calc(100% - 32px);
     max-width: 100%;
     height: 80px;
   }

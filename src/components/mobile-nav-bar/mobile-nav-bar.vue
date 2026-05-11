@@ -1,20 +1,50 @@
 <template>
   <div class="mobile-nav-bar">
     <RouterLink
-      class="mobile-nav-bar__link"
-      exact-active-class="mobile-nav-bar__link_active"
       v-for="link in navBarLinks"
       :key="link.name"
-      :to="{ name: link.name }">
-      <Icon :size="20" :name="link.icon" />
-      {{ link.text }}
+      exact-active-class="mobile-nav-bar__link_active"
+      :to="{ name: link.name }"
+    >
+      <ButtonComponent type="link" size="s" wide :icon-name="link.icon">
+        {{ link.text }}
+      </ButtonComponent>
     </RouterLink>
+    <ButtonComponent
+      v-if="!auth.isAuthenticated"
+      type="link"
+      size="s"
+      wide
+      icon-name="user"
+      @click="openAccount"
+    >
+      Кабинет
+    </ButtonComponent>
   </div>
 </template>
 
 <script setup lang="ts">
-import { navBarLinks } from "@/common/consts.ts";
-import Icon from "@/components/icon/icon.vue";
+import { getNavBarLinks } from "@/common/consts.ts";
+import { computed } from "vue";
+import { useAuthStore } from "@/stores/use-auth-store.ts";
+import ButtonComponent from "@/components/button-component/button-component.vue";
+import { PageName } from "@/router/consts.ts";
+import { useRouter } from "vue-router";
+import { useUiStore } from "@/stores/use-ui-store.ts";
+
+const auth = useAuthStore();
+const ui = useUiStore();
+const router = useRouter();
+
+const navBarLinks = computed(() => getNavBarLinks(auth.isAuthenticated));
+
+function openAccount() {
+  if (auth.isAuthenticated) {
+    router.push({ name: PageName.Orders });
+    return;
+  }
+  ui.openPopup("login");
+}
 </script>
 
 <style lang="css">
@@ -23,11 +53,11 @@ import Icon from "@/components/icon/icon.vue";
   left: 50%;
   transform: translateX(-50%);
   bottom: 16px;
-  width: calc(100% - 32px);
+  width: calc(100% - 24px);
   box-shadow: var(--shadow);
   height: 64px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   padding: 12px 24px;
   max-width: var(--max-width);
   border-radius: 128px;

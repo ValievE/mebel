@@ -30,10 +30,11 @@ const customClasses = computed<string[]>(() => {
   const classes: string[] = [];
 
   classes.push(`button-component_${props.size}`);
+  classes.push(`button-component_${props.type}`);
 
   if (isIconOnly.value) classes.push("button-component_square");
   if (props.disabled) classes.push("button-component_disabled");
-  if (props.type === "red") classes.push("button-component_red");
+  if (props.wide) classes.push("button-component_wide");
 
   return classes;
 });
@@ -46,12 +47,11 @@ const iconSize = computed<number>(() => {
     case "xl":
       return 32;
     default:
-      return 16;
+      return 20;
   }
 });
 
-const clickHandler = (e: MouseEvent) => {
-  e.preventDefault();
+const clickHandler = () => {
   if (props.disabled) return;
   emit("click");
 };
@@ -124,5 +124,24 @@ const clickHandler = (e: MouseEvent) => {
   background-color: var(--red-60);
   color: var(--white);
   box-shadow: none;
+}
+.button-component_link {
+  box-shadow: none;
+  color: var(--gray-50);
+  background: none;
+  flex-direction: column;
+  gap: 2px;
+
+  &:hover {
+    background: none;
+    color: var(--gray-90);
+  }
+  &:active {
+    background: none;
+    color: var(--gray-60);
+  }
+}
+.button-component_wide {
+  width: 100%;
 }
 </style>

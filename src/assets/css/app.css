@@ -30,6 +30,9 @@ h2 {
   line-height: var(--line-height-l);
   cursor: default;
 }
+a {
+  text-decoration: none;
+}
 
 #app {
   width: 100%;

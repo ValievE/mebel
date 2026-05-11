@@ -253,7 +253,7 @@ const getItem = async (id: string) => {
   overflow: hidden;
 }
 .catalog__header {
-  margin-top: 160px;
+  margin-top: var(--header-height);
   display: flex;
   gap: 16px;
   justify-content: space-between;
@@ -289,7 +289,7 @@ const getItem = async (id: string) => {
 
 @media screen and (max-width: 768px) {
   .catalog__header {
-    margin-top: 128px;
+    margin-top: var(--header-height);
   }
   .catalog__list-scroll {
     grid-template-columns: repeat(2, 1fr);

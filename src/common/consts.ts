@@ -1,15 +1,16 @@
 import { PageName } from "@/router/consts.ts";
-import { FurnitureType, type UIComponentsNS } from "@/types/types.ts";
+import { FurnitureType, type NavBarLink } from "@/types/types.ts";
 
-export const navBarLinks: Array<{
-  text: string;
-  name: PageName;
-  icon: UIComponentsNS.Icon.Names;
-}> = [
-  { text: "Главная", name: PageName.Home, icon: "logo-outline" },
-  { text: "Каталог", name: PageName.Catalog, icon: "catalog" },
-  { text: "Доставка", name: PageName.Delivery, icon: "delivery" }
-];
+export const getNavBarLinks = (isLoggedIn: boolean): NavBarLink[] => {
+  const links: NavBarLink[] = [
+    { text: "Главная", name: PageName.Home, icon: "logo-outline" },
+    { text: "Каталог", name: PageName.Catalog, icon: "catalog" },
+    { text: "Доставка", name: PageName.Delivery, icon: "delivery" }
+  ];
+  if (isLoggedIn)
+    links.push({ text: "Кабинет", name: PageName.Orders, icon: "user" });
+  return links;
+};
 
 export const furnitureName: Record<FurnitureType, string> = {
   [FurnitureType.Kitchen]: "Кухня",

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { LayoutName, PageName, Routes } from "@/router/consts.ts";
+import { useAuthStore } from "@/stores/use-auth-store.ts";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +31,24 @@ const router = createRouter({
           name: Routes[PageName.Catalog].name,
           path: Routes[PageName.Catalog].path,
           component: Routes[PageName.Catalog].component
+        },
+        {
+          name: Routes[LayoutName.Cabinet].name,
+          path: Routes[LayoutName.Cabinet].path,
+          component: Routes[LayoutName.Cabinet].component,
+          meta: Routes[LayoutName.Cabinet].meta,
+          children: [
+            {
+              name: Routes[PageName.Orders].name,
+              path: Routes[PageName.Orders].path,
+              component: Routes[PageName.Orders].component
+            },
+            {
+              name: Routes[PageName.Settings].name,
+              path: Routes[PageName.Settings].path,
+              component: Routes[PageName.Settings].component
+            }
+          ]
         }
       ]
     },
@@ -39,6 +58,18 @@ const router = createRouter({
       redirect: Routes[PageName.NotFound].redirect
     }
   ]
+});
+
+router.beforeEach((to, _from, next) => {
+  const auth = useAuthStore();
+  const requiresAuth = to.matched.some(
+    record => record.meta.requiresAuth === true
+  );
+  if (requiresAuth && !auth.isAuthenticated) {
+    next({ name: PageName.Home });
+    return;
+  }
+  next();
 });
 
 export default router;

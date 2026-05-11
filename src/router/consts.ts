@@ -2,13 +2,16 @@ import type { RouteRecordRaw } from "vue-router";
 
 export enum LayoutName {
   Narrow = "narrow",
-  Wide = "wide"
+  Wide = "wide",
+  Cabinet = "cabinet"
 }
 
 export enum PageName {
   Home = "home",
   Catalog = "catalog",
   Delivery = "delivery",
+  Orders = "orders",
+  Settings = "settings",
   NotFound = "not-found"
 }
 
@@ -37,6 +40,22 @@ export const Routes = {
     name: PageName.Delivery,
     path: "delivery",
     component: () => import("@/pages/delivery/delivery.vue")
+  },
+  [LayoutName.Cabinet]: {
+    name: LayoutName.Cabinet,
+    path: "cabinet",
+    component: () => import("@/layouts/cabinet-layout/cabinet-layout.vue"),
+    meta: { requiresAuth: true }
+  },
+  [PageName.Orders]: {
+    name: PageName.Orders,
+    path: "orders",
+    component: () => import("@/pages/orders/orders.vue")
+  },
+  [PageName.Settings]: {
+    name: PageName.Settings,
+    path: "settings",
+    component: () => import("@/pages/settings/settings.vue")
   },
   [PageName.NotFound]: {
     name: PageName.NotFound,

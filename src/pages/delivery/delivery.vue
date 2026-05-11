@@ -63,7 +63,7 @@ import DeliveryMap from "@/pages/delivery/components/delivery-map/delivery-map.v
     width: calc(100% - 32px);
     max-width: none;
     top: unset;
-    bottom: 96px;
+    bottom: var(--footer-height);
     transform: translateX(-50%);
     left: 50%;
   }

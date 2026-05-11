@@ -1,27 +1,22 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+
+import http from "@/infrastructure/http.ts";
 
 export type QueryPayload = {
   point: string;
   config: AxiosRequestConfig;
 };
 
-async function query<T = any>(
+async function query<T = unknown>(
   payload: QueryPayload
 ): Promise<AxiosResponse<T>> {
-  try {
-    const config = payload.config;
-    const apiURL = import.meta.env.VITE_API_URL;
-
-    if (!apiURL) throw new Error("Missing API URL");
-
-    if (apiURL) {
-      config.baseURL = apiURL.replace(/\/$/, "");
-    }
-
-    return await axios(payload.point, config);
-  } catch (e) {
-    return Promise.reject(e);
+  if (!import.meta.env.VITE_API_URL) {
+    throw new Error("Missing VITE_API_URL");
   }
+  return http.request<T>({
+    url: payload.point,
+    ...payload.config
+  });
 }
 
 export default query;

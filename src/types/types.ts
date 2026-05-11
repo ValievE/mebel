@@ -1,6 +1,8 @@
+import { PageName } from "@/router/consts.ts";
+
 export namespace UIComponentsNS {
   export type Size = "s" | "m" | "l" | "xl";
-  export type Style = "red" | "white";
+  export type Style = "red" | "white" | "link";
 
   export namespace Icon {
     export type Names =
@@ -23,7 +25,8 @@ export namespace UIComponentsNS {
       | "logo-outline"
       | "chevron"
       | "warning"
-      | "close-square";
+      | "close-square"
+      | "user";
 
     export type Props = {
       size?: number;
@@ -37,6 +40,7 @@ export namespace UIComponentsNS {
       size?: Size;
       disabled?: boolean;
       type?: Style;
+      wide?: boolean;
     };
     export type Emits = {
       (e: "click"): void;
@@ -123,3 +127,9 @@ export enum FurnitureType {
   Wardrobe = "Wardrobe",
   Other = "Other"
 }
+
+export type NavBarLink = {
+  text: string;
+  name: PageName;
+  icon: UIComponentsNS.Icon.Names;
+};

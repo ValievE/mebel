@@ -69,6 +69,11 @@
 
   --max-width: 1280px;
 
+  /* NARROW-LAYOUT */
+
+  --header-height: 160px;
+  --footer-height: 96px;
+
   @media screen and (max-width: 768px) {
     --font-size-s: 12px;
     --font-size-m: 14px;
@@ -78,5 +83,9 @@
     --line-height-m: 16px;
     --line-height-l: 20px;
     --line-height-xl: 32px;
+
+    /* NARROW-LAYOUT */
+
+    --header-height: 128px;
   }
 }
