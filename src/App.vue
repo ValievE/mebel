@@ -2,7 +2,7 @@
   <div class="overlay"></div>
   <Toaster :toasts="uiStore.toasts" @delete="uiStore.removeToast" />
   <HeaderComponent />
-  <LoginPopup @success="onLoginSuccess" />
+  <LoginPopup />
   <RouterView />
   <MobileNavBar />
 </template>
@@ -12,16 +12,16 @@ import { nextTick, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import MobileNavBar from "@/components/mobile-nav-bar/mobile-nav-bar.vue";
 import HeaderComponent from "@/components/header-component/header-component.vue";
-import LoginPopup from "@/components/login-popup/login-popup.vue";
+import LoginPopup from "@/widgets/login-popup/login-popup.vue";
 import Toaster from "@/components/toaster/toaster.vue";
-import { LayoutName, PageName } from "@/router/consts.ts";
+import { PageName } from "@/router/consts.ts";
 
 const uiStore = useUiStore();
 const router = useRouter();
 
 async function onLoginSuccess() {
   await nextTick();
-  await router.push({ name: LayoutName.Cabinet });
+  await router.push({ name: PageName.Orders });
 }
 
 onMounted(() => {

@@ -3,7 +3,8 @@
     class="input-component"
     :class="{
       'input-component_required': required,
-      'input-component_disabled': disabled
+      'input-component_disabled': disabled,
+      'input-component_error': error
     }"
   >
     <label class="input-component__wrapper">
@@ -106,6 +107,14 @@ const inputHandler = (e: InputEvent): void => {
   .input-component__wrapper-input {
     background-color: var(--gray-10);
     cursor: not-allowed;
+  }
+}
+
+/* ERROR */
+
+.input-component_error {
+  .input-component__wrapper-input {
+    border: 1px solid var(--red-60);
   }
 }
 </style>

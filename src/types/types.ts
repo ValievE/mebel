@@ -144,6 +144,21 @@ export namespace UIComponentsNS {
       (e: "update:modelValue", value: string): void;
     };
   }
+
+  export namespace Tabs {
+    export type Item<T> = {
+      id: T;
+      text: string;
+    };
+    export type Props<T> = {
+      items: Item<T>[];
+      modelValue: T;
+      disabled?: boolean;
+    };
+    export type Emits<T> = {
+      (e: "update:modelValue", value: T): void;
+    };
+  }
 }
 
 export enum FurnitureType {
