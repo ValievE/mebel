@@ -8,27 +8,37 @@ export type LoginResponse = {
 
 export type MeResponse = {
   id: number;
-  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
 };
 
-export async function loginRequest(
-  username: string,
-  password: string
-): Promise<LoginResponse> {
-  const { data } = await http.post<LoginResponse>("/api/v1/auth/login", {
-    username,
-    password
-  });
+export async function loginRequest(email: string, password: string): Promise<LoginResponse> {
+  const { data } = await http.post<LoginResponse>("/api/v1/auth/login", { email, password });
   return data;
 }
 
-export async function registerRequest(
-  username: string,
+export async function registerInitRequest(
+  email: string,
+  firstName: string,
+  lastName: string,
   password: string
-): Promise<LoginResponse> {
-  const { data } = await http.post<LoginResponse>("/api/v1/auth/register", {
-    username,
+): Promise<void> {
+  await http.post("/api/v1/auth/register/init", {
+    email,
+    first_name: firstName,
+    last_name: lastName,
     password
+  });
+}
+
+export async function registerConfirmRequest(
+  email: string,
+  code: string
+): Promise<LoginResponse> {
+  const { data } = await http.post<LoginResponse>("/api/v1/auth/register/confirm", {
+    email,
+    code
   });
   return data;
 }

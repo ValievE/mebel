@@ -11,15 +11,13 @@
       >
         {{ link.text }}
       </RouterLink>
-      <ButtonComponent
+      <p
         v-if="!auth.isAuthenticated"
-        class="header-component__cabinet-btn"
-        type="white"
-        size="m"
+        class="header-component__links-item"
         @click="openAccount"
       >
-        Личный кабинет
-      </ButtonComponent>
+        Кабинет
+      </p>
     </div>
   </header>
 </template>
@@ -27,7 +25,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import Logo from "@/components/logo/logo.vue";
-import ButtonComponent from "@/components/button-component/button-component.vue";
 import { useAuthStore } from "@/stores/use-auth-store.ts";
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import { PageName } from "@/router/consts.ts";
@@ -78,15 +75,12 @@ function openAccount() {
   gap: 32px;
 }
 
-.header-component__cabinet-btn {
-  flex-shrink: 0;
-}
-
 .header-component__links-item {
   text-decoration: none;
   transition: var(--transition-color-100);
   color: var(--gray-50);
   user-select: none;
+  cursor: pointer;
 
   &:hover {
     color: var(--gray-90);

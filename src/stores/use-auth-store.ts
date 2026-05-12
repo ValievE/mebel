@@ -7,7 +7,8 @@ import {
   loginRequest,
   logoutRequest,
   meRequest,
-  registerRequest,
+  registerInitRequest,
+  registerConfirmRequest,
   type MeResponse
 } from "@/infrastructure/auth-api.ts";
 
@@ -56,14 +57,25 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
     bootstrapped.value = true;
   }
 
-  async function login(username: string, password: string): Promise<void> {
-    const data = await loginRequest(username, password);
+  async function login(email: string, password: string): Promise<void> {
+    const data = await loginRequest(email, password);
     setAccessToken(data.access_token);
     user.value = await meRequest();
   }
 
-  async function register(username: string, password: string): Promise<void> {
-    const data = await registerRequest(username, password);
+  /** Шаг 1 регистрации — отправляет код на email */
+  async function registerInit(
+    email: string,
+    firstName: string,
+    lastName: string,
+    password: string
+  ): Promise<void> {
+    await registerInitRequest(email, firstName, lastName, password);
+  }
+
+  /** Шаг 2 регистрации — подтверждает код и авторизует */
+  async function registerConfirm(email: string, code: string): Promise<void> {
+    const data = await registerConfirmRequest(email, code);
     setAccessToken(data.access_token);
     user.value = await meRequest();
   }
@@ -82,7 +94,8 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
     setAccessToken,
     bootstrap,
     login,
-    register,
+    registerInit,
+    registerConfirm,
     logout
   };
 });

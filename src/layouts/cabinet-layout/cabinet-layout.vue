@@ -27,7 +27,7 @@ const auth = useAuthStore();
 const router = useRouter();
 
 const sidebar: CabinetSidebarNS.Props = reactive({
-  userName: auth.user?.username || "",
+  userName: auth.user ? `${auth.user.first_name} ${auth.user.last_name}`.trim() : "",
   items: [
     {
       id: "orders",
