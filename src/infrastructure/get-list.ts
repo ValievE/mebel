@@ -7,8 +7,6 @@ export enum GetListField {
   PriceDesc = "price.desc",
   TitleAsc = "title.asc",
   TitleDesc = "title.desc",
-  TypeAsc = "type.asc",
-  TypeDesc = "type.desc",
   Default = "id.asc"
 }
 export type GetListRequest = {

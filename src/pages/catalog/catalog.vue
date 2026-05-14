@@ -141,14 +141,6 @@ const sortSelector: SortSelector = reactive({
       name: "По названию (Я–А)"
     },
     {
-      id: GetListField.TypeAsc,
-      name: "По типу комнаты (возр.)"
-    },
-    {
-      id: GetListField.TypeDesc,
-      name: "По типу комнаты (убыв.)"
-    },
-    {
       id: GetListField.Default,
       name: "По-умолчанию"
     }
@@ -187,7 +179,6 @@ const cart: CartObject = reactive({
           );
         cartStore.sum = cart.popupData.data.sum;
       } catch {
-        error.value = "Не удалось получить список предметов";
         uiStore.addToast("Произошла ошибка при загрузке корзины", "error");
       } finally {
         uiStore.loaders.cart = false;
