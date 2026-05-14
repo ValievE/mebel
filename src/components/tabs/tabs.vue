@@ -3,7 +3,9 @@
     <ButtonComponent
       v-for="tab in items"
       :key="String(tab.id)"
+      :disabled="disabled"
       class="tabs__item"
+      :type="tab.id === modelValue ? 'red' : 'white'"
       @click="updateModelValue(tab.id)"
     >
       {{ tab.text }}

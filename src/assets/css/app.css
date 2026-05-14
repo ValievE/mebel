@@ -8,6 +8,20 @@
   box-sizing: border-box;
   margin: 0;
   -webkit-tap-highlight-color: transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    margin-block: 24px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--gray-20);
+    border-radius: 10px;
+  }
 }
 
 body {

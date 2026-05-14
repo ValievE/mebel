@@ -2,13 +2,14 @@
   <Popup
     id="login"
     custom-class="login-popup"
-    :loading="loginPopup.data.loading"
+    content-height
+    content-width
     @close="loginPopup.functions.onClose"
   >
     <div class="login-popup__inner">
       <Tabs
         :model-value="loginPopup.data.tabs.modelValue"
-        :disabled="loginPopup.data.tabs.disabled"
+        :disabled="loginPopup.data.loading"
         :items="loginPopup.data.tabs.items"
         @update:modelValue="loginPopup.functions.handleTabChange"
       />
@@ -23,6 +24,7 @@
           :placeholder="item.placeholder"
           :error="loginPopup.data.errors[item.id]"
           required
+          :disabled="loginPopup.data.loading"
           @update:modelValue="
             loginPopup.functions.handleModelValue($event, item.id)
           "
@@ -50,9 +52,13 @@ import { useAuthStore } from "@/stores/use-auth-store.ts";
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import { type LoginPopupNS } from "@/widgets/login-popup/types.ts";
 import Tabs from "@/components/tabs/tabs.vue";
+import { useRouter } from "vue-router";
+import { PageName } from "@/router/consts.ts";
+import { getErrorText } from "@/common/consts.ts";
 
 const auth = useAuthStore();
 const ui = useUiStore();
+const router = useRouter();
 
 const forms: Record<LoginPopupNS.Mode, LoginPopupNS.FormField[]> = {
   code: [
@@ -137,8 +143,7 @@ const loginPopup: LoginPopupNS.Object = reactive({
           id: "register"
         }
       ],
-      modelValue: "login",
-      disabled: false
+      modelValue: "login"
     }
   },
   functions: {
@@ -149,14 +154,10 @@ const loginPopup: LoginPopupNS.Object = reactive({
       try {
         await sendRequest();
       } catch (e: any) {
-        console.log(e);
+        ui.addToast(getErrorText(e), "error");
       } finally {
         loginPopup.data.loading = false;
       }
-    },
-    changeMode(mode) {
-      loginPopup.data.mode = mode;
-      loginPopup.functions.clean();
     },
     clean() {
       loginPopup.data.form = getInitialValues();
@@ -183,6 +184,7 @@ const loginPopup: LoginPopupNS.Object = reactive({
     handleTabChange(mode) {
       loginPopup.data.tabs.modelValue = mode;
       loginPopup.data.mode = mode;
+      loginPopup.functions.clean();
     },
     onClose() {
       ui.closePopup("login");
@@ -206,6 +208,7 @@ const sendRequest = async () => {
         loginPopup.data.form.email,
         loginPopup.data.form.password
       );
+      await router.push({ name: PageName.Orders });
       loginPopup.functions.onClose();
       break;
     case "register":
@@ -230,6 +233,7 @@ const sendRequest = async () => {
         loginPopup.data.form.email,
         loginPopup.data.form.code
       );
+      await router.push({ name: PageName.Orders });
       loginPopup.functions.onClose();
       loginPopup.data.mode = "login";
       break;
@@ -239,9 +243,8 @@ const sendRequest = async () => {
 
 <style lang="css">
 .login-popup {
+  padding: 48px;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .login-popup__inner {
   display: flex;
@@ -249,5 +252,7 @@ const sendRequest = async () => {
   gap: 16px;
   width: 360px;
   max-width: 100%;
+  height: fit-content;
+  margin: auto;
 }
 </style>

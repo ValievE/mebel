@@ -1,5 +1,9 @@
 import { PageName } from "@/router/consts.ts";
-import { FurnitureType, type NavBarLink } from "@/types/types.ts";
+import {
+  type ErrorType,
+  FurnitureType,
+  type NavBarLink
+} from "@/types/types.ts";
 
 export const getNavBarLinks = (isLoggedIn: boolean): NavBarLink[] => {
   const links: NavBarLink[] = [
@@ -20,3 +24,6 @@ export const furnitureName: Record<FurnitureType, string> = {
   [FurnitureType.Wardrobe]: "Шкаф-купе",
   [FurnitureType.Other]: "Прочая мебель"
 };
+
+export const getErrorText = (e: ErrorType) =>
+  e.response?.data?.error?.message || "Ошибка сервера";

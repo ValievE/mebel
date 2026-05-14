@@ -9,7 +9,9 @@
         <div
           class="popup"
           :class="{
-            [`popup_${size}`]: size
+            [`popup_${size}`]: size,
+            'popup_content-height': contentHeight,
+            'popup_content-width': contentWidth
           }"
         >
           <ButtonComponent
@@ -86,11 +88,33 @@ const uiStore = useUiStore();
 
 .popup__loader,
 .popup__content {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
+}
+
+.popup__content {
+  overflow: auto;
+  max-height: 100%;
+}
+
+.popup_content-width {
+  width: fit-content;
+  max-width: 100%;
+  .popup__content {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+  }
+}
+
+.popup_content-height {
+  max-height: 100%;
+  height: fit-content;
+  .popup__content {
+    position: relative;
+    max-height: 100%;
+    height: fit-content;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -100,6 +124,11 @@ const uiStore = useUiStore();
     min-height: 0;
     max-height: 100%;
     border-radius: 0;
+  }
+
+  .popup .popup__content {
+    height: 100%;
+    width: 100%;
   }
 }
 </style>

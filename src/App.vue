@@ -8,21 +8,13 @@
 </template>
 <script setup lang="ts">
 import { useUiStore } from "@/stores/use-ui-store.ts";
-import { nextTick, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted } from "vue";
 import MobileNavBar from "@/components/mobile-nav-bar/mobile-nav-bar.vue";
 import HeaderComponent from "@/components/header-component/header-component.vue";
 import LoginPopup from "@/widgets/login-popup/login-popup.vue";
 import Toaster from "@/components/toaster/toaster.vue";
-import { PageName } from "@/router/consts.ts";
 
 const uiStore = useUiStore();
-const router = useRouter();
-
-async function onLoginSuccess() {
-  await nextTick();
-  await router.push({ name: PageName.Orders });
-}
 
 onMounted(() => {
   window.addEventListener("resize", () => {

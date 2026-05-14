@@ -28,7 +28,6 @@ export namespace LoginPopupNS {
       submit(): Promise<void>;
       clean(): void;
       validate(): boolean;
-      changeMode(mode: Mode): void;
       handleTabChange(mode: Mode): void;
       onClose(): void;
       handleModelValue(value: string, id: FormFields): void;

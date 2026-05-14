@@ -79,11 +79,7 @@ const clickHandler = () => {
     background-color: var(--gray-30);
   }
 }
-.button-component_disabled {
-  cursor: not-allowed;
-  pointer-events: none;
-  background-color: var(--gray-10);
-}
+
 .button-component_square {
   aspect-ratio: 1;
 }
@@ -124,6 +120,12 @@ const clickHandler = () => {
   background-color: var(--red-60);
   color: var(--white);
   box-shadow: none;
+  &:hover {
+    background-color: var(--red-70);
+  }
+  &:active {
+    background-color: var(--red-80);
+  }
 }
 .button-component_link {
   box-shadow: none;
@@ -143,5 +145,14 @@ const clickHandler = () => {
 }
 .button-component_wide {
   width: 100%;
+}
+
+.button-component_disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  background-color: var(--gray-10);
+  &.button-component_red {
+    background-color: var(--red-40);
+  }
 }
 </style>

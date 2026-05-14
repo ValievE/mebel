@@ -67,6 +67,8 @@ export namespace UIComponentsNS {
       customClass?: string;
       size?: Size;
       loading?: boolean;
+      contentWidth?: boolean;
+      contentHeight?: boolean;
     };
     export type Emits = {
       (e: "close"): void;
@@ -174,4 +176,15 @@ export type NavBarLink = {
   text: string;
   name: PageName;
   icon: UIComponentsNS.Icon.Names;
+};
+
+export type ErrorType = {
+  response?: {
+    data?: {
+      error?: {
+        code?: string;
+        message?: string;
+      };
+    };
+  };
 };
