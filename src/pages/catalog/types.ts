@@ -28,5 +28,6 @@ export type CartObject = {
     addItem(id: string, price: number): void;
     hasItem(id: string): boolean;
     deleteItem(id: string): void;
+    changeQuantity(payload: { increase: boolean; id: string }): void;
   };
 };

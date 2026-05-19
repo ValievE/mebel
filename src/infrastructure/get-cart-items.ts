@@ -4,10 +4,10 @@ import { ExtFurnitureType } from "@/infrastructure/types.ts";
 export type GetCartItemsResponse = Array<
   Partial<{
     id: number;
+    in_stock: number;
     title: string;
     type: ExtFurnitureType;
     price: number;
-    created_at: string;
     images: string[];
     parameters: Record<string, string>;
   }>

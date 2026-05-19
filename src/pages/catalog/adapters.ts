@@ -55,20 +55,24 @@ export const getCartItemsAdapter = (
         image: item.images?.[0] || "",
         title: item.title || "",
         id: String(item.id) || "",
-        tags: [
-          {
+        tags: {
+          type: {
             text: `${furnitureName[adaptListType[item.type || 0]]}`,
             type: "white"
           },
-          {
+          quantity: {
             text: "Кол-во: 1",
-            type: "white"
+            type: "white",
+            editable: true
           },
-          {
+          price: {
             text: (item.price || 0) + "Р",
             type: "red"
           }
-        ]
+        },
+        price: item.price || 0,
+        quantity: 1,
+        inStock: item.in_stock || 0
       });
 
       return acc;

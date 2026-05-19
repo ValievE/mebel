@@ -1,6 +1,6 @@
 <template>
   <teleport to=".overlay">
-    <transition name="fade-100">
+    <Transition name="fade-100">
       <div
         v-if="uiStore.isPopupOpened(id)"
         class="popup-overlay"
@@ -34,7 +34,7 @@
           </Transition>
         </div>
       </div>
-    </transition>
+    </Transition>
   </teleport>
 </template>
 
@@ -90,6 +90,12 @@ const uiStore = useUiStore();
 .popup__content {
   width: 100%;
   height: 100%;
+}
+
+.popup__loader {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .popup__content {

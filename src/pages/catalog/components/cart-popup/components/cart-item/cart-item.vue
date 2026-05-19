@@ -18,8 +18,27 @@
           {{ props.title }}
         </h2>
         <div class="cart-item__wrapper-info-tags">
-          <Tag v-for="tag in props.tags" :key="tag.text" :type="tag.type">
+          <Tag
+            v-for="tag in props.tags"
+            :key="tag.text"
+            class="cart-item__wrapper-info-tags-item"
+            :type="tag.type"
+          >
             {{ tag.text }}
+            <div
+              v-if="tag.editable"
+              class="cart-item__wrapper-info-tags-item-buttons"
+            >
+              <ButtonComponent size="s" @click="$emit('change:quantity', true)">
+                +
+              </ButtonComponent>
+              <ButtonComponent
+                size="s"
+                @click="$emit('change:quantity', false)"
+              >
+                -
+              </ButtonComponent>
+            </div>
           </Tag>
         </div>
       </div>
@@ -93,5 +112,14 @@ defineEmits<CartPopupNS.ItemEmits>();
   display: flex;
   align-items: center;
   gap: 16px;
+}
+.cart-item__wrapper-info-tags-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cart-item__wrapper-info-tags-item-buttons {
+  display: flex;
+  gap: 4px;
 }
 </style>

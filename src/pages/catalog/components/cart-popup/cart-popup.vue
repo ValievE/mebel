@@ -14,6 +14,9 @@
               v-for="item in props.data.items"
               :key="item.id"
               :props="item"
+              @change:quantity="
+                $emit('change:quantity', { increase: $event, id: item.id })
+              "
               @click:item="$emit('click:item', item.id)"
               @delete="$emit('delete', item.id)"
             />
@@ -62,6 +65,7 @@ defineEmits<CartPopupNS.Emits>();
   padding: 24px 16px;
   display: flex;
   flex-direction: column;
+  position: relative;
   gap: 24px;
 }
 .cart-popup__footer {

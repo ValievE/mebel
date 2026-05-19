@@ -10,6 +10,7 @@
       @close="cart.functions.closePopup"
       @delete="cart.functions.deleteItem"
       @click:item="itemPopup.functions.open"
+      @change:quantity="cart.functions.changeQuantity"
     />
     <header class="catalog__header">
       <h1 class="catalog__header-title">Каталог</h1>
@@ -88,6 +89,7 @@ import type {
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
 import { useCartStore } from "@/stores/use-cart-store.ts";
+import { CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
 const error = ref<string>("");
@@ -198,6 +200,28 @@ const cart: CartObject = reactive({
       cart.popupData.data.items.splice(index, 1);
       cart.popupData.data.sum = cartStore.sum;
       if (!cart.popupData.data.items.length) cart.functions.closePopup();
+    },
+    changeQuantity(payload) {
+      const item = cart.popupData.data.items.find(i => i.id === payload.id);
+      if (!item) return;
+
+      const changeQuantity = (item: CartPopupNS.Item) => {
+        if (payload.increase) {
+          if (item.quantity + 1 > item.inStock) return;
+          item.quantity += 1;
+          return;
+        }
+
+        if (item.quantity === 1) {
+          cart.functions.deleteItem(payload.id);
+          return;
+        }
+        item.quantity -= 1;
+      };
+      changeQuantity(item);
+
+      item.tags.quantity.text = "Кол-во: " + item.quantity;
+      item.tags.price.text = item.price * item.quantity + "Р";
     }
   }
 });

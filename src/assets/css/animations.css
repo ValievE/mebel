@@ -1,6 +1,14 @@
+.fade-100-leave-active,
+.fade-300-leave-active {
+  position: absolute;
+}
+
 .fade-100-enter-active,
-.fade-100-leave-active {
-  transition: opacity 0.1s ease;
+.fade-100-leave-active,
+.fade-100-move {
+  transition-property: transform, opacity;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in-out;
 }
 
 .fade-100-enter-from,
@@ -9,8 +17,11 @@
 }
 
 .fade-300-enter-active,
-.fade-300-leave-active {
-  transition: opacity 0.3s ease;
+.fade-300-leave-active,
+.fade-300-move {
+  transition-property: transform, opacity;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in-out;
 }
 
 .fade-300-enter-from,
