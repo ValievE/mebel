@@ -12,14 +12,13 @@
         {{ label }}
       </span>
       <input
-        :type="inputType"
+        :type="type"
         :value="modelValue"
         :placeholder="placeholder"
         class="input-component__wrapper-input"
         :disabled="disabled"
         :autocomplete="autocomplete"
         :maxlength="maxlength"
-        :inputmode="inputmode"
         @input="inputHandler"
       />
     </label>
@@ -31,11 +30,13 @@
 
 <script setup lang="ts">
 import { type UIComponentsNS } from "@/types/types.ts";
+import { computed } from "vue";
 
-const props = withDefaults(defineProps<UIComponentsNS.Input.Props>(), {
-  inputType: "text"
-});
+const props = defineProps<UIComponentsNS.Input.Props>();
 const emit = defineEmits<UIComponentsNS.Input.Emits>();
+
+const type = computed<string>(() => (props.hidden ? "password" : "text"));
+
 const inputHandler = (e: InputEvent): void => {
   e.preventDefault();
   if (props.disabled) return;

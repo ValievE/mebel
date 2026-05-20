@@ -21,6 +21,7 @@
           :model-value="loginPopup.data.form[item.id]"
           class="login-popup__input-wrap login-popup__input-wrap_code"
           :label="item.label"
+          :hidden="isHiddenInput(item.id)"
           :placeholder="item.placeholder"
           :error="loginPopup.data.errors[item.id]"
           required
@@ -239,6 +240,8 @@ const sendRequest = async () => {
       break;
   }
 };
+const isHiddenInput = (id: LoginPopupNS.FormFields): boolean =>
+  ["passwordRepeat", "password"].includes(id);
 </script>
 
 <style lang="css">

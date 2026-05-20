@@ -128,19 +128,9 @@ export namespace UIComponentsNS {
       error?: string;
       required?: boolean;
       disabled?: boolean;
-      /** HTML-атрибут type у input (email, password, text, …). */
-      inputType?: string;
+      hidden?: boolean;
       autocomplete?: string;
       maxlength?: number;
-      inputmode?:
-        | "text"
-        | "search"
-        | "email"
-        | "url"
-        | "none"
-        | "tel"
-        | "numeric"
-        | "decimal";
     };
     export type Emits = {
       (e: "update:modelValue", value: string): void;
