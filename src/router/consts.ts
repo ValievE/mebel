@@ -28,7 +28,7 @@ export const Routes = {
   },
   [PageName.Home]: {
     name: PageName.Home,
-    path: "",
+    path: "/",
     component: () => import("@/pages/homepage/homepage.vue")
   },
   [PageName.Catalog]: {

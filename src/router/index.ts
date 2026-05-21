@@ -37,6 +37,12 @@ const router = createRouter({
           path: Routes[LayoutName.Cabinet].path,
           component: Routes[LayoutName.Cabinet].component,
           meta: Routes[LayoutName.Cabinet].meta,
+          beforeEnter: (to, _, next) => {
+            if (to.name === LayoutName.Cabinet) {
+              next({ name: PageName.Orders });
+            }
+            next();
+          },
           children: [
             {
               name: Routes[PageName.Orders].name,

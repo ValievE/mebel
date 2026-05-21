@@ -1,7 +1,8 @@
 export enum StoreNames {
   UI = "ui",
   Cart = "cart",
-  Auth = "auth"
+  Auth = "auth",
+  CabinetLayout = "cabinetLayout"
 }
 
 export namespace CartStore {

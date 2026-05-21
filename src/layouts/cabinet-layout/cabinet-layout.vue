@@ -1,7 +1,7 @@
 <template>
   <div class="cabinet-layout">
     <div class="cabinet-layout__page">
-      <h1 class="cabinet-layout__page-title">Личный кабинет</h1>
+      <h1 class="cabinet-layout__page-title">{{ layoutStore.title }}</h1>
       <div class="cabinet-layout__page-scroll">
         <ScrollContainer>
           <RouterView />
@@ -22,12 +22,16 @@ import ScrollContainer from "@/components/scroll-container/scroll-container.vue"
 import CabinetSidebar from "@/layouts/cabinet-layout/components/cabinet-sidebar/cabinet-sidebar.vue";
 import { reactive } from "vue";
 import { type CabinetSidebarNS } from "@/layouts/cabinet-layout/components/cabinet-sidebar/types.ts";
+import { useCabinetLayout } from "@/stores/use-cabinet-layout.ts";
 
 const auth = useAuthStore();
 const router = useRouter();
+const layoutStore = useCabinetLayout();
 
 const sidebar: CabinetSidebarNS.Props = reactive({
-  userName: auth.user ? `${auth.user.first_name} ${auth.user.last_name}`.trim() : "",
+  userName: auth.user
+    ? `${auth.user.first_name} ${auth.user.last_name}`.trim()
+    : "",
   items: [
     {
       id: "orders",

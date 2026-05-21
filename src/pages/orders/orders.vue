@@ -10,10 +10,17 @@
 
 <script setup lang="ts">
 import { OrderItemNS } from "@/pages/orders/components/order-item/types.ts";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import Status = OrderItemNS.Status;
 import OrderItem from "@/pages/orders/components/order-item/order-item.vue";
 import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
+import { useCabinetLayout } from "@/stores/use-cabinet-layout.ts";
+
+const { setTitle } = useCabinetLayout();
+
+onMounted(() => {
+  setTitle("Заказы");
+});
 
 const orders = ref<OrderItemNS.Props[]>([
   {

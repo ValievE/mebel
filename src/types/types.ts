@@ -1,4 +1,4 @@
-import { PageName } from "@/router/consts.ts";
+import { LayoutName, PageName } from "@/router/consts.ts";
 
 export namespace UIComponentsNS {
   export type Size = "s" | "m" | "l" | "xl";
@@ -151,6 +151,16 @@ export namespace UIComponentsNS {
       (e: "update:modelValue", value: T): void;
     };
   }
+
+  export namespace Tumbler {
+    export type Props = {
+      modelValue: boolean;
+      disabled?: boolean;
+    };
+    export type Emits = {
+      (e: "update:modelValue", value: boolean): void;
+    };
+  }
 }
 
 export enum FurnitureType {
@@ -164,7 +174,7 @@ export enum FurnitureType {
 
 export type NavBarLink = {
   text: string;
-  name: PageName;
+  name: PageName | LayoutName;
   icon: UIComponentsNS.Icon.Names;
 };
 

@@ -1,4 +1,4 @@
-import { PageName } from "@/router/consts.ts";
+import { LayoutName, PageName } from "@/router/consts.ts";
 import {
   type ErrorType,
   FurnitureType,
@@ -12,7 +12,7 @@ export const getNavBarLinks = (isLoggedIn: boolean): NavBarLink[] => {
     { text: "Доставка", name: PageName.Delivery, icon: "delivery" }
   ];
   if (isLoggedIn)
-    links.push({ text: "Кабинет", name: PageName.Orders, icon: "user" });
+    links.push({ text: "Кабинет", name: LayoutName.Cabinet, icon: "user" });
   return links;
 };
 
