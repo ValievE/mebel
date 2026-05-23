@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { StoreNames } from "@/stores/types.ts";
 import { ACCESS_TOKEN_KEY } from "@/infrastructure/auth-token.ts";
+import http from "@/infrastructure/http.ts";
 import {
   loginRequest,
   logoutRequest,
@@ -17,6 +18,8 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
   const user = ref<MeResponse | null>(null);
   const bootstrapped = ref(false);
 
+  let bootstrapPromise: Promise<void> | null = null;
+
   function setAccessToken(token: string | null) {
     accessToken.value = token ?? "";
     if (token) {
@@ -30,31 +33,51 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
     () => accessToken.value.length > 0 && user.value !== null
   );
 
+  async function refreshAccessToken(): Promise<boolean> {
+    try {
+      const { data } = await axios.post<{ access_token: string }>(
+        `${http.defaults.baseURL ?? ""}/api/v1/auth/refresh`,
+        {},
+        { withCredentials: true }
+      );
+      setAccessToken(data.access_token);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async function bootstrap(): Promise<void> {
-    accessToken.value = sessionStorage.getItem(ACCESS_TOKEN_KEY) ?? "";
-    const base = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
-    if (!accessToken.value) {
-      user.value = null;
-      bootstrapped.value = true;
+    if (bootstrapped.value) return;
+    if (bootstrapPromise) {
+      await bootstrapPromise;
       return;
     }
-    try {
-      user.value = await meRequest();
-    } catch {
+
+    bootstrapPromise = (async () => {
+      accessToken.value = sessionStorage.getItem(ACCESS_TOKEN_KEY) ?? "";
+      if (!accessToken.value) {
+        user.value = null;
+        return;
+      }
       try {
-        const { data } = await axios.post<{ access_token: string }>(
-          `${base}/api/v1/auth/refresh`,
-          {},
-          { withCredentials: true }
-        );
-        setAccessToken(data.access_token);
         user.value = await meRequest();
       } catch {
-        setAccessToken(null);
-        user.value = null;
+        if (await refreshAccessToken()) {
+          user.value = await meRequest();
+        } else {
+          setAccessToken(null);
+          user.value = null;
+        }
       }
+    })();
+
+    try {
+      await bootstrapPromise;
+    } finally {
+      bootstrapPromise = null;
+      bootstrapped.value = true;
     }
-    bootstrapped.value = true;
   }
 
   async function login(email: string, password: string): Promise<void> {

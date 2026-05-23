@@ -15,5 +15,10 @@ export default {
     return import("./get-cart-items.ts").then(m => {
       return m.getCartItems(ids);
     });
+  },
+  getOrders() {
+    return import("./get-orders.ts").then(m => {
+      return m.getOrders();
+    });
   }
 };

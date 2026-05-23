@@ -40,6 +40,7 @@ const router = createRouter({
           beforeEnter: (to, _, next) => {
             if (to.name === LayoutName.Cabinet) {
               next({ name: PageName.Orders });
+              return;
             }
             next();
           },
@@ -66,13 +67,17 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const auth = useAuthStore();
+  if (!auth.bootstrapped) {
+    await auth.bootstrap();
+  }
+
   const requiresAuth = to.matched.some(
     record => record.meta.requiresAuth === true
   );
   if (requiresAuth && !auth.isAuthenticated) {
-    next({ name: PageName.Home });
+    next({ name: PageName.Catalog });
     return;
   }
   next();
