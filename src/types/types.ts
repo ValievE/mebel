@@ -2,7 +2,7 @@ import { LayoutName, PageName } from "@/router/consts.ts";
 
 export namespace UIComponentsNS {
   export type Size = "s" | "m" | "l" | "xl";
-  export type Style = "red" | "white" | "link";
+  export type Style = "red" | "white" | "orange" | "link";
 
   export namespace Icon {
     export type Names =

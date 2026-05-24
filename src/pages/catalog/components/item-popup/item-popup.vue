@@ -23,13 +23,16 @@
           </span>
         </p>
       </ScrollContainer>
-      <ButtonComponent
-        :disabled="!props.data.price || props.data.isAdded"
-        class="item-popup__info-button"
-        @click="$emit('addToCart')"
-      >
-        {{ buttonText }}
-      </ButtonComponent>
+      <footer class="item-popup__footer">
+        <ButtonComponent
+          :type="buttonType"
+          :disabled="props.data.isAdded || !props.data.price"
+          class="item-popup__footer-info-button"
+          @click="$emit('addToCart')"
+        >
+          {{ buttonText }}
+        </ButtonComponent>
+      </footer>
     </div>
   </Popup>
 </template>
@@ -41,9 +44,16 @@ import ButtonComponent from "@/components/button-component/button-component.vue"
 import ImagePreviewer from "@/components/image-previewer/image-previewer.vue";
 import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
 import { computed } from "vue";
+import { type UIComponentsNS } from "@/types/types.ts";
 
 const { props } = defineProps<{ props: ItemPopupNS.Props }>();
 defineEmits<ItemPopupNS.Emits>();
+
+const buttonType = computed<UIComponentsNS.Style>(() => {
+  if (props.data.isAdded) return "orange";
+  if (!props.data.price) return "red";
+  return "white";
+});
 
 const buttonText = computed<string>(() => {
   if (props.data.isAdded) return "Товар в корзине";
@@ -88,9 +98,13 @@ const buttonText = computed<string>(() => {
   font-size: var(--font-size-s);
   color: var(--gray-60);
 }
-.item-popup__info-button {
+.item-popup__footer {
   margin-left: auto;
   margin-top: auto;
+  display: flex;
+  gap: 8px;
+}
+.item-popup__footer-info-button {
 }
 
 @media screen and (max-width: 768px) {

@@ -29,14 +29,14 @@
               v-if="tag.editable"
               class="cart-item__wrapper-info-tags-item-buttons"
             >
-              <ButtonComponent size="s" @click="$emit('change:quantity', true)">
-                +
-              </ButtonComponent>
               <ButtonComponent
                 size="s"
                 @click="$emit('change:quantity', false)"
               >
                 -
+              </ButtonComponent>
+              <ButtonComponent size="s" @click="$emit('change:quantity', true)">
+                +
               </ButtonComponent>
             </div>
           </Tag>

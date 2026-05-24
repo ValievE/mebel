@@ -127,6 +127,17 @@ const clickHandler = () => {
     background-color: var(--red-80);
   }
 }
+.button-component_orange {
+  background-color: var(--orange-50);
+  color: var(--white);
+  box-shadow: none;
+  &:hover {
+    background-color: var(--orange-70);
+  }
+  &:active {
+    background-color: var(--orange-80);
+  }
+}
 .button-component_link {
   box-shadow: none;
   color: var(--gray-50);
@@ -153,6 +164,9 @@ const clickHandler = () => {
   background-color: var(--gray-10);
   &.button-component_red {
     background-color: var(--red-40);
+  }
+  &.button-component_orange {
+    background-color: var(--orange-40);
   }
 }
 </style>

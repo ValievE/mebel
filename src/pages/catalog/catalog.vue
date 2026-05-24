@@ -91,7 +91,7 @@ import type {
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
 import { useCartStore } from "@/stores/use-cart-store.ts";
-import { CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
+import { type CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
 import { useAuthStore } from "@/stores/use-auth-store.ts";
 import { PageName } from "@/router/consts.ts";
 
@@ -126,7 +126,7 @@ const itemPopup: ItemPopupObject = reactive({
     },
     addToCart() {
       cart.functions.addItem(itemPopup.data.data.id, itemPopup.data.data.price);
-      itemPopup.functions.close();
+      itemPopup.data.data.isAdded = true;
     }
   }
 });

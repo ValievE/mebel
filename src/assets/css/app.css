@@ -8,6 +8,7 @@
   box-sizing: border-box;
   margin: 0;
   -webkit-tap-highlight-color: transparent;
+  letter-spacing: 0.5px;
 
   &::-webkit-scrollbar {
     width: 4px;

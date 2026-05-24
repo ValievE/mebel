@@ -3,6 +3,7 @@
 
   --white: #ffffff;
   --black: #000000;
+
   --red-90: #331010;
   --red-80: #662121;
   --red-70: #993131;
@@ -12,6 +13,17 @@
   --red-30: #ff9797;
   --red-20: #ffbaba;
   --red-10: #ffdcdc;
+
+  --orange-90: #662f15;
+  --orange-80: #8c4a2a;
+  --orange-70: #b3643f;
+  --orange-60: #d97f54;
+  --orange-50: #ff9969;
+  --orange-40: #ffad87;
+  --orange-30: #ffc2a5;
+  --orange-20: #ffd6c3;
+  --orange-10: #ffebe1;
+
   --gray-90: #181818;
   --gray-80: #313131;
   --gray-70: #494949;

@@ -28,6 +28,7 @@ export type CartObject = {
     addItem(id: string, price: number): void;
     hasItem(id: string): boolean;
     deleteItem(id: string): void;
+    checkout(): Promise<void>; // TODO
     changeQuantity(payload: { increase: boolean; id: string }): void;
   };
 };
