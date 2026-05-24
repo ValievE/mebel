@@ -13,6 +13,10 @@
       @click:item="itemPopup.functions.open"
       @change:quantity="cart.functions.changeQuantity"
     />
+    <PaymentResultPopup
+      :mode="paymentResultMode"
+      @close="closePaymentResult"
+    />
     <header class="catalog__header">
       <h1 class="catalog__header-title">Каталог</h1>
       <div class="catalog__header-options">
@@ -61,7 +65,6 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
 
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import Loader from "@/components/loader/loader.vue";
@@ -93,7 +96,9 @@ import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
 import { useCartStore } from "@/stores/use-cart-store.ts";
 import { type CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
 import { useAuthStore } from "@/stores/use-auth-store.ts";
-import { PageName } from "@/router/consts.ts";
+import { saveCheckoutCart } from "@/infrastructure/checkout-cart.ts";
+import { initPaymentRequest } from "@/infrastructure/payments-api.ts";
+import { usePaymentReturn } from "@/composables/use-payment-return.ts";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
 const error = ref<string>("");
@@ -101,7 +106,12 @@ const error = ref<string>("");
 const uiStore = useUiStore();
 const cartStore = useCartStore();
 const authStore = useAuthStore();
-const router = useRouter();
+const {
+  PaymentResultPopup,
+  paymentResultMode,
+  handlePaymentReturn,
+  closePaymentResult
+} = usePaymentReturn();
 
 const itemPopup: ItemPopupObject = reactive({
   data: {
@@ -240,17 +250,19 @@ const cart: CartObject = reactive({
 
       uiStore.loaders.checkout = true;
       try {
+        saveCheckoutCart({ ...cartStore.cart });
+
         const items = cartStore.itemIDs.map(id => ({
           item_id: Number(id),
           quantity: cartStore.cart[id]?.quantity ?? 1
         }));
-        await infrastructure.createOrder({ items });
-        cartStore.clear();
-        cart.popupData.data.items = [];
-        cart.popupData.data.sum = 0;
+        const created = await infrastructure.createOrder({ items });
+        const payment = await initPaymentRequest({
+          order_ids: created.orders.map(order => order.id),
+          return_url: `${window.location.origin}/catalog`
+        });
         cart.functions.closePopup();
-        uiStore.addToast("Заказ оформлен", "success");
-        await router.push({ name: PageName.Orders });
+        window.location.assign(payment.redirect_url);
       } catch {
         uiStore.addToast("Не удалось оформить заказ", "error");
       } finally {
@@ -260,8 +272,9 @@ const cart: CartObject = reactive({
   }
 });
 
-onMounted(() => {
+onMounted(async () => {
   getList();
+  await handlePaymentReturn();
 });
 
 const getList = async (payload?: GetListRequest) => {

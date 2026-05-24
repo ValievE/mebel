@@ -44,6 +44,14 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
   const increaseQuantity = (id: string) => changeQuantity(id, true);
   const decreaseQuantity = (id: string) => changeQuantity(id, false);
 
+  const restoreSnapshot = (snapshot: Record<string, CartStore.Item>) => {
+    cart.value = { ...snapshot };
+    sum.value = Object.values(cart.value).reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
+  };
+
   const clear = () => {
     cart.value = {};
     sum.value = 0;
@@ -57,6 +65,7 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
     deleteItem,
     increaseQuantity,
     decreaseQuantity,
+    restoreSnapshot,
     clear
   };
 });
