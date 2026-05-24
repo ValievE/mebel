@@ -10,7 +10,10 @@
           <span class="order-item__wrapper-info-dates-item">
             Дата создания: {{ props.creationDate }}
           </span>
-          <span class="order-item__wrapper-info-dates-item">
+          <span
+            v-if="props.deliveryDate"
+            class="order-item__wrapper-info-dates-item"
+          >
             Дата доставки: {{ props.deliveryDate }}
           </span>
         </p>
@@ -52,6 +55,7 @@ const { props } = defineProps<{ props: OrderItemNS.Props }>();
 
 const status = computed<string>(() => {
   const dict: Record<OrderItemNS.Status, string> = {
+    [OrderItemNS.Status.Payment]: "Ожидает оплаты",
     [OrderItemNS.Status.Pending]: "Обрабатывается",
     [OrderItemNS.Status.Production]: "В производстве",
     [OrderItemNS.Status.Delivery]: "Доставляется",

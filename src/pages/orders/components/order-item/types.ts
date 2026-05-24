@@ -12,9 +12,10 @@ export namespace OrderItemNS {
   };
 
   export enum Status {
-    Pending = "pending",
-    Production = "production",
-    Delivery = "delivery",
-    Completed = "completed"
+    Payment = "payment", // Ожидает оплаты
+    Pending = "pending", // Заказ обрабатывается
+    Production = "production", // Заказ в производстве
+    Delivery = "delivery", // Заказ доставляется
+    Completed = "completed" // Заказ завершен
   }
 }

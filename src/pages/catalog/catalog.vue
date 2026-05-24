@@ -8,6 +8,7 @@
     <CartPopup
       :props="cart.popupData"
       @close="cart.functions.closePopup"
+      @checkout="cart.functions.checkout"
       @delete="cart.functions.deleteItem"
       @click:item="itemPopup.functions.open"
       @change:quantity="cart.functions.changeQuantity"
@@ -60,6 +61,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import Loader from "@/components/loader/loader.vue";
@@ -90,12 +92,16 @@ import { useUiStore } from "@/stores/use-ui-store.ts";
 import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
 import { useCartStore } from "@/stores/use-cart-store.ts";
 import { CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
+import { useAuthStore } from "@/stores/use-auth-store.ts";
+import { PageName } from "@/router/consts.ts";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
 const error = ref<string>("");
 
 const uiStore = useUiStore();
 const cartStore = useCartStore();
+const authStore = useAuthStore();
+const router = useRouter();
 
 const itemPopup: ItemPopupObject = reactive({
   data: {
@@ -165,7 +171,7 @@ const cart: CartObject = reactive({
     },
     id: "cart",
     get loading() {
-      return !!uiStore.loaders.cart;
+      return !!uiStore.loaders.cart || !!uiStore.loaders.checkout;
     }
   },
   functions: {
@@ -222,6 +228,34 @@ const cart: CartObject = reactive({
 
       item.tags.quantity.text = "Кол-во: " + item.quantity;
       item.tags.price.text = item.price * item.quantity + "Р";
+    },
+    async checkout() {
+      if (uiStore.loaders.checkout || !cartStore.itemIDs.length) return;
+
+      if (!authStore.isAuthenticated) {
+        uiStore.addToast("Войдите в аккаунт, чтобы оформить заказ", "error");
+        uiStore.openPopup("login");
+        return;
+      }
+
+      uiStore.loaders.checkout = true;
+      try {
+        const items = cartStore.itemIDs.map(id => ({
+          item_id: Number(id),
+          quantity: cartStore.cart[id]?.quantity ?? 1
+        }));
+        await infrastructure.createOrder({ items });
+        cartStore.clear();
+        cart.popupData.data.items = [];
+        cart.popupData.data.sum = 0;
+        cart.functions.closePopup();
+        uiStore.addToast("Заказ оформлен", "success");
+        await router.push({ name: PageName.Orders });
+      } catch {
+        uiStore.addToast("Не удалось оформить заказ", "error");
+      } finally {
+        uiStore.loaders.checkout = false;
+      }
     }
   }
 });

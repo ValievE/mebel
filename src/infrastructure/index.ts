@@ -20,5 +20,10 @@ export default {
     return import("./get-orders.ts").then(m => {
       return m.getOrders();
     });
+  },
+  createOrder(payload: import("./create-order.ts").CreateOrderRequest) {
+    return import("./create-order.ts").then(m => {
+      return m.createOrder(payload);
+    });
   }
 };

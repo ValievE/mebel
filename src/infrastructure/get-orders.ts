@@ -1,15 +1,15 @@
 import query from "@/infrastructure/query.ts";
-import { OrderItemNS } from "@/pages/orders/components/order-item/types.ts";
 
 export type GetOrdersResponseItem = {
-  id: number;
+  id: string;
+  item_id: number;
   title: string;
   description: string;
   image_url: string;
   created_at: string;
   delivery_at: string;
-  status: OrderItemNS.Status;
-  price: number;
+  status: number;
+  unit_price: number;
   quantity: number;
 };
 

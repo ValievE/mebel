@@ -31,7 +31,9 @@
           {{ props.data.sum }}
         </span>
       </p>
-      <ButtonComponent type="red">Оплатить</ButtonComponent>
+      <ButtonComponent type="red" @click="$emit('checkout')">
+        Оплатить
+      </ButtonComponent>
     </footer>
   </Popup>
 </template>

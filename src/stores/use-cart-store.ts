@@ -44,6 +44,11 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
   const increaseQuantity = (id: string) => changeQuantity(id, true);
   const decreaseQuantity = (id: string) => changeQuantity(id, false);
 
+  const clear = () => {
+    cart.value = {};
+    sum.value = 0;
+  };
+
   return {
     cart,
     sum,
@@ -51,6 +56,7 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
     addItem,
     deleteItem,
     increaseQuantity,
-    decreaseQuantity
+    decreaseQuantity,
+    clear
   };
 });

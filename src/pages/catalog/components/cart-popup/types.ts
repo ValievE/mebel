@@ -28,6 +28,7 @@ export namespace CartPopupNS {
   };
   export type Emits = {
     (e: "close"): void;
+    (e: "checkout"): void;
     (e: "accept"): void;
     (e: "delete", id: string): void;
     (e: "click:item", id: string): void;
