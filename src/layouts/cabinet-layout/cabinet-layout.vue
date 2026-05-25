@@ -59,6 +59,7 @@ async function onLogout() {
   height: 100%;
   display: flex;
   padding-top: var(--header-height);
+  position: relative;
 }
 .cabinet-layout__page {
   flex-grow: 1;
@@ -83,6 +84,9 @@ async function onLogout() {
   .cabinet-layout {
     padding-top: var(--header-height);
     flex-direction: column;
+  }
+  .cabinet-layout__page {
+    height: 40%;
   }
   .cabinet-layout__sidebar {
     width: 100%;

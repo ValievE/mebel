@@ -4,7 +4,7 @@
     <Tag class="catalog-item__type">{{ furnitureName[props.type] }}</Tag>
     <footer class="catalog-item__footer">
       <Tag type="red">{{ props.title }}</Tag>
-      <Tag v-if="props.price" type="red">{{ props.price }} ₽</Tag>
+      <Tag v-if="props.price" type="orange">{{ props.price }} ₽</Tag>
     </footer>
   </article>
 </template>

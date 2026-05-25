@@ -152,4 +152,17 @@ const status = computed<string>(() => {
 .order-item__wrapper-info-delivery {
   font-weight: var(--font-weight-semibold);
 }
+@media screen and (max-width: 768px) {
+  .order-item__wrapper-image {
+    width: 100%;
+    height: 240px;
+  }
+  .order-item__wrapper-info {
+    width: 100%;
+    margin: 200px 0 0;
+  }
+  .order-item__wrapper-info-delivery {
+    margin-top: 24px;
+  }
+}
 </style>

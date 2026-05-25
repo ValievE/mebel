@@ -64,9 +64,15 @@ onMounted(async () => {
   flex-direction: column;
   gap: 24px;
   padding: 24px 24px 24px 0;
-  height: 100%;
+  height: fit-content;
 }
 .orders__empty {
   margin: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .orders__scroll-list {
+    padding: 24px 0;
+  }
 }
 </style>

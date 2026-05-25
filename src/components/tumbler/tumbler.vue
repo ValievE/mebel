@@ -32,6 +32,7 @@ const clickHandler = () => {
   padding: 4px;
   cursor: pointer;
   transition: var(--transition-bg-color-100);
+  flex-shrink: 0;
 }
 .tumbler:hover {
   background-color: var(--gray-30);

@@ -13,17 +13,14 @@
       @click:item="itemPopup.functions.open"
       @change:quantity="cart.functions.changeQuantity"
     />
-    <PaymentResultPopup
-      :mode="paymentResultMode"
-      @close="closePaymentResult"
-    />
+    <PaymentResultPopup :mode="paymentResultMode" @close="closePaymentResult" />
     <header class="catalog__header">
       <h1 class="catalog__header-title">Каталог</h1>
       <div class="catalog__header-options">
         <Transition name="slide-upside-down">
           <ButtonComponent
             v-if="cartStore.itemIDs.length"
-            type="red"
+            type="orange"
             icon-name="cart"
             size="m"
             @click="cart.functions.openPopup"
@@ -352,10 +349,13 @@ const getItem = async (id: string) => {
 @media screen and (max-width: 768px) {
   .catalog__header {
     margin-top: var(--header-height);
+    flex-direction: column;
+    width: 100%;
   }
   .catalog__list-scroll {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 200px;
+    grid-template-columns: repeat(1, 1fr);
+    grid-auto-rows: 240px;
+    gap: 32px;
     padding-bottom: 100px;
   }
 }

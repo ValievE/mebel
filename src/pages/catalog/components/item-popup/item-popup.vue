@@ -27,6 +27,7 @@
         <ButtonComponent
           :type="buttonType"
           :disabled="props.data.isAdded || !props.data.price"
+          :size="uiStore.isMobile ? 'l' : 'm'"
           class="item-popup__footer-info-button"
           @click="$emit('addToCart')"
         >
@@ -45,14 +46,18 @@ import ImagePreviewer from "@/components/image-previewer/image-previewer.vue";
 import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
 import { computed } from "vue";
 import { type UIComponentsNS } from "@/types/types.ts";
+import { useUiStore } from "@/stores/use-ui-store.ts";
 
 const { props } = defineProps<{ props: ItemPopupNS.Props }>();
 defineEmits<ItemPopupNS.Emits>();
 
+const uiStore = useUiStore();
+
 const buttonType = computed<UIComponentsNS.Style>(() => {
-  if (props.data.isAdded) return "orange";
   if (!props.data.price) return "red";
-  return "white";
+  // if (props.data.isAdded) return "orange";
+  // return "white";
+  return "orange";
 });
 
 const buttonText = computed<string>(() => {
@@ -111,7 +116,11 @@ const buttonText = computed<string>(() => {
   .item-popup__images .carousel__pagination {
     bottom: 80px;
   }
-  .item-popup__info-title {
+  .item-popup__footer {
+    width: 100%;
+  }
+  .item-popup__footer-info-button {
+    width: 100%;
   }
 }
 </style>

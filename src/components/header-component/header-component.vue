@@ -97,12 +97,13 @@ function openAccount() {
 
 @media screen and (max-width: 768px) {
   .header-component {
-    justify-content: space-between;
+    justify-content: center;
     padding: 16px 24px;
     box-shadow: none;
     width: calc(100% - 32px);
     max-width: 100%;
     height: 80px;
+    top: 8px;
   }
 
   .header-component__links {

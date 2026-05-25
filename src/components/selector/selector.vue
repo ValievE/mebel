@@ -7,6 +7,7 @@
     }"
   >
     <div class="selector__value" @click="toggleSelector">
+      <!--      TODO: toggleSelector & v-click-->
       <span class="selector__value-text">
         {{
           selectedOption
@@ -74,6 +75,7 @@ const toggleSelector = () => {
 .selector {
   position: relative;
   height: fit-content;
+  flex-shrink: 0;
 }
 .selector__value {
   background-color: var(--red-60);

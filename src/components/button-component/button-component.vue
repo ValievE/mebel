@@ -71,6 +71,7 @@ const clickHandler = () => {
   background-color: var(--white);
   transition: var(--transition-bg-color-100);
   user-select: none;
+  flex-shrink: 0;
 
   &:hover {
     background-color: var(--gray-20);
@@ -79,7 +80,6 @@ const clickHandler = () => {
     background-color: var(--gray-30);
   }
 }
-
 .button-component_square {
   aspect-ratio: 1;
 }
@@ -101,7 +101,7 @@ const clickHandler = () => {
   }
 }
 .button-component_l {
-  padding: 10px 16px;
+  padding: 12px 16px;
   gap: 8px;
   & > * {
     font-size: var(--font-size-l);
@@ -109,7 +109,7 @@ const clickHandler = () => {
   }
 }
 .button-component_xl {
-  padding: 12px 24px;
+  padding: 16px 24px;
   gap: 12px;
   & > * {
     font-size: var(--font-size-xl);

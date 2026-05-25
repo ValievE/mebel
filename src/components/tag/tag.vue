@@ -57,4 +57,8 @@ const customClass = computed(() => {
   background-color: var(--red-60);
   color: var(--white);
 }
+.tag_orange {
+  background-color: var(--orange-50);
+  color: var(--white);
+}
 </style>
