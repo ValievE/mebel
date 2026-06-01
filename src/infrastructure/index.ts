@@ -25,5 +25,10 @@ export default {
     return import("./create-order.ts").then(m => {
       return m.createOrder(payload);
     });
+  },
+  getLegalDocument(type: import("./get-legal-document.ts").LegalDocumentType) {
+    return import("./get-legal-document.ts").then(m => {
+      return m.getLegalDocument(type);
+    });
   }
 };

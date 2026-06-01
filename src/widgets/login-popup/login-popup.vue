@@ -66,7 +66,7 @@ const forms: Record<LoginPopupNS.Mode, LoginPopupNS.FormField[]> = {
     {
       label: "Код из письма",
       type: "input",
-      placeholder: "012345",
+      placeholder: "Введите 6 цифр",
       id: "code"
     }
   ],

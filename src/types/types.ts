@@ -188,3 +188,8 @@ export type ErrorType = {
     };
   };
 };
+
+export enum DocumentsTypeRoute {
+  Data = "consent-to-the-processing-of-personal-data",
+  Privacy = "privacy-policy"
+}

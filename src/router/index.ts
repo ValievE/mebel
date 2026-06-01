@@ -56,6 +56,11 @@ const router = createRouter({
               component: Routes[PageName.Settings].component
             }
           ]
+        },
+        {
+          name: Routes[PageName.Legal].name,
+          path: Routes[PageName.Legal].path,
+          component: Routes[PageName.Legal].component
         }
       ]
     },

@@ -12,18 +12,19 @@ export enum PageName {
   Delivery = "delivery",
   Orders = "orders",
   Settings = "settings",
-  NotFound = "not-found"
+  NotFound = "not-found",
+  Legal = "legal"
 }
 
 export const Routes = {
   [LayoutName.Narrow]: {
     name: LayoutName.Narrow,
-    path: "",
+    path: "/",
     component: () => import("@/layouts/narrow-layout/narrow-layout.vue")
   },
   [LayoutName.Wide]: {
     name: LayoutName.Wide,
-    path: "",
+    path: "/",
     component: () => import("@/layouts/wide-layout/wide-layout.vue")
   },
   [PageName.Home]: {
@@ -63,5 +64,10 @@ export const Routes = {
     redirect: {
       name: PageName.Home
     }
+  },
+  [PageName.Legal]: {
+    name: PageName.Legal,
+    path: "legal/:id",
+    component: () => import("@/pages/legal/legal.vue")
   }
 } satisfies Record<string, RouteRecordRaw>;

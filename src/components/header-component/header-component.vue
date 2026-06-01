@@ -6,7 +6,7 @@
         v-for="link in navBarLinks"
         :key="link.name"
         class="header-component__links-item"
-        active-class="header-component__links-item_active"
+        exact-active-class="header-component__links-item_active"
         :to="{ name: link.name }"
       >
         {{ link.text }}

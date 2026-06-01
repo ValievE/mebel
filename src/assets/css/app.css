@@ -56,6 +56,11 @@ a {
   flex-direction: column;
 }
 
+.app-content {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
 .overlay {
   position: relative;
 }
