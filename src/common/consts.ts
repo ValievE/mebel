@@ -1,5 +1,6 @@
 import { LayoutName, PageName } from "@/router/consts.ts";
 import {
+  DocumentsTypeRoute,
   type ErrorType,
   FurnitureType,
   type NavBarLink
@@ -27,3 +28,22 @@ export const furnitureName: Record<FurnitureType, string> = {
 
 export const getErrorText = (e: ErrorType) =>
   e.response?.data?.error?.message || "Ошибка сервера";
+
+export const documentLinks: { name: string; id: DocumentsTypeRoute }[] = [
+  {
+    name: "Политика конфиденциальности",
+    id: DocumentsTypeRoute.Privacy
+  },
+  {
+    name: "Публичная оферта",
+    id: DocumentsTypeRoute.Offer
+  },
+  {
+    name: "Правила возврата и обмена товаров",
+    id: DocumentsTypeRoute.Return
+  },
+  {
+    name: "Реквизиты",
+    id: DocumentsTypeRoute.Details
+  }
+];

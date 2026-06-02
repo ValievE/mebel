@@ -11,7 +11,6 @@
 
 <script setup lang="ts">
 import infrastructure from "@/infrastructure";
-import { LegalDocumentType } from "@/infrastructure/get-legal-document.ts";
 import { onMounted, ref, watch } from "vue";
 import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
 import { VueShowdown } from "vue-showdown";
@@ -23,28 +22,32 @@ const route = useRoute();
 const text = ref<string>("");
 const title = ref<string>("");
 
-const dictionary: Record<string, LegalDocumentType> = {
-  [DocumentsTypeRoute.Data]: LegalDocumentType.DataProcessing,
-  [DocumentsTypeRoute.Privacy]: LegalDocumentType.PrivacyPolicy
+const titles: Record<string, string> = {
+  [DocumentsTypeRoute.Privacy]: "Политика конфиденциальности",
+  [DocumentsTypeRoute.Offer]:
+    "Договор публичной оферты интернет-магазина «Мебель вашего дома»",
+  [DocumentsTypeRoute.Details]: "Реквизиты Продавца",
+  [DocumentsTypeRoute.Return]:
+    "Правила возврата и обмена товаров в интернет-магазине «Мебель вашего дома»"
 };
 
-const getDocument = async (type: LegalDocumentType) => {
+const getDocument = async (id: string) => {
   try {
-    const response = await infrastructure.getLegalDocument(type);
-
+    const response = await infrastructure.getLegalDocument(id);
     text.value = response.text;
-    title.value = response.title;
-  } catch (e) {}
+    title.value = titles[id] ?? id;
+  } catch {
+    text.value = "";
+    title.value = "";
+  }
 };
 
 const init = () => {
-  const type = dictionary[route.params?.id?.toString() || ""];
-
-  if (!type) {
-    return; // TODO: Редирект документ не найден
+  const id = route.params?.id?.toString() || "";
+  if (!id || !titles[id]) {
+    return;
   }
-
-  getDocument(type);
+  getDocument(id);
 };
 
 watch(
@@ -81,6 +84,12 @@ onMounted(() => {
   h2,
   h3 {
     margin-top: 16px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .legal__content-text {
+    padding-bottom: var(--footer-height);
   }
 }
 </style>

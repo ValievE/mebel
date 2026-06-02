@@ -1,12 +1,13 @@
 <template>
   <div class="overlay"></div>
   <Toaster :toasts="uiStore.toasts" @delete="uiStore.removeToast" />
-  <HeaderComponent />
+  <HeaderComponent @openDocumentsPopup="uiStore.openPopup('documents')" />
   <LoginPopup />
   <div class="app-content">
     <RouterView />
   </div>
   <MobileNavBar />
+  <DocumentsPopup @close="uiStore.closePopup('documents')" />
   <FooterComponent :absolute="isFooterAbsolute" />
 </template>
 <script setup lang="ts">
@@ -19,6 +20,7 @@ import Toaster from "@/components/toaster/toaster.vue";
 import FooterComponent from "@/components/footer-component/footer-component.vue";
 import { useRoute } from "vue-router";
 import { LayoutName } from "@/router/consts.ts";
+import DocumentsPopup from "@/components/documents-popup/documents-popup.vue";
 
 const uiStore = useUiStore();
 const route = useRoute();

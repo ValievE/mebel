@@ -19,6 +19,12 @@
         Кабинет
       </p>
     </div>
+    <ButtonComponent
+      class="header-component__burger-button"
+      icon-name="more-2"
+      size="m"
+      @click="$emit('openDocumentsPopup')"
+    />
   </header>
 </template>
 
@@ -30,6 +36,11 @@ import { useUiStore } from "@/stores/use-ui-store.ts";
 import { PageName } from "@/router/consts.ts";
 import { getNavBarLinks } from "@/common/consts.ts";
 import { computed } from "vue";
+import ButtonComponent from "@/components/button-component/button-component.vue";
+
+defineEmits<{
+  (e: "openDocumentsPopup"): void;
+}>();
 
 const auth = useAuthStore();
 const ui = useUiStore();
@@ -95,19 +106,27 @@ function openAccount() {
   color: var(--gray-90);
 }
 
+.header-component__burger-button {
+  display: none;
+}
+
 @media screen and (max-width: 768px) {
   .header-component {
-    justify-content: center;
-    padding: 16px 24px;
+    padding: 16px;
     box-shadow: none;
     width: calc(100% - 32px);
     max-width: 100%;
     height: 80px;
     top: 8px;
+    justify-content: space-between;
   }
 
   .header-component__links {
     display: none;
+  }
+
+  .header-component__burger-button {
+    display: flex;
   }
 }
 </style>

@@ -26,9 +26,9 @@ export default {
       return m.createOrder(payload);
     });
   },
-  getLegalDocument(type: import("./get-legal-document.ts").LegalDocumentType) {
+  getLegalDocument(id: string) {
     return import("./get-legal-document.ts").then(m => {
-      return m.getLegalDocument(type);
+      return m.getLegalDocument(id);
     });
   }
 };

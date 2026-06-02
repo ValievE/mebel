@@ -190,6 +190,8 @@ export type ErrorType = {
 };
 
 export enum DocumentsTypeRoute {
-  Data = "consent-to-the-processing-of-personal-data",
-  Privacy = "privacy-policy"
+  Privacy = "privacy-policy",
+  Return = "return-policy",
+  Details = "store-details",
+  Offer = "public-offer"
 }
