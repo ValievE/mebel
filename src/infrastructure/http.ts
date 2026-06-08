@@ -49,9 +49,9 @@ http.interceptors.response.use(
     }
     cfg._retry = true;
     try {
-      const { data } = await axios.post<{
-        access_token: string;
-      }>(`${baseURL}/api/v1/auth/refresh`, {}, { withCredentials: true });
+      const { refresh } =
+        await import("@/infrastructure/auth/refresh/refresh.ts");
+      const data = await refresh();
       sessionStorage.setItem(ACCESS_TOKEN_KEY, data.access_token);
       cfg.headers.Authorization = `Bearer ${data.access_token}`;
       void import("@/stores/use-auth-store").then(({ useAuthStore }) => {
@@ -67,9 +67,7 @@ http.interceptors.response.use(
       void import("@/stores/use-auth-store").then(({ useAuthStore }) => {
         try {
           useAuthStore().setAccessToken(null);
-        } catch {
-          /* */
-        }
+        } catch {}
       });
       return Promise.reject(err);
     }

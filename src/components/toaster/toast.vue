@@ -1,7 +1,9 @@
 <template>
   <div class="toast">
     <p class="toast__text">
-      <span class="toast__text-title">{{ titleText }}</span> <br />
+      <span v-if="titleText" class="toast__text-title">
+        {{ titleText }} <br />
+      </span>
       {{ props.message }}
     </p>
     <ButtonComponent

@@ -109,7 +109,7 @@ export namespace UIComponentsNS {
   }
 
   export namespace Toast {
-    export type Type = "error" | "success";
+    export type Type = "error" | "success" | "info";
     export type Emits = {
       (e: "close", id: string): void;
     };
@@ -156,6 +156,18 @@ export namespace UIComponentsNS {
     export type Props = {
       modelValue: boolean;
       disabled?: boolean;
+    };
+    export type Emits = {
+      (e: "update:modelValue", value: boolean): void;
+    };
+  }
+
+  export namespace Checkbox {
+    export type Props = {
+      modelValue: boolean;
+      disabled?: boolean;
+      required?: boolean;
+      error?: string;
     };
     export type Emits = {
       (e: "update:modelValue", value: boolean): void;

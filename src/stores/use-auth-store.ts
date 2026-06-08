@@ -1,17 +1,14 @@
-import axios from "axios";
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { StoreNames } from "@/stores/types.ts";
 import { ACCESS_TOKEN_KEY } from "@/infrastructure/auth-token.ts";
-import http from "@/infrastructure/http.ts";
-import {
-  loginRequest,
-  logoutRequest,
-  meRequest,
-  registerInitRequest,
-  registerConfirmRequest,
-  type MeResponse
-} from "@/infrastructure/auth-api.ts";
+import { login as loginRequest } from "@/infrastructure/auth/login/login.ts";
+import { logout as logoutRequest } from "@/infrastructure/auth/logout/logout.ts";
+import { me } from "@/infrastructure/auth/me/me.ts";
+import type { MeResponse } from "@/infrastructure/auth/me/types.ts";
+import { registerInit as registerInitRequest } from "@/infrastructure/auth/register-init/register-init.ts";
+import { registerConfirm as registerConfirmRequest } from "@/infrastructure/auth/register-confirm/register-confirm.ts";
+import { refresh } from "@/infrastructure/auth/refresh/refresh.ts";
 
 export const useAuthStore = defineStore(StoreNames.Auth, () => {
   const accessToken = ref<string>(sessionStorage.getItem(ACCESS_TOKEN_KEY) ?? "");
@@ -35,11 +32,7 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
 
   async function refreshAccessToken(): Promise<boolean> {
     try {
-      const { data } = await axios.post<{ access_token: string }>(
-        `${http.defaults.baseURL ?? ""}/api/v1/auth/refresh`,
-        {},
-        { withCredentials: true }
-      );
+      const data = await refresh();
       setAccessToken(data.access_token);
       return true;
     } catch {
@@ -61,10 +54,10 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
         return;
       }
       try {
-        user.value = await meRequest();
+        user.value = await me();
       } catch {
         if (await refreshAccessToken()) {
-          user.value = await meRequest();
+          user.value = await me();
         } else {
           setAccessToken(null);
           user.value = null;
@@ -81,9 +74,9 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
   }
 
   async function login(email: string, password: string): Promise<void> {
-    const data = await loginRequest(email, password);
+    const data = await loginRequest({ email, password });
     setAccessToken(data.access_token);
-    user.value = await meRequest();
+    user.value = await me();
   }
 
   /** Шаг 1 регистрации — отправляет код на email */
@@ -91,16 +84,23 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
     email: string,
     firstName: string,
     lastName: string,
-    password: string
+    password: string,
+    advertisingAgreement: boolean
   ): Promise<void> {
-    await registerInitRequest(email, firstName, lastName, password);
+    await registerInitRequest({
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      password,
+      advertising_agreement: advertisingAgreement
+    });
   }
 
   /** Шаг 2 регистрации — подтверждает код и авторизует */
   async function registerConfirm(email: string, code: string): Promise<void> {
-    const data = await registerConfirmRequest(email, code);
+    const data = await registerConfirmRequest({ email, code });
     setAccessToken(data.access_token);
-    user.value = await meRequest();
+    user.value = await me();
   }
 
   async function logout(): Promise<void> {

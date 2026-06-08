@@ -30,6 +30,34 @@
             loginPopup.functions.handleModelValue($event, item.id)
           "
         />
+        <template v-if="isRegister">
+          <Checkbox
+            :model-value="loginPopup.data.form.privacy"
+            required
+            :disabled="loginPopup.data.loading"
+            :error="loginPopup.data.errors.privacy"
+            @update:modelValue="
+              loginPopup.functions.handleCheckbox($event, 'privacy')
+            "
+          >
+            Даю согласие на обработку персональных данных в соответствии с
+            <RouterLink
+              class="login-popup__form-checkbox-link"
+              :to="{
+                name: PageName.Legal,
+                params: { id: DocumentsTypeRoute.Privacy }
+              }"
+            >
+              Политикой конфиденциальности
+            </RouterLink>
+          </Checkbox>
+          <Checkbox
+            v-model="loginPopup.data.form.advertisingAgreement"
+            :disabled="loginPopup.data.loading"
+          >
+            Даю согласие получать новости и акции на указанный email
+          </Checkbox>
+        </template>
       </div>
       <ButtonComponent
         class="login-popup__submit"
@@ -56,6 +84,8 @@ import Tabs from "@/components/tabs/tabs.vue";
 import { useRouter } from "vue-router";
 import { PageName } from "@/router/consts.ts";
 import { getErrorText } from "@/common/consts.ts";
+import Checkbox from "@/components/checkbox/checkbox.vue";
+import { DocumentsTypeRoute } from "@/types/types.ts";
 
 const auth = useAuthStore();
 const ui = useUiStore();
@@ -124,7 +154,9 @@ const getInitialValues = (): LoginPopupNS.Form => ({
   passwordRepeat: "",
   firstName: "",
   lastName: "",
-  code: ""
+  code: "",
+  privacy: false,
+  advertisingAgreement: false
 });
 
 const loginPopup: LoginPopupNS.Object = reactive({
@@ -176,6 +208,15 @@ const loginPopup: LoginPopupNS.Object = reactive({
         loginPopup.data.errors[i] = "Обязательное поле";
       });
 
+      if (
+        loginPopup.data.mode === "register" &&
+        !loginPopup.data.form.privacy
+      ) {
+        loginPopup.data.errors.privacy = "Обязательное поле";
+      } else {
+        delete loginPopup.data.errors.privacy;
+      }
+
       return !Object.keys(loginPopup.data.errors).length;
     },
     handleModelValue(value, id) {
@@ -190,6 +231,10 @@ const loginPopup: LoginPopupNS.Object = reactive({
     onClose() {
       ui.closePopup("login");
       loginPopup.functions.clean();
+    },
+    handleCheckbox(value, id) {
+      loginPopup.data.form[id] = value;
+      delete loginPopup.data.errors[id];
     }
   }
 });
@@ -201,6 +246,7 @@ const title = computed<string>(() => {
   if (loginPopup.data.mode === "login") return "Вход в личный кабинет";
   return "Регистрация";
 });
+const isRegister = computed<boolean>(() => loginPopup.data.mode === "register");
 
 const sendRequest = async () => {
   switch (loginPopup.data.mode) {
@@ -224,7 +270,8 @@ const sendRequest = async () => {
         loginPopup.data.form.email,
         loginPopup.data.form.firstName,
         loginPopup.data.form.lastName,
-        loginPopup.data.form.password
+        loginPopup.data.form.password,
+        loginPopup.data.form.advertisingAgreement
       );
 
       loginPopup.data.mode = "code";
@@ -240,7 +287,7 @@ const sendRequest = async () => {
       break;
   }
 };
-const isHiddenInput = (id: LoginPopupNS.FormFields): boolean =>
+const isHiddenInput = (id: LoginPopupNS.StringFormFields): boolean =>
   ["passwordRepeat", "password"].includes(id);
 </script>
 
@@ -257,5 +304,9 @@ const isHiddenInput = (id: LoginPopupNS.FormFields): boolean =>
   max-width: 100%;
   height: fit-content;
   margin: auto;
+}
+.login-popup__form-checkbox-link {
+  color: var(--red-60);
+  font-weight: var(--font-weight-semibold);
 }
 </style>

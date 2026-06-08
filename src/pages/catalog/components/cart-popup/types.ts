@@ -20,6 +20,7 @@ export namespace CartPopupNS {
   export type Data = {
     items: Item[];
     sum: number;
+    agreement: boolean;
   };
   export type Props = {
     data: Data;
@@ -33,6 +34,7 @@ export namespace CartPopupNS {
     (e: "delete", id: string): void;
     (e: "click:item", id: string): void;
     (e: "change:quantity", payload: { increase: boolean; id: string }): void;
+    (e: "change:agreement"): void;
   };
   export type ItemEmits = {
     (e: "click:item"): void;

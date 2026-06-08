@@ -30,5 +30,6 @@ export type CartObject = {
     deleteItem(id: string): void;
     checkout(): Promise<void>; // TODO
     changeQuantity(payload: { increase: boolean; id: string }): void;
+    changeAgreement(): void;
   };
 };

@@ -2,25 +2,28 @@ import type { UIComponentsNS } from "@/types/types.ts";
 
 export namespace LoginPopupNS {
   export type Mode = "login" | "register" | "code";
-  export type FormFields =
+  export type StringFormFields =
     | "email"
     | "password"
     | "passwordRepeat"
     | "firstName"
     | "lastName"
     | "code";
-  export type Form = Record<FormFields, string>;
+  export type BooleanFormFields = "privacy" | "advertisingAgreement";
+
+  export type Form = Record<StringFormFields, string> &
+    Record<BooleanFormFields, boolean>;
   export type FormField = {
     type: "input" | "code";
     label: string;
-    id: FormFields;
+    id: StringFormFields;
     placeholder: string;
   };
   export type Object = {
     data: {
       mode: Mode;
       form: Form;
-      errors: Partial<Form>;
+      errors: Partial<Record<StringFormFields | BooleanFormFields, string>>;
       loading: boolean;
       tabs: UIComponentsNS.Tabs.Props<Mode>;
     };
@@ -30,7 +33,8 @@ export namespace LoginPopupNS {
       validate(): boolean;
       handleTabChange(mode: Mode): void;
       onClose(): void;
-      handleModelValue(value: string, id: FormFields): void;
+      handleModelValue(value: string, id: StringFormFields): void;
+      handleCheckbox(value: boolean, id: BooleanFormFields): void;
     };
   };
 }

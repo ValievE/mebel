@@ -2,6 +2,8 @@
   <Popup
     id="payment-result"
     size="s"
+    content-height
+    content-width
     :loading="false"
     @close="close"
   >
@@ -72,6 +74,6 @@ const goToOrders = async () => {
   color: var(--gray-60);
 }
 .payment-result-popup__actions {
-  margin-top: 8px;
+  margin: 8px auto 0;
 }
 </style>

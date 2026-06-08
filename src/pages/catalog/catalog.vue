@@ -12,6 +12,7 @@
       @delete="cart.functions.deleteItem"
       @click:item="itemPopup.functions.open"
       @change:quantity="cart.functions.changeQuantity"
+      @change:agreement="cart.functions.changeAgreement"
     />
     <PaymentResultPopup :mode="paymentResultMode" @close="closePaymentResult" />
     <header class="catalog__header">
@@ -174,7 +175,8 @@ const cart: CartObject = reactive({
   popupData: {
     data: {
       items: [],
-      sum: cartStore.sum
+      sum: cartStore.sum,
+      agreement: false
     },
     id: "cart",
     get loading() {
@@ -182,6 +184,9 @@ const cart: CartObject = reactive({
     }
   },
   functions: {
+    changeAgreement() {
+      cart.popupData.data.agreement = !cart.popupData.data.agreement;
+    },
     async openPopup() {
       if (!cartStore.itemIDs.length || uiStore.loaders.cart) return;
       uiStore.loaders.cart = true;
@@ -240,7 +245,7 @@ const cart: CartObject = reactive({
       if (uiStore.loaders.checkout || !cartStore.itemIDs.length) return;
 
       if (!authStore.isAuthenticated) {
-        uiStore.addToast("Войдите в аккаунт, чтобы оформить заказ", "error");
+        uiStore.addToast("Войдите в аккаунт, чтобы оформить заказ", "info");
         uiStore.openPopup("login");
         return;
       }
