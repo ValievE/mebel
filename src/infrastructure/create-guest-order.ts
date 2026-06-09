@@ -5,6 +5,7 @@ import type { CreateOrderLine } from "@/infrastructure/create-order.ts";
 export type CreateGuestOrderRequest = {
   email: string;
   items: CreateOrderLine[];
+  delivery_address: string;
 };
 
 export async function createGuestOrder(

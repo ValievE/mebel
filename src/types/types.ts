@@ -121,6 +121,10 @@ export namespace UIComponentsNS {
   }
 
   export namespace Input {
+    export type SearchItem = {
+      id: string;
+      name: string;
+    };
     export type Props = {
       placeholder?: string;
       label?: string;
@@ -131,9 +135,12 @@ export namespace UIComponentsNS {
       hidden?: boolean;
       autocomplete?: string;
       maxlength?: number;
+      search?: boolean;
+      searchResults?: SearchItem[];
     };
     export type Emits = {
       (e: "update:modelValue", value: string): void;
+      (e: "select:result", item: SearchItem): void;
     };
   }
 

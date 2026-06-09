@@ -14,13 +14,19 @@
       @change:quantity="cart.functions.changeQuantity"
       @change:agreement="cart.functions.changeAgreement"
     />
-    <UnauthorizedBuyPopup
-      :email="unauthorizedBuyPopup.data.email"
-      :loading="unauthorizedBuyPopup.data.loading"
-      :error="unauthorizedBuyPopup.data.error"
-      @close="unauthorizedBuyPopup.functions.close"
-      @accept="unauthorizedBuyPopup.functions.accept"
-      @update:email="unauthorizedBuyPopup.functions.updateEmail"
+    <CheckoutPopup
+      :email="checkoutPopup.data.email"
+      :address="checkoutPopup.data.address"
+      :cities-hint="citiesHint"
+      :loading="checkoutPopup.data.loading"
+      :email-error="checkoutPopup.data.emailError"
+      :address-error="checkoutPopup.data.addressError"
+      :address-suggestions="checkoutPopup.data.addressSuggestions"
+      :guest="checkoutPopup.data.guest"
+      @close="checkoutPopup.functions.close"
+      @accept="checkoutPopup.functions.accept"
+      @update:email="checkoutPopup.functions.updateEmail"
+      @update:address="checkoutPopup.functions.updateAddress"
     />
     <PaymentResultPopup :mode="paymentResultMode" @close="closePaymentResult" />
     <header class="catalog__header">
@@ -70,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, computed } from "vue";
 
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import Loader from "@/components/loader/loader.vue";
@@ -96,25 +102,33 @@ import type {
   CartObject,
   ItemPopupObject,
   SortSelector,
-  UnauthorizedBuyPopupObject
+  CheckoutPopupObject
 } from "@/pages/catalog/types.ts";
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
 import { useCartStore } from "@/stores/use-cart-store.ts";
 import { type CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
 import { useAuthStore } from "@/stores/use-auth-store.ts";
-import { saveCheckoutCart } from "@/infrastructure/checkout-cart.ts";
 import {
   initGuestPaymentRequest,
   initPaymentRequest
 } from "@/infrastructure/payments-api.ts";
 import { createGuestOrder } from "@/infrastructure/create-guest-order.ts";
 import { usePaymentReturn } from "@/composables/use-payment-return.ts";
-import UnauthorizedBuyPopup from "@/pages/catalog/components/unauthorized-buy-popup/unauthorized-buy-popup.vue";
 import { validator } from "@/common/validator.ts";
+import { debounce, getErrorText } from "@/common/consts.ts";
+import type { ErrorType } from "@/types/types.ts";
+import CheckoutPopup from "@/pages/catalog/components/checkout-popup/checkout-popup.vue";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
 const error = ref<string>("");
+const deliveryCities = ref<string[]>([]);
+
+const citiesHint = computed(() =>
+  deliveryCities.value.length
+    ? `Доступные населённые пункты: ${deliveryCities.value.join(", ")}`
+    : undefined
+);
 
 const uiStore = useUiStore();
 const cartStore = useCartStore();
@@ -257,46 +271,107 @@ const cart: CartObject = reactive({
       item.tags.price.text = item.price * item.quantity + "Р";
     },
     async checkout() {
-      if (authStore.isAuthenticated) {
-        checkout(false);
-        return;
-      }
-      unauthorizedBuyPopup.functions.open();
+      checkoutPopup.functions.open();
     }
   }
 });
-const unauthorizedBuyPopup: UnauthorizedBuyPopupObject = reactive({
+const checkoutPopup: CheckoutPopupObject = reactive({
   data: {
     email: "",
+    get guest() {
+      return !authStore.isAuthenticated;
+    },
+    address: "",
     get loading() {
       return uiStore.loaders.checkout;
     }
   },
   functions: {
     open() {
-      uiStore.openPopup("unauthorized-buy-popup");
+      delete checkoutPopup.data.emailError;
+      delete checkoutPopup.data.addressError;
+      uiStore.openPopup("checkout-popup");
     },
     close() {
-      uiStore.closePopup("unauthorized-buy-popup");
+      uiStore.closePopup("checkout-popup");
     },
     async accept() {
-      if (!validator.isEmail(unauthorizedBuyPopup.data.email)) {
-        unauthorizedBuyPopup.data.error = "Неправильно введен email";
+      delete checkoutPopup.data.emailError;
+      delete checkoutPopup.data.addressError;
+
+      if (
+        checkoutPopup.data.guest &&
+        !validator.isEmail(checkoutPopup.data.email)
+      ) {
+        checkoutPopup.data.emailError = "Неправильно введен email";
         return;
       }
+
+      const addressText = checkoutPopup.data.address.trim();
+      if (!addressText) {
+        checkoutPopup.data.addressError = "Укажите адрес доставки";
+        return;
+      }
+
       await checkout(true);
     },
     updateEmail(value) {
-      unauthorizedBuyPopup.data.email = value;
-      delete unauthorizedBuyPopup.data.error;
+      checkoutPopup.data.email = value;
+      delete checkoutPopup.data.emailError;
+    },
+    updateAddress(value) {
+      checkoutPopup.data.address = value;
+      getSuggestions(value);
+      delete checkoutPopup.data.addressError;
     }
   }
 });
 
 onMounted(async () => {
   getList();
+  void loadDeliveryCities();
   await handlePaymentReturn();
 });
+
+const getSuggestions = debounce(async (query: string) => {
+  try {
+    const response = await infrastructure.suggestAddress({ query });
+
+    checkoutPopup.data.addressSuggestions = response.suggestions || [];
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+const loadDeliveryCities = async () => {
+  try {
+    const response = await infrastructure.getDeliveryCities();
+    deliveryCities.value = response.cities ?? [];
+  } catch {
+    deliveryCities.value = [];
+  }
+};
+
+const applyCheckoutError = (e: unknown, guest: boolean) => {
+  const err = e as ErrorType;
+  const code = err.response?.data?.error?.code;
+  const message = getErrorText(err);
+
+  if (
+    code === "DELIVERY_NOT_AVAILABLE" ||
+    code === "INVALID_DELIVERY_ADDRESS"
+  ) {
+    checkoutPopup.data.addressError = message;
+    return;
+  }
+
+  if (code === "INVALID_EMAIL" && guest) {
+    checkoutPopup.data.emailError = message;
+    return;
+  }
+
+  uiStore.addToast(message || "Не удалось оформить заказ", "error");
+};
 
 const getList = async (payload?: GetListRequest) => {
   uiStore.loaders.itemList = true;
@@ -336,22 +411,21 @@ const checkout = async (guest: boolean) => {
 
   uiStore.loaders.checkout = true;
   try {
-    saveCheckoutCart(
-      { ...cartStore.cart },
-      guest ? unauthorizedBuyPopup.data.email : undefined
-    );
-
     const created = guest
       ? await createGuestOrder({
-          email: unauthorizedBuyPopup.data.email,
-          items
+          email: checkoutPopup.data.email,
+          items,
+          delivery_address: checkoutPopup.data.address
         })
-      : await infrastructure.createOrder({ items });
+      : await infrastructure.createOrder({
+          items,
+          delivery_address: checkoutPopup.data.address
+        });
 
     const orderIds = created.orders.map(order => order.id);
     const payment = guest
       ? await initGuestPaymentRequest({
-          email: unauthorizedBuyPopup.data.email,
+          email: checkoutPopup.data.email,
           order_ids: orderIds,
           return_url: returnUrl
         })
@@ -361,10 +435,11 @@ const checkout = async (guest: boolean) => {
         });
 
     cart.functions.closePopup();
+    checkoutPopup.functions.close();
 
     window.location.assign(payment.redirect_url);
-  } catch {
-    uiStore.addToast("Не удалось оформить заказ", "error");
+  } catch (e) {
+    applyCheckoutError(e, guest);
   } finally {
     uiStore.loaders.checkout = false;
   }

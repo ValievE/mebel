@@ -2,7 +2,7 @@ import type { ItemPopupNS } from "@/pages/catalog/components/item-popup/types.ts
 import type { UIComponentsNS } from "@/types/types.ts";
 import { GetListField } from "@/infrastructure/get-list.ts";
 import type { CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
-import { type UnauthorizedBuyPopupNS } from "@/pages/catalog/components/unauthorized-buy-popup/types.ts";
+import { type CheckoutPopupNS } from "@/pages/catalog/components/checkout-popup/types.ts";
 
 export type ItemPopupObject = {
   data: ItemPopupNS.Props;
@@ -35,12 +35,13 @@ export type CartObject = {
   };
 };
 
-export type UnauthorizedBuyPopupObject = {
-  data: UnauthorizedBuyPopupNS.Props;
+export type CheckoutPopupObject = {
+  data: CheckoutPopupNS.Props;
   functions: {
     open(): void;
     close(): void;
     accept(): Promise<void>;
-    updateEmail(id: string): void;
+    updateEmail(value: string): void;
+    updateAddress(value: string): void;
   };
 };

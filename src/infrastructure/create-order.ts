@@ -8,6 +8,7 @@ export type CreateOrderLine = {
 
 export type CreateOrderRequest = {
   items: CreateOrderLine[];
+  delivery_address: string;
 };
 
 export async function createOrder(

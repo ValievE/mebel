@@ -3,9 +3,12 @@
     <div class="delivery__info">
       <h2 class="delivery__info-title">Доставка</h2>
       <span class="delivery__info-text">
-        Мы осуществляем доставку во все населенные пункты, указанные на карте
-        <br />
-        (а также за пределами зоны в радиусе 10 км)
+        Мы осуществляем доставку в следующие населённые пункты:
+        <template v-if="cities.length">
+          {{ cities.join(", ") }}
+        </template>
+        <template v-else>уточняйте по телефону</template>
+        .
       </span>
       <span class="delivery__info-warning">
         Стоимость доставки уточняйте по телефону
@@ -16,7 +19,21 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
+
+import infrastructure from "@/infrastructure";
 import DeliveryMap from "@/pages/delivery/components/delivery-map/delivery-map.vue";
+
+const cities = ref<string[]>([]);
+
+onMounted(async () => {
+  try {
+    const response = await infrastructure.getDeliveryCities();
+    cities.value = response.cities ?? [];
+  } catch {
+    cities.value = [];
+  }
+});
 </script>
 
 <style lang="css">

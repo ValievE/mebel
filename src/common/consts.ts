@@ -8,8 +8,7 @@ import {
 
 export enum SSNames {
   AccessToken = "mebel_access_token",
-  CheckoutCart = "mebel_checkout_cart",
-  CheckoutEmail = "mebel_checkout_email"
+  CheckoutCart = "mebel_checkout_cart"
 }
 
 export enum LSNames {}
@@ -55,3 +54,17 @@ export const documentLinks: { name: string; id: DocumentsTypeRoute }[] = [
     id: DocumentsTypeRoute.Details
   }
 ];
+
+export const debounce = <T extends (...arg: any[]) => any>(
+  func: T,
+  timeout = 500
+): ((...arg: Parameters<T>) => void) => {
+  let timer: ReturnType<typeof setTimeout>;
+
+  return (...arg: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...arg);
+    }, timeout);
+  };
+};

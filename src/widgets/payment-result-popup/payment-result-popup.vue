@@ -37,7 +37,7 @@ import Popup from "@/components/popup/popup.vue";
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import { PageName } from "@/router/consts.ts";
-import { PaymentResultPopupNS } from "@/widgets/payment-result-popup/types.ts";
+import { type PaymentResultPopupNS } from "@/widgets/payment-result-popup/types.ts";
 
 const props = defineProps<{ mode: PaymentResultPopupNS.Mode | null }>();
 const emit = defineEmits<{ (e: "close"): void }>();

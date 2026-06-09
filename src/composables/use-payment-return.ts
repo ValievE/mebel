@@ -4,11 +4,6 @@ import PaymentResultPopup from "@/widgets/payment-result-popup/payment-result-po
 import { type PaymentResultPopupNS } from "@/widgets/payment-result-popup/types.ts";
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import {
-  clearCheckoutCart,
-  loadCheckoutCart,
-  loadCheckoutEmail
-} from "@/infrastructure/checkout-cart.ts";
-import {
   confirmGuestPaymentRequest,
   confirmPaymentRequest
 } from "@/infrastructure/payments-api.ts";
@@ -22,9 +17,7 @@ export function usePaymentReturn() {
   const paymentResultMode = ref<PaymentResultPopupNS.Mode | null>(null);
 
   const restoreCartFromCheckout = () => {
-    const snapshot = loadCheckoutCart();
-    if (!snapshot) return;
-    cartStore.restoreSnapshot(snapshot);
+    // cartStore.restoreSnapshot();
   };
 
   const handlePaymentReturn = async () => {
@@ -33,7 +26,7 @@ export function usePaymentReturn() {
     if (!sessionId) return;
 
     const resultFromQuery = params.get("payment_result");
-    const isGuestCheckout = !authStore.isAuthenticated && !!loadCheckoutEmail();
+    const isGuestCheckout = !authStore.isAuthenticated;
 
     window.history.replaceState({}, "", window.location.pathname);
 
@@ -48,7 +41,6 @@ export function usePaymentReturn() {
         : await confirmPaymentRequest({ payment_id: sessionId });
 
       if (status === "success" || resultFromQuery === "success") {
-        clearCheckoutCart();
         cartStore.clear();
         paymentResultMode.value = "success";
         uiStore.openPopup("payment-result");

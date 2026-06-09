@@ -1,4 +1,5 @@
 import type { GetListRequest } from "@/infrastructure/get-list.ts";
+import type { SuggestAddressRequest } from "@/infrastructure/delivery/suggest-address.ts";
 
 export default {
   getList(payload?: GetListRequest) {
@@ -26,9 +27,26 @@ export default {
       return m.createOrder(payload);
     });
   },
+  createGuestOrder(
+    payload: import("./create-guest-order.ts").CreateGuestOrderRequest
+  ) {
+    return import("./create-guest-order.ts").then(m => {
+      return m.createGuestOrder(payload);
+    });
+  },
   getLegalDocument(id: string) {
     return import("./get-legal-document.ts").then(m => {
       return m.getLegalDocument(id);
+    });
+  },
+  getDeliveryCities() {
+    return import("./delivery/get-cities.ts").then(m => {
+      return m.getDeliveryCities();
+    });
+  },
+  suggestAddress(payload: SuggestAddressRequest) {
+    return import("./delivery/suggest-address.ts").then(m => {
+      return m.suggestAddress(payload);
     });
   }
 };

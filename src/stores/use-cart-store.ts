@@ -47,7 +47,7 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
   const restoreSnapshot = (snapshot: Record<string, CartStore.Item>) => {
     cart.value = { ...snapshot };
     sum.value = Object.values(cart.value).reduce(
-      (acc, item) => acc + item.price * item.quantity,
+      (acc, item) => acc + item.quantity * item.quantity,
       0
     );
   };
