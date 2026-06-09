@@ -3,7 +3,7 @@ import axios, {
   type InternalAxiosRequestConfig
 } from "axios";
 
-import { ACCESS_TOKEN_KEY } from "@/infrastructure/auth-token.ts";
+import { SSNames } from "@/common/consts.ts";
 
 const baseURL = import.meta.env.VITE_API_URL?.replace(/\/$/, "") ?? "";
 
@@ -25,7 +25,7 @@ http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     delete config.headers.Authorization;
     return config;
   }
-  const token = sessionStorage.getItem(ACCESS_TOKEN_KEY);
+  const token = sessionStorage.getItem(SSNames.AccessToken);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -52,7 +52,7 @@ http.interceptors.response.use(
       const { refresh } =
         await import("@/infrastructure/auth/refresh/refresh.ts");
       const data = await refresh();
-      sessionStorage.setItem(ACCESS_TOKEN_KEY, data.access_token);
+      sessionStorage.setItem(SSNames.AccessToken, data.access_token);
       cfg.headers.Authorization = `Bearer ${data.access_token}`;
       void import("@/stores/use-auth-store").then(({ useAuthStore }) => {
         try {
@@ -63,7 +63,7 @@ http.interceptors.response.use(
       });
       return http(cfg);
     } catch {
-      sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+      sessionStorage.removeItem(SSNames.AccessToken);
       void import("@/stores/use-auth-store").then(({ useAuthStore }) => {
         try {
           useAuthStore().setAccessToken(null);

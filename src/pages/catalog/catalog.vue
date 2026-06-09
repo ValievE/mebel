@@ -14,6 +14,14 @@
       @change:quantity="cart.functions.changeQuantity"
       @change:agreement="cart.functions.changeAgreement"
     />
+    <UnauthorizedBuyPopup
+      :email="unauthorizedBuyPopup.data.email"
+      :loading="unauthorizedBuyPopup.data.loading"
+      :error="unauthorizedBuyPopup.data.error"
+      @close="unauthorizedBuyPopup.functions.close"
+      @accept="unauthorizedBuyPopup.functions.accept"
+      @update:email="unauthorizedBuyPopup.functions.updateEmail"
+    />
     <PaymentResultPopup :mode="paymentResultMode" @close="closePaymentResult" />
     <header class="catalog__header">
       <h1 class="catalog__header-title">Каталог</h1>
@@ -87,7 +95,8 @@ import ItemPopup from "@/pages/catalog/components/item-popup/item-popup.vue";
 import type {
   CartObject,
   ItemPopupObject,
-  SortSelector
+  SortSelector,
+  UnauthorizedBuyPopupObject
 } from "@/pages/catalog/types.ts";
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
@@ -95,8 +104,14 @@ import { useCartStore } from "@/stores/use-cart-store.ts";
 import { type CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
 import { useAuthStore } from "@/stores/use-auth-store.ts";
 import { saveCheckoutCart } from "@/infrastructure/checkout-cart.ts";
-import { initPaymentRequest } from "@/infrastructure/payments-api.ts";
+import {
+  initGuestPaymentRequest,
+  initPaymentRequest
+} from "@/infrastructure/payments-api.ts";
+import { createGuestOrder } from "@/infrastructure/create-guest-order.ts";
 import { usePaymentReturn } from "@/composables/use-payment-return.ts";
+import UnauthorizedBuyPopup from "@/pages/catalog/components/unauthorized-buy-popup/unauthorized-buy-popup.vue";
+import { validator } from "@/common/validator.ts";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
 const error = ref<string>("");
@@ -242,34 +257,38 @@ const cart: CartObject = reactive({
       item.tags.price.text = item.price * item.quantity + "Р";
     },
     async checkout() {
-      if (uiStore.loaders.checkout || !cartStore.itemIDs.length) return;
-
-      if (!authStore.isAuthenticated) {
-        uiStore.addToast("Войдите в аккаунт, чтобы оформить заказ", "info");
-        uiStore.openPopup("login");
+      if (authStore.isAuthenticated) {
+        checkout(false);
         return;
       }
-
-      uiStore.loaders.checkout = true;
-      try {
-        saveCheckoutCart({ ...cartStore.cart });
-
-        const items = cartStore.itemIDs.map(id => ({
-          item_id: Number(id),
-          quantity: cartStore.cart[id]?.quantity ?? 1
-        }));
-        const created = await infrastructure.createOrder({ items });
-        const payment = await initPaymentRequest({
-          order_ids: created.orders.map(order => order.id),
-          return_url: `${window.location.origin}/catalog`
-        });
-        cart.functions.closePopup();
-        window.location.assign(payment.redirect_url);
-      } catch {
-        uiStore.addToast("Не удалось оформить заказ", "error");
-      } finally {
-        uiStore.loaders.checkout = false;
+      unauthorizedBuyPopup.functions.open();
+    }
+  }
+});
+const unauthorizedBuyPopup: UnauthorizedBuyPopupObject = reactive({
+  data: {
+    email: "",
+    get loading() {
+      return uiStore.loaders.checkout;
+    }
+  },
+  functions: {
+    open() {
+      uiStore.openPopup("unauthorized-buy-popup");
+    },
+    close() {
+      uiStore.closePopup("unauthorized-buy-popup");
+    },
+    async accept() {
+      if (!validator.isEmail(unauthorizedBuyPopup.data.email)) {
+        unauthorizedBuyPopup.data.error = "Неправильно введен email";
+        return;
       }
+      await checkout(true);
+    },
+    updateEmail(value) {
+      unauthorizedBuyPopup.data.email = value;
+      delete unauthorizedBuyPopup.data.error;
     }
   }
 });
@@ -304,6 +323,50 @@ const getItem = async (id: string) => {
     itemPopup.functions.close();
   } finally {
     itemPopup.data.loading = false;
+  }
+};
+const checkout = async (guest: boolean) => {
+  if (uiStore.loaders.checkout || !cartStore.itemIDs.length) return;
+
+  const items = cartStore.itemIDs.map(id => ({
+    item_id: Number(id),
+    quantity: cartStore.cart[id]?.quantity ?? 1
+  }));
+  const returnUrl = `${window.location.origin}/catalog`;
+
+  uiStore.loaders.checkout = true;
+  try {
+    saveCheckoutCart(
+      { ...cartStore.cart },
+      guest ? unauthorizedBuyPopup.data.email : undefined
+    );
+
+    const created = guest
+      ? await createGuestOrder({
+          email: unauthorizedBuyPopup.data.email,
+          items
+        })
+      : await infrastructure.createOrder({ items });
+
+    const orderIds = created.orders.map(order => order.id);
+    const payment = guest
+      ? await initGuestPaymentRequest({
+          email: unauthorizedBuyPopup.data.email,
+          order_ids: orderIds,
+          return_url: returnUrl
+        })
+      : await initPaymentRequest({
+          order_ids: orderIds,
+          return_url: returnUrl
+        });
+
+    cart.functions.closePopup();
+
+    window.location.assign(payment.redirect_url);
+  } catch {
+    uiStore.addToast("Не удалось оформить заказ", "error");
+  } finally {
+    uiStore.loaders.checkout = false;
   }
 };
 </script>

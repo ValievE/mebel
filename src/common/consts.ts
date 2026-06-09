@@ -6,6 +6,14 @@ import {
   type NavBarLink
 } from "@/types/types.ts";
 
+export enum SSNames {
+  AccessToken = "mebel_access_token",
+  CheckoutCart = "mebel_checkout_cart",
+  CheckoutEmail = "mebel_checkout_email"
+}
+
+export enum LSNames {}
+
 export const getNavBarLinks = (isLoggedIn: boolean): NavBarLink[] => {
   const links: NavBarLink[] = [
     { text: "Главная", name: PageName.Home, icon: "logo-outline" },

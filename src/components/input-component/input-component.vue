@@ -49,7 +49,7 @@ const inputHandler = (e: InputEvent): void => {
 <style lang="css">
 .input-component {
   width: 100%;
-  height: 100%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   padding-bottom: 24px;
@@ -57,7 +57,7 @@ const inputHandler = (e: InputEvent): void => {
 }
 .input-component__wrapper {
   width: 100%;
-  height: 100%;
+  height: fit-content;
 }
 .input-component__wrapper-title {
   display: block;

@@ -7,7 +7,7 @@ export enum StoreNames {
 
 export namespace CartStore {
   export type Item = {
+    id: string;
     quantity: number;
-    price: number;
   };
 }

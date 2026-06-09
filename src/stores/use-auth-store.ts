@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { StoreNames } from "@/stores/types.ts";
-import { ACCESS_TOKEN_KEY } from "@/infrastructure/auth-token.ts";
+import { SSNames } from "@/common/consts.ts";
 import { login as loginRequest } from "@/infrastructure/auth/login/login.ts";
 import { logout as logoutRequest } from "@/infrastructure/auth/logout/logout.ts";
 import { me } from "@/infrastructure/auth/me/me.ts";
@@ -11,7 +11,7 @@ import { registerConfirm as registerConfirmRequest } from "@/infrastructure/auth
 import { refresh } from "@/infrastructure/auth/refresh/refresh.ts";
 
 export const useAuthStore = defineStore(StoreNames.Auth, () => {
-  const accessToken = ref<string>(sessionStorage.getItem(ACCESS_TOKEN_KEY) ?? "");
+  const accessToken = ref<string>(sessionStorage.getItem(SSNames.AccessToken) ?? "");
   const user = ref<MeResponse | null>(null);
   const bootstrapped = ref(false);
 
@@ -20,9 +20,9 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
   function setAccessToken(token: string | null) {
     accessToken.value = token ?? "";
     if (token) {
-      sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
+      sessionStorage.setItem(SSNames.AccessToken, token);
     } else {
-      sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+      sessionStorage.removeItem(SSNames.AccessToken);
     }
   }
 
@@ -48,7 +48,7 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
     }
 
     bootstrapPromise = (async () => {
-      accessToken.value = sessionStorage.getItem(ACCESS_TOKEN_KEY) ?? "";
+      accessToken.value = sessionStorage.getItem(SSNames.AccessToken) ?? "";
       if (!accessToken.value) {
         user.value = null;
         return;

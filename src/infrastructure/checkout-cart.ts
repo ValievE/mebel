@@ -1,15 +1,25 @@
+import { SSNames } from "@/common/consts.ts";
 import type { CartStore } from "@/stores/types.ts";
-
-export const CHECKOUT_CART_KEY = "mebel_checkout_cart";
 
 export type CheckoutCartSnapshot = Record<string, CartStore.Item>;
 
-export function saveCheckoutCart(cart: CheckoutCartSnapshot): void {
-  sessionStorage.setItem(CHECKOUT_CART_KEY, JSON.stringify(cart));
+export function saveCheckoutCart(
+  cart: CheckoutCartSnapshot,
+  guestEmail?: string
+): void {
+  sessionStorage.setItem(SSNames.CheckoutCart, JSON.stringify(cart));
+  if (guestEmail) {
+    sessionStorage.setItem(
+      SSNames.CheckoutEmail,
+      guestEmail.trim().toLowerCase()
+    );
+  } else {
+    sessionStorage.removeItem(SSNames.CheckoutEmail);
+  }
 }
 
 export function loadCheckoutCart(): CheckoutCartSnapshot | null {
-  const raw = sessionStorage.getItem(CHECKOUT_CART_KEY);
+  const raw = sessionStorage.getItem(SSNames.CheckoutCart);
   if (!raw) return null;
   try {
     return JSON.parse(raw) as CheckoutCartSnapshot;
@@ -18,6 +28,11 @@ export function loadCheckoutCart(): CheckoutCartSnapshot | null {
   }
 }
 
+export function loadCheckoutEmail(): string {
+  return sessionStorage.getItem(SSNames.CheckoutEmail) ?? "";
+}
+
 export function clearCheckoutCart(): void {
-  sessionStorage.removeItem(CHECKOUT_CART_KEY);
+  sessionStorage.removeItem(SSNames.CheckoutCart);
+  sessionStorage.removeItem(SSNames.CheckoutEmail);
 }

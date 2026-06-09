@@ -38,3 +38,27 @@ export async function confirmPaymentRequest(
   );
   return data;
 }
+
+export type InitGuestPaymentRequest = InitPaymentRequest & {
+  email: string;
+};
+
+export async function initGuestPaymentRequest(
+  payload: InitGuestPaymentRequest
+): Promise<InitPaymentResponse> {
+  const { data } = await http.post<InitPaymentResponse>(
+    "/api/v1/payments/guest/init",
+    payload
+  );
+  return data;
+}
+
+export async function confirmGuestPaymentRequest(
+  payload: ConfirmPaymentRequest
+): Promise<ConfirmPaymentResponse> {
+  const { data } = await http.post<ConfirmPaymentResponse>(
+    "/api/v1/payments/guest/confirm",
+    payload
+  );
+  return data;
+}

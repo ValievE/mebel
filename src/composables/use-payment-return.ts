@@ -5,9 +5,13 @@ import { type PaymentResultPopupNS } from "@/widgets/payment-result-popup/types.
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import {
   clearCheckoutCart,
-  loadCheckoutCart
+  loadCheckoutCart,
+  loadCheckoutEmail
 } from "@/infrastructure/checkout-cart.ts";
-import { confirmPaymentRequest } from "@/infrastructure/payments-api.ts";
+import {
+  confirmGuestPaymentRequest,
+  confirmPaymentRequest
+} from "@/infrastructure/payments-api.ts";
 import { useCartStore } from "@/stores/use-cart-store.ts";
 import { useAuthStore } from "@/stores/use-auth-store.ts";
 
@@ -29,18 +33,19 @@ export function usePaymentReturn() {
     if (!sessionId) return;
 
     const resultFromQuery = params.get("payment_result");
+    const isGuestCheckout = !authStore.isAuthenticated && !!loadCheckoutEmail();
 
     window.history.replaceState({}, "", window.location.pathname);
 
-    if (!authStore.isAuthenticated) {
+    if (!authStore.isAuthenticated && !isGuestCheckout) {
       uiStore.addToast("Войдите в аккаунт для проверки оплаты", "error");
       return;
     }
 
     try {
-      const { status } = await confirmPaymentRequest({
-        payment_id: sessionId
-      });
+      const { status } = isGuestCheckout
+        ? await confirmGuestPaymentRequest({ payment_id: sessionId })
+        : await confirmPaymentRequest({ payment_id: sessionId });
 
       if (status === "success" || resultFromQuery === "success") {
         clearCheckoutCart();
