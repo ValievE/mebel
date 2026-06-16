@@ -25,10 +25,17 @@
       </ScrollContainer>
       <footer class="item-popup__footer">
         <ButtonComponent
-          :type="buttonType"
-          :disabled="props.data.isAdded || !props.data.price"
-          :size="uiStore.isMobile ? 'l' : 'm'"
+          icon-name="help"
           class="item-popup__footer-info-button"
+          @click="uiStore.openPopup('social-media-popup')"
+        >
+          Задать вопрос
+        </ButtonComponent>
+        <ButtonComponent
+          :type="buttonType"
+          :disabled="props.data.isAdded || !displayPrice"
+          :size="uiStore.isMobile ? 'l' : 'm'"
+          class="item-popup__footer-cart-button"
           @click="$emit('addToCart')"
         >
           {{ buttonText }}
@@ -53,16 +60,21 @@ defineEmits<ItemPopupNS.Emits>();
 
 const uiStore = useUiStore();
 
+const displayPrice = computed<number>(() => {
+  const prices = props.data.variants.flatMap(group =>
+    group.options.map(option => option.price)
+  );
+  return prices.length ? Math.min(...prices) : 0;
+});
+
 const buttonType = computed<UIComponentsNS.Style>(() => {
-  if (!props.data.price) return "red";
-  // if (props.data.isAdded) return "orange";
-  // return "white";
+  if (!displayPrice.value) return "red";
   return "orange";
 });
 
 const buttonText = computed<string>(() => {
   if (props.data.isAdded) return "Товар в корзине";
-  if (props.data.price) return props.data.price + " Р";
+  if (displayPrice.value) return displayPrice.value + " Р";
   return "Цена индивидуальная";
 });
 </script>
@@ -109,7 +121,7 @@ const buttonText = computed<string>(() => {
   display: flex;
   gap: 8px;
 }
-.item-popup__footer-info-button {
+.item-popup__footer-cart-button {
 }
 
 @media screen and (max-width: 768px) {
@@ -119,8 +131,8 @@ const buttonText = computed<string>(() => {
   .item-popup__footer {
     width: 100%;
   }
-  .item-popup__footer-info-button {
-    width: 100%;
+  .item-popup__footer-cart-button {
+    flex-grow: 1;
   }
 }
 </style>

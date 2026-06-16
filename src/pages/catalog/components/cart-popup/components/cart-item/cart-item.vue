@@ -32,12 +32,14 @@
             >
               <ButtonComponent
                 :size="uiStore.isMobile ? 'm' : 's'"
+                type="orange"
                 @click="$emit('change:quantity', false)"
               >
                 -
               </ButtonComponent>
               <ButtonComponent
                 :size="uiStore.isMobile ? 'm' : 's'"
+                type="orange"
                 @click="$emit('change:quantity', true)"
               >
                 +

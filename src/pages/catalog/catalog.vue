@@ -91,6 +91,7 @@ import {
 import {
   getCartItemsAdapter,
   getItemAdapter,
+  getItemMinPrice,
   getListAdapter
 } from "@/pages/catalog/adapters.ts";
 import CatalogItem from "@/pages/catalog/components/catalog-item/catalog-item.vue";
@@ -162,7 +163,10 @@ const itemPopup: ItemPopupObject = reactive({
       uiStore.closePopup(itemPopup.data.id);
     },
     addToCart() {
-      cart.functions.addItem(itemPopup.data.data.id, itemPopup.data.data.price);
+      cart.functions.addItem(
+        itemPopup.data.data.id,
+        getItemMinPrice(itemPopup.data.data)
+      );
       itemPopup.data.data.isAdded = true;
     }
   }

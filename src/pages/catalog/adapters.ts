@@ -25,8 +25,16 @@ export const getListAdapter = (
     image: i.images?.[0] || "",
     title: i.title || "",
     price: i.price || 0,
-    id: String(i.id) || ""
+    id: String(i.id) || "",
+    multipleVariants: i.multiple_variants ?? false
   }));
+
+export const getItemMinPrice = (data: ItemPopupNS.Data): number => {
+  const prices = data.variants.flatMap(group =>
+    group.options.map(option => option.price)
+  );
+  return prices.length ? Math.min(...prices) : 0;
+};
 
 export const getItemAdapter = (response: GetItemResponse): ItemPopupNS.Data => {
   if (response == null || Array.isArray(response)) throw new Error();
@@ -36,7 +44,8 @@ export const getItemAdapter = (response: GetItemResponse): ItemPopupNS.Data => {
     type: adaptListType[response.type || 0],
     images: response.images || [],
     title: response.title || "",
-    price: response.price || 0,
+    article: response.article || "",
+    variants: response.variants || [],
     id: String(response.id) || "",
     parameters: response.parameters || {}
   };

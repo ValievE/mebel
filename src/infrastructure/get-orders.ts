@@ -5,6 +5,9 @@ export type GetOrdersResponseItem = {
   item_id: number;
   title: string;
   description: string;
+  article: string;
+  size?: string;
+  material?: string;
   image_url: string;
   created_at: string;
   delivery_at: string;

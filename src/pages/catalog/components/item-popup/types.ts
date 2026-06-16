@@ -1,11 +1,13 @@
 import { FurnitureType } from "@/types/types.ts";
+import type { ItemVariantSizeGroup } from "@/infrastructure/get-item.ts";
 
 export namespace ItemPopupNS {
   export type Data = {
     id: string;
     title: string;
     parameters: Record<string, string>;
-    price: number;
+    article: string;
+    variants: ItemVariantSizeGroup[];
     images: string[];
     type: FurnitureType;
     isAdded?: boolean;

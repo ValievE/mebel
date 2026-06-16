@@ -22,6 +22,8 @@ export type GetListResponse = Array<
     type: ExtFurnitureType;
     images: string[];
     price: number;
+    article: string;
+    multiple_variants: boolean;
   }>
 >;
 

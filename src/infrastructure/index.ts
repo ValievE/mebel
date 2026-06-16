@@ -12,9 +12,9 @@ export default {
       return m.getItem(id);
     });
   },
-  getCartItems(ids: string[]) {
+  getCartItems(lines: import("./get-cart-items.ts").CartLineInput[]) {
     return import("./get-cart-items.ts").then(m => {
-      return m.getCartItems(ids);
+      return m.getCartItems(lines);
     });
   },
   getOrders() {

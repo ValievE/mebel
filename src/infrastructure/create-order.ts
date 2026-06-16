@@ -4,6 +4,8 @@ import type { GetOrdersResponse } from "@/infrastructure/get-orders.ts";
 export type CreateOrderLine = {
   item_id: number;
   quantity: number;
+  size?: string;
+  material_id?: string;
 };
 
 export type CreateOrderRequest = {

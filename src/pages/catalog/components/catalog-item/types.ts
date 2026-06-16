@@ -7,5 +7,6 @@ export namespace CatalogItemNS {
     price: number;
     type: FurnitureType;
     image: string;
+    multipleVariants?: boolean;
   };
 }

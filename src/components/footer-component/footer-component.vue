@@ -14,12 +14,21 @@
     >
       {{ link.name }}
     </RouterLink>
+    <span
+      class="footer-component-item"
+      @click="uiStore.openPopup('social-media-popup')"
+    >
+      Контакты
+    </span>
   </footer>
 </template>
 
 <script setup lang="ts">
 import { PageName } from "@/router/consts.ts";
 import { documentLinks } from "@/common/consts.ts";
+import { useUiStore } from "@/stores/use-ui-store.ts";
+
+const uiStore = useUiStore();
 
 defineProps<{
   absolute?: boolean;
@@ -44,6 +53,7 @@ defineProps<{
   justify-content: start;
   gap: 12px 48px;
   width: 100%;
+  flex-wrap: wrap;
 }
 .footer-component_absolute {
   position: absolute;
@@ -53,7 +63,6 @@ defineProps<{
   border-radius: 128px;
   padding: 8px 32px;
   width: calc(100% - 32px);
-  flex-wrap: wrap;
   justify-content: center;
 }
 

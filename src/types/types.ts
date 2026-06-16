@@ -5,28 +5,55 @@ export namespace UIComponentsNS {
   export type Style = "red" | "white" | "orange" | "link";
 
   export namespace Icon {
-    export type Names =
-      | "search"
-      | "checkbox"
-      | "checkbox-checked"
-      | "radio-checked"
-      | "radio"
-      | "close"
-      | "more-1"
-      | "more-2"
-      | "slider"
-      | "success"
-      | "filter"
-      | "cart"
-      | "nav-point"
-      | "phone"
-      | "delivery"
-      | "catalog"
-      | "logo-outline"
-      | "chevron"
-      | "warning"
-      | "close-square"
-      | "user";
+    // export type Names =
+    //   | "search"
+    //   | "checkbox"
+    //   | "checkbox-checked"
+    //   | "radio-checked"
+    //   | "radio"
+    //   | "close"
+    //   | "more-1"
+    //   | "more-2"
+    //   | "slider"
+    //   | "success"
+    //   | "filter"
+    //   | "cart"
+    //   | "nav-point"
+    //   | "phone"
+    //   | "delivery"
+    //   | "catalog"
+    //   | "logo-outline"
+    //   | "chevron"
+    //   | "warning"
+    //   | "close-square"
+    //   | "user";
+
+    export const names = [
+      "search",
+      "checkbox",
+      "checkbox-checked",
+      "radio-checked",
+      "radio",
+      "close",
+      "more-1",
+      "more-2",
+      "slider",
+      "success",
+      "filter",
+      "cart",
+      "nav-point",
+      "phone",
+      "delivery",
+      "catalog",
+      "logo-outline",
+      "chevron",
+      "warning",
+      "close-square",
+      "user",
+      "help"
+    ] as const;
+
+    export type Names = (typeof Icon.names)[number];
 
     export type Props = {
       size?: number;
@@ -213,4 +240,10 @@ export enum DocumentsTypeRoute {
   Return = "return-policy",
   Details = "store-details",
   Offer = "public-offer"
+}
+
+export enum Contacts {
+  Phone = "phone",
+  VK = "vk",
+  Max = "max"
 }
