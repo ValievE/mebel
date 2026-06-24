@@ -47,7 +47,11 @@ export const getItemAdapter = (response: GetItemResponse): ItemPopupNS.Data => {
     article: response.article || "",
     variants: response.variants || [],
     id: String(response.id) || "",
-    parameters: response.parameters || {}
+    parameters: response.parameters || {},
+    pickedOptions: {
+      material: response.variants?.[0]?.options?.[0]?.material_id || "",
+      size: response.variants?.[0]?.size || ""
+    }
   };
 };
 

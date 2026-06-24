@@ -33,6 +33,9 @@
             </div>
           </Transition>
         </div>
+        <div v-if="$slots['additional-popup']" class="additional-popup">
+          <slot name="additional-popup" />
+        </div>
       </div>
     </Transition>
   </teleport>
@@ -63,6 +66,7 @@ const uiStore = useUiStore();
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(15px);
+  gap: 24px;
 }
 
 .popup {
@@ -123,6 +127,20 @@ const uiStore = useUiStore();
   }
 }
 
+.additional-popup {
+  width: 256px;
+  height: fit-content;
+  max-height: 90%;
+  background-color: var(--white);
+  box-shadow: var(--shadow);
+  position: relative;
+  max-width: 100%;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 @media screen and (max-width: 768px) {
   .popup {
     width: 100%;
@@ -135,6 +153,10 @@ const uiStore = useUiStore();
   .popup .popup__content {
     height: 100%;
     width: 100%;
+  }
+
+  .additional-popup {
+    display: none;
   }
 }
 </style>

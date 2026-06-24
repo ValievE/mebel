@@ -5,6 +5,22 @@
     :loading="props.loading"
     @close="$emit('close')"
   >
+    <template #additional-popup>
+      <div class="item-popup__materials">
+        <h2 class="item-popup__materials-title">Материалы</h2>
+        <MaterialSelector
+          :model-value="props.data.pickedOptions.material"
+          :options="sizeAndMaterialOptions.material"
+          @update:modelValue="$emit('updateMaterial', $event)"
+        />
+        <h2 class="item-popup__materials-title">Размеры</h2>
+        <SizeSelector
+          :model-value="props.data.pickedOptions.size"
+          :options="sizeAndMaterialOptions.size"
+          @update:modelValue="$emit('updateSize', $event)"
+        />
+      </div>
+    </template>
     <div class="item-popup__images">
       <ImagePreviewer :images="props.data.images" />
     </div>
@@ -54,17 +70,48 @@ import ScrollContainer from "@/components/scroll-container/scroll-container.vue"
 import { computed } from "vue";
 import { type UIComponentsNS } from "@/types/types.ts";
 import { useUiStore } from "@/stores/use-ui-store.ts";
+import MaterialSelector from "@/components/material-selector/material-selector.vue";
+import { type MaterialSelectorNS } from "@/components/material-selector/types.ts";
+import SizeSelector from "@/components/size-selector/size-selector.vue";
+import { type SizeSelectorNS } from "@/components/size-selector/types.ts";
 
 const { props } = defineProps<{ props: ItemPopupNS.Props }>();
 defineEmits<ItemPopupNS.Emits>();
 
 const uiStore = useUiStore();
 
-const displayPrice = computed<number>(() => {
-  const prices = props.data.variants.flatMap(group =>
-    group.options.map(option => option.price)
+const sizeAndMaterialOptions = computed<{
+  size: SizeSelectorNS.Option[];
+  material: MaterialSelectorNS.Option[];
+}>(() => {
+  const item = props.data.variants.find(
+    i => i.size === props.data.pickedOptions.size
   );
-  return prices.length ? Math.min(...prices) : 0;
+  if (!item)
+    return {
+      size: [],
+      material: []
+    };
+
+  return {
+    size: props.data.variants.map(i => ({ id: i.size, label: i.size })),
+    material: item.options.map(i => ({
+      id: i.material_id,
+      url: i.url,
+      name: i.name
+    }))
+  };
+});
+
+const displayPrice = computed<number>(() => {
+  const item = props.data.variants.find(
+    i => i.size === props.data.pickedOptions.size
+  );
+  if (!item) return 0;
+  return (
+    item.options.find(i => i.material_id === props.data.pickedOptions.material)
+      ?.price || 0
+  );
 });
 
 const buttonType = computed<UIComponentsNS.Style>(() => {
@@ -80,6 +127,17 @@ const buttonText = computed<string>(() => {
 </script>
 
 <style lang="css">
+.item-popup__materials {
+  display: flex;
+  width: 100%;
+  padding: 24px 12px;
+  flex-direction: column;
+  gap: 24px;
+}
+.item-popup__materials-title {
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-60);
+}
 .item-popup__images {
   width: 100%;
   height: 60%;

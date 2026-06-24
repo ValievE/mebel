@@ -4,7 +4,9 @@
     <Tag class="catalog-item__type">{{ furnitureName[props.type] }}</Tag>
     <footer class="catalog-item__footer">
       <Tag type="red">{{ props.title }}</Tag>
-      <Tag v-if="props.price" type="orange">{{ props.price }} ₽</Tag>
+      <Tag v-if="props.price" type="orange">
+        {{ price }}
+      </Tag>
     </footer>
   </article>
 </template>
@@ -14,8 +16,13 @@ import { type CatalogItemNS } from "@/pages/catalog/components/catalog-item/type
 import Tag from "@/components/tag/tag.vue";
 import { furnitureName } from "@/common/consts.ts";
 import ImagePreviewer from "@/components/image-previewer/image-previewer.vue";
+import { computed } from "vue";
 
 const { props } = defineProps<{ props: CatalogItemNS.Props }>();
+
+const price = computed<string>(() => {
+  return `${props.multipleVariants ? "от " : ""}${props.price}₽`;
+});
 </script>
 
 <style lang="css">

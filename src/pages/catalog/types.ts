@@ -10,6 +10,8 @@ export type ItemPopupObject = {
     open(id: string): void;
     close(): void;
     addToCart(): void;
+    updateSize(value: string): void;
+    updateMaterial(value: string): void;
   };
 };
 

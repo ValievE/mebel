@@ -207,6 +207,17 @@ export namespace UIComponentsNS {
       (e: "update:modelValue", value: boolean): void;
     };
   }
+
+  export namespace Radio {
+    export type Props = {
+      modelValue: boolean;
+      disabled?: boolean;
+      error?: string;
+    };
+    export type Emits = {
+      (e: "update:modelValue", value: boolean): void;
+    };
+  }
 }
 
 export enum FurnitureType {

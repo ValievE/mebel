@@ -4,6 +4,8 @@
       :props="itemPopup.data"
       @close="itemPopup.functions.close"
       @addToCart="itemPopup.functions.addToCart"
+      @updateMaterial="itemPopup.functions.updateMaterial"
+      @updateSize="itemPopup.functions.updateSize"
     />
     <CartPopup
       :props="cart.popupData"
@@ -146,12 +148,17 @@ const itemPopup: ItemPopupObject = reactive({
     id: "item",
     loading: false,
     data: {
+      article: "",
+      variants: [],
       title: "Название кухни 1234",
       parameters: {},
-      price: 0,
       images: [],
       type: FurnitureType.Other,
-      id: ""
+      id: "",
+      pickedOptions: {
+        material: "",
+        size: ""
+      }
     }
   },
   functions: {
@@ -168,6 +175,15 @@ const itemPopup: ItemPopupObject = reactive({
         getItemMinPrice(itemPopup.data.data)
       );
       itemPopup.data.data.isAdded = true;
+    },
+    updateSize(value: string) {
+      itemPopup.data.data.pickedOptions.size = value;
+      itemPopup.data.data.pickedOptions.material =
+        itemPopup.data.data.variants.find(i => i.size === value)?.options[0]
+          ?.material_id || "";
+    },
+    updateMaterial(value: string) {
+      itemPopup.data.data.pickedOptions.material = value;
     }
   }
 });

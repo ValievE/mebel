@@ -11,6 +11,10 @@ export namespace ItemPopupNS {
     images: string[];
     type: FurnitureType;
     isAdded?: boolean;
+    pickedOptions: {
+      material: string;
+      size: string;
+    };
   };
   export type Props = {
     data: Data;
@@ -20,5 +24,7 @@ export namespace ItemPopupNS {
   export type Emits = {
     (e: "close"): void;
     (e: "addToCart"): void;
+    (e: "updateSize", value: string): void;
+    (e: "updateMaterial", value: string): void;
   };
 }
