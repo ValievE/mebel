@@ -24,13 +24,19 @@ export const getNavBarLinks = (isLoggedIn: boolean): NavBarLink[] => {
   return links;
 };
 
-export const furnitureName: Record<FurnitureType, string> = {
-  [FurnitureType.Kitchen]: "Кухня",
-  [FurnitureType.Bathroom]: "Ванная",
-  [FurnitureType.Bedroom]: "Спальня",
-  [FurnitureType.LivingRoom]: "Гостиная",
-  [FurnitureType.Wardrobe]: "Шкаф-купе",
-  [FurnitureType.Other]: "Прочая мебель"
+export const furnitureName: Record<
+  FurnitureType,
+  { long: string; short: string }
+> = {
+  [FurnitureType.Kitchen]: { short: "Кухня", long: "Мебель для кухни" },
+  [FurnitureType.Bathroom]: { short: "Ванная", long: "Мебель для ванной" },
+  [FurnitureType.Bedroom]: { short: "Спальня", long: "Мебель для спальни" },
+  [FurnitureType.LivingRoom]: {
+    short: "Гостиная",
+    long: "Мебель для гостиной"
+  },
+  [FurnitureType.Wardrobe]: { short: "Шкаф-купе", long: "Шкафы-купе" },
+  [FurnitureType.Other]: { short: "Прочая мебель", long: "Прочая мебель" }
 };
 
 export const getErrorText = (e: ErrorType) =>

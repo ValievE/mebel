@@ -7,13 +7,13 @@
   >
     <template #additional-popup>
       <div class="item-popup__materials">
-        <h2 class="item-popup__materials-title">Материалы</h2>
+        <h2 class="item-popup__materials-title">Цвет</h2>
         <MaterialSelector
           :model-value="props.data.pickedOptions.material"
           :options="sizeAndMaterialOptions.material"
           @update:modelValue="$emit('updateMaterial', $event)"
         />
-        <h2 class="item-popup__materials-title">Размеры</h2>
+        <h2 class="item-popup__materials-title">Размер</h2>
         <SizeSelector
           :model-value="props.data.pickedOptions.size"
           :options="sizeAndMaterialOptions.size"
@@ -47,15 +47,20 @@
         >
           Задать вопрос
         </ButtonComponent>
-        <ButtonComponent
-          :type="buttonType"
-          :disabled="props.data.isAdded || !displayPrice"
-          :size="uiStore.isMobile ? 'l' : 'm'"
-          class="item-popup__footer-cart-button"
-          @click="$emit('addToCart')"
-        >
-          {{ buttonText }}
-        </ButtonComponent>
+        <transition name="flashlight" mode="out-in">
+          <ButtonComponent
+            :key="buttonText"
+            :type="buttonType"
+            :disabled="props.data.isAdded || !displayPrice"
+            :size="uiStore.isMobile ? 'l' : 'm'"
+            class="item-popup__footer-cart-button"
+            @click="$emit('addToCart')"
+          >
+            <span>
+              {{ buttonText }}
+            </span>
+          </ButtonComponent>
+        </transition>
       </footer>
     </div>
   </Popup>
@@ -178,8 +183,7 @@ const buttonText = computed<string>(() => {
   margin-top: auto;
   display: flex;
   gap: 8px;
-}
-.item-popup__footer-cart-button {
+  position: relative;
 }
 
 @media screen and (max-width: 768px) {

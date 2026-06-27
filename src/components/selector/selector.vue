@@ -9,11 +9,7 @@
     <div class="selector__value" @click="toggleSelector">
       <!--      TODO: toggleSelector & v-click-->
       <span class="selector__value-text">
-        {{
-          selectedOption
-            ? placeholder + ": " + selectedOption.name
-            : placeholder
-        }}
+        {{ valueText }}
       </span>
       <div class="selector__value-icon">
         <Icon name="chevron" />
@@ -34,7 +30,9 @@
             :key="String(option.id)"
             class="selector__options-item"
             :class="{
-              'selector__options-item_selected': option.id === props.modelValue
+              'selector__options-item_selected': props.modelValue.includes(
+                option.id
+              )
             }"
             @click="selectOption(option.id)"
           >
@@ -56,13 +54,26 @@ const emit = defineEmits<UIComponentsNS.Selector.Emits<T>>();
 
 const isOpen = ref(false);
 
-const selectedOption = computed(() => {
-  return props.options?.find(opt => opt.id === props.modelValue);
+const valueText = computed<string>(() => {
+  if (!props.modelValue.length) return props.placeholder || "";
+  if (props.modelValue.length === 1) {
+    const item = props.options?.find(opt => props.modelValue.includes(opt.id));
+    return props.placeholder + ": " + item?.name || "";
+  }
+  return props.placeholder + " (Выбрано: " + props.modelValue.length + ")";
 });
 
+const getValue = (option: T): Array<T> => {
+  if (!props.modelValue.length) return [option];
+
+  if (props.modelValue.includes(option))
+    return props.modelValue.filter(i => i !== option);
+
+  return [...props.modelValue, option];
+};
 const selectOption = (option: T) => {
   if (props.disabled) return;
-  emit("update:modelValue", option);
+  emit("update:modelValue", getValue(option));
   toggleSelector();
 };
 const toggleSelector = () => {
@@ -112,25 +123,30 @@ const toggleSelector = () => {
   z-index: 1;
   box-shadow: var(--shadow);
   user-select: none;
+  min-width: fit-content;
 }
 .selector__options__empty-list {
   color: var(--gray-40);
 }
 .selector__options-item {
+  white-space: nowrap;
   padding: 8px 12px;
   cursor: pointer;
   transition: var(--transition-bg-color-100);
+  color: var(--gray-50);
 
   &:hover {
-    background-color: var(--red-20);
+    background-color: var(--gray-10);
+    color: var(--gray-50);
   }
 }
 .selector__options-item_selected {
   background-color: var(--red-10);
+  color: var(--red-90);
 }
 
 /* DISABLED */
 .selector_disabled .selector__value {
-  background-color: var(--red-40);
+  background-color: var(--gray-30);
 }
 </style>

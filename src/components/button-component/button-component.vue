@@ -80,6 +80,10 @@ const clickHandler = () => {
     background-color: var(--gray-30);
   }
 }
+.button-component__text {
+  position: relative;
+}
+
 .button-component_square {
   aspect-ratio: 1;
 }

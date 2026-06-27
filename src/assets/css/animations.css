@@ -79,3 +79,24 @@
   opacity: 0;
   transform: translateY(-24px);
 }
+
+/* flashlight */
+
+.flashlight-enter-active,
+.flashlight-leave-active {
+  transition-property: filter, opacity !important;
+  transition-duration: 0.1s !important;
+  transition-timing-function: ease-in-out !important;
+}
+
+.flashlight-enter-from,
+.flashlight-leave-to {
+  filter: contrast(200%);
+  opacity: 0.5;
+}
+
+.flashlight-leave-from,
+.flashlight-enter-to {
+  filter: contrast(100%);
+  opacity: 1;
+}

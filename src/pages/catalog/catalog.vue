@@ -48,6 +48,14 @@
         <Selector
           :disabled="uiStore.loaders.itemList"
           size="l"
+          :model-value="filterSelector.value"
+          placeholder="Тип"
+          :options="filterSelector.items"
+          @update:modelValue="filterSelector.functions.updateValue"
+        />
+        <Selector
+          :disabled="uiStore.loaders.itemList"
+          size="l"
           :model-value="sortSelector.value"
           placeholder="Сортировка"
           :options="sortSelector.items"
@@ -78,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, computed } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import Loader from "@/components/loader/loader.vue";
@@ -86,10 +94,7 @@ import ScrollContainer from "@/components/scroll-container/scroll-container.vue"
 import Selector from "@/components/selector/selector.vue";
 import WarningBadge from "@/components/warning-badge/warning-badge.vue";
 import infrastructure from "@/infrastructure";
-import {
-  GetListField,
-  type GetListRequest
-} from "@/infrastructure/get-list.ts";
+import { type GetListRequest, GetListSort } from "@/infrastructure/get-list.ts";
 import {
   getCartItemsAdapter,
   getItemAdapter,
@@ -98,14 +103,16 @@ import {
 } from "@/pages/catalog/adapters.ts";
 import CatalogItem from "@/pages/catalog/components/catalog-item/catalog-item.vue";
 import { type CatalogItemNS } from "@/pages/catalog/components/catalog-item/types.ts";
+import type { ErrorType } from "@/types/types.ts";
 import { FurnitureType } from "@/types/types.ts";
 import ItemPopup from "@/pages/catalog/components/item-popup/item-popup.vue";
 
 import type {
   CartObject,
+  CheckoutPopupObject,
+  FilterSelector,
   ItemPopupObject,
-  SortSelector,
-  CheckoutPopupObject
+  SortSelector
 } from "@/pages/catalog/types.ts";
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
@@ -119,8 +126,7 @@ import {
 import { createGuestOrder } from "@/infrastructure/create-guest-order.ts";
 import { usePaymentReturn } from "@/composables/use-payment-return.ts";
 import { validator } from "@/common/validator.ts";
-import { debounce, getErrorText } from "@/common/consts.ts";
-import type { ErrorType } from "@/types/types.ts";
+import { debounce, furnitureName, getErrorText } from "@/common/consts.ts";
 import CheckoutPopup from "@/pages/catalog/components/checkout-popup/checkout-popup.vue";
 
 const catalogItems = ref<CatalogItemNS.Props[]>([]);
@@ -190,33 +196,71 @@ const itemPopup: ItemPopupObject = reactive({
 const sortSelector: SortSelector = reactive({
   items: [
     {
-      id: GetListField.PriceAsc,
+      id: GetListSort.PriceAsc,
       name: "По возрастанию цены"
     },
     {
-      id: GetListField.PriceDesc,
+      id: GetListSort.PriceDesc,
       name: "По убыванию цены"
     },
     {
-      id: GetListField.TitleAsc,
+      id: GetListSort.TitleAsc,
       name: "По названию (А–Я)"
     },
     {
-      id: GetListField.TitleDesc,
+      id: GetListSort.TitleDesc,
       name: "По названию (Я–А)"
     },
     {
-      id: GetListField.Default,
+      id: GetListSort.Default,
       name: "По-умолчанию"
     }
   ],
-  value: GetListField.Default,
+  value: [GetListSort.Default],
   functions: {
     async updateValue(id) {
+      if (!id[1]) return;
       await getList({
-        sort: id
+        sort: id[1]
       });
-      sortSelector.value = id;
+      sortSelector.value = [id[1]];
+    }
+  }
+});
+const filterSelector: FilterSelector = reactive({
+  items: [
+    {
+      id: FurnitureType.Kitchen,
+      name: furnitureName[FurnitureType.Kitchen].long
+    },
+    {
+      id: FurnitureType.LivingRoom,
+      name: furnitureName[FurnitureType.LivingRoom].long
+    },
+    {
+      id: FurnitureType.Bedroom,
+      name: furnitureName[FurnitureType.Bedroom].long
+    },
+    {
+      id: FurnitureType.Bathroom,
+      name: furnitureName[FurnitureType.Bathroom].long
+    },
+    {
+      id: FurnitureType.Wardrobe,
+      name: furnitureName[FurnitureType.Wardrobe].long
+    },
+    {
+      id: FurnitureType.Other,
+      name: furnitureName[FurnitureType.Other].long
+    }
+  ],
+  value: [],
+  functions: {
+    async updateValue(id) {
+      // await getList({
+      //   sort: id
+      // });
+      filterSelector.value = id;
     }
   }
 });

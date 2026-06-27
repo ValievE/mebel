@@ -54,9 +54,15 @@ defineEmits<MaterialSelectorNS.Emits>();
   transition: var(--transition-border-300);
   cursor: pointer;
 }
+.material-selector__item-name {
+  transition: var(--transition-color-300);
+}
 .material-selector__item_selected {
   .material-selector__item-image {
     border: 2px solid var(--red-50);
+  }
+  .material-selector__item-name {
+    color: var(--red-50);
   }
 }
 </style>

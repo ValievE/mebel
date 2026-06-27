@@ -117,11 +117,11 @@ export namespace UIComponentsNS {
     export type Props<T> = {
       disabled?: boolean;
       placeholder?: string;
-      modelValue: T;
+      modelValue: Array<T>;
       options: Option<T>[];
     };
     export type Emits<T> = {
-      (e: "update:modelValue", value: T): void;
+      (e: "update:modelValue", value: Array<T>): void;
     };
   }
 

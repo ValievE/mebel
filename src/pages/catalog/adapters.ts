@@ -70,7 +70,7 @@ export const getCartItemsAdapter = (
         id: String(item.id) || "",
         tags: {
           type: {
-            text: `${furnitureName[adaptListType[item.type || 0]]}`,
+            text: `${furnitureName[adaptListType[item.type || 0]].short}`,
             type: "white"
           },
           quantity: {

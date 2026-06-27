@@ -1,7 +1,7 @@
 <template>
   <article class="catalog-item">
     <ImagePreviewer class="catalog-item__img" :images="[props.image]" />
-    <Tag class="catalog-item__type">{{ furnitureName[props.type] }}</Tag>
+    <Tag class="catalog-item__type">{{ furnitureName[props.type].short }}</Tag>
     <footer class="catalog-item__footer">
       <Tag type="red">{{ props.title }}</Tag>
       <Tag v-if="props.price" type="orange">
