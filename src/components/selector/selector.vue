@@ -78,7 +78,7 @@ const toggleSelector = () => {
   flex-shrink: 0;
 }
 .selector__value {
-  background-color: var(--red-60);
+  background-color: var(--red-50);
   padding: 8px 16px;
   border-radius: 100px;
   cursor: pointer;

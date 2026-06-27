@@ -117,7 +117,7 @@ const clickHandler = () => {
   }
 }
 .button-component_red {
-  background-color: var(--red-60);
+  background-color: var(--red-50);
   color: var(--white);
   box-shadow: none;
   &:hover {

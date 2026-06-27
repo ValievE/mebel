@@ -1,48 +1,51 @@
 * {
   /* colors */
 
-  --white: #ffffff;
-  --black: #000000;
+  --red-100: #2d1110;
+  --red-90: #471b19;
+  --red-80: #612523;
+  --red-70: #7c2e2c;
+  --red-60: #963836;
+  --red-50: #b0423f;
+  --red-40: #bb5a58;
+  --red-30: #c67371;
+  --red-20: #d18b89;
+  --red-10: #dca4a2;
 
-  --red-90: #331010;
-  --red-80: #662121;
-  --red-70: #993131;
-  --red-60: #cc4242;
-  --red-50: #ff5252;
-  --red-40: #ff7575;
-  --red-30: #ff9797;
-  --red-20: #ffbaba;
-  --red-10: #ffdcdc;
+  --orange-100: #542916;
+  --orange-90: #6d3821;
+  --orange-80: #86472c;
+  --orange-70: #9e5637;
+  --orange-60: #b76542;
+  --orange-50: #d0744d;
+  --orange-40: #d78a69;
+  --orange-30: #dfa085;
+  --orange-20: #e6b6a2;
+  --orange-10: #eeccbe;
 
-  --orange-90: #662f15;
-  --orange-80: #8c4a2a;
-  --orange-70: #b3643f;
-  --orange-60: #d97f54;
-  --orange-50: #ff9969;
-  --orange-40: #ffad87;
-  --orange-30: #ffc2a5;
-  --orange-20: #ffd6c3;
-  --orange-10: #ffebe1;
+  --gray-100: #171515;
+  --gray-90: #231f1f;
+  --gray-80: #2e2a2a;
+  --gray-70: #3a3434;
+  --gray-60: #4d4747;
+  --gray-50: #605b5b;
+  --gray-40: #736e6e;
+  --gray-30: #868282;
+  --gray-20: #aba8a8;
+  --gray-10: #d1cfcf;
 
-  --gray-90: #181818;
-  --gray-80: #313131;
-  --gray-70: #494949;
-  --gray-60: #626262;
-  --gray-50: #7a7a7a;
-  --gray-40: #959595;
-  --gray-30: #afafaf;
-  --gray-20: #cacaca;
-  --gray-10: #e4e4e4;
+  --white: #f7f6f6;
+  --black: var(--gray-100);
 
   /* colors with opacity */
 
-  --gray-a-10: rgb(24 24 24 / 10%);
-  --gray-a-25: rgb(24 24 24 / 25%);
-  --gray-a-50: rgb(24 24 24 / 50%);
-  --white-a-10: rgba(255, 255, 255, 0.1);
-  --white-a-25: rgba(255, 255, 255, 0.25);
-  --white-a-50: rgba(255, 255, 255, 0.5);
-  --white-a-75: rgba(255, 255, 255, 0.75);
+  --gray-90-a-10: color-mix(in srgb, var(--gray-90) 10%, transparent);
+  --gray-90-a-25: color-mix(in srgb, var(--gray-90) 25%, transparent);
+  --gray-90-a-50: color-mix(in srgb, var(--gray-90) 50%, transparent);
+  --white-a-10: color-mix(in srgb, var(--white) 10%, transparent);
+  --white-a-25: color-mix(in srgb, var(--white) 25%, transparent);
+  --white-a-50: color-mix(in srgb, var(--white) 50%, transparent);
+  --white-a-75: color-mix(in srgb, var(--white) 75%, transparent);
 
   /* font */
 

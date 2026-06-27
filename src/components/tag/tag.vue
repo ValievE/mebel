@@ -23,10 +23,10 @@ const customClass = computed(() => {
 
 <style lang="css">
 .tag {
-  padding: 4px 12px;
+  padding: 6px 16px;
   background-color: var(--white);
   height: fit-content;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   border-radius: 100px;
   user-select: none;
   width: fit-content;
@@ -54,7 +54,7 @@ const customClass = computed(() => {
   line-height: var(--line-height-xl);
 }
 .tag_red {
-  background-color: var(--red-60);
+  background-color: var(--red-50);
   color: var(--white);
 }
 .tag_orange {

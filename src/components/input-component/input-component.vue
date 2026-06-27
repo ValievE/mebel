@@ -151,7 +151,7 @@ const inputHandler = (e: InputEvent): void => {
   position: absolute;
   bottom: 0;
   font-size: var(--font-size-s);
-  color: var(--red-60);
+  color: var(--red-50);
 }
 
 /* REQUIRED */
@@ -159,7 +159,7 @@ const inputHandler = (e: InputEvent): void => {
 .input-component_required {
   .input-component__wrapper-title::after {
     content: "*";
-    color: var(--red-60);
+    color: var(--red-50);
     margin-left: 2px;
   }
 }
@@ -180,7 +180,7 @@ const inputHandler = (e: InputEvent): void => {
 
 .input-component_error {
   .input-component__wrapper-input {
-    border: 1px solid var(--red-60);
+    border: 1px solid var(--red-50);
   }
 }
 </style>

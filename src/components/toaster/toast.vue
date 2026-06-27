@@ -28,7 +28,7 @@ const titleText = props.type === "error" ? "Ошибка!" : "";
 .toast {
   width: 100%;
   padding: 16px 20px;
-  background-color: var(--red-60);
+  background-color: var(--red-50);
   color: var(--white);
   box-shadow: var(--shadow);
   border-radius: 16px;

@@ -306,7 +306,7 @@ const isHiddenInput = (id: LoginPopupNS.StringFormFields): boolean =>
   margin: auto;
 }
 .login-popup__form-checkbox-link {
-  color: var(--red-60);
+  color: var(--red-50);
   font-weight: var(--font-weight-semibold);
 }
 </style>

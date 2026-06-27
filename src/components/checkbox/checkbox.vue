@@ -59,7 +59,7 @@ const onChange = (event: Event) => {
   outline: none;
 }
 .checkbox__input:checked {
-  background-color: var(--red-60);
+  background-color: var(--red-50);
   position: relative;
   border: none;
 }
@@ -80,7 +80,7 @@ const onChange = (event: Event) => {
 .checkbox_required {
   .checkbox__text:after {
     content: "*";
-    color: var(--red-60);
+    color: var(--red-50);
   }
 }
 
@@ -93,6 +93,6 @@ const onChange = (event: Event) => {
   position: absolute;
   bottom: 0;
   font-size: var(--font-size-s);
-  color: var(--red-60);
+  color: var(--red-50);
 }
 </style>

@@ -48,7 +48,7 @@ const clickHandler = () => {
   transition: var(--transition-transform-100), var(--transition-bg-color-100);
 }
 .tumbler_active {
-  background-color: var(--red-60);
+  background-color: var(--red-50);
   .tumbler-track {
     transform: translateX(24px);
     background-color: var(--red-10);
