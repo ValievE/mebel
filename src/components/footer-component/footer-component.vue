@@ -64,6 +64,7 @@ defineProps<{
   padding: 8px 32px;
   width: calc(100% - 32px);
   justify-content: center;
+  box-shadow: var(--shadow);
 }
 
 .footer-component-item {

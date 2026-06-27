@@ -5,29 +5,6 @@ export namespace UIComponentsNS {
   export type Style = "red" | "white" | "orange" | "link";
 
   export namespace Icon {
-    // export type Names =
-    //   | "search"
-    //   | "checkbox"
-    //   | "checkbox-checked"
-    //   | "radio-checked"
-    //   | "radio"
-    //   | "close"
-    //   | "more-1"
-    //   | "more-2"
-    //   | "slider"
-    //   | "success"
-    //   | "filter"
-    //   | "cart"
-    //   | "nav-point"
-    //   | "phone"
-    //   | "delivery"
-    //   | "catalog"
-    //   | "logo-outline"
-    //   | "chevron"
-    //   | "warning"
-    //   | "close-square"
-    //   | "user";
-
     export const names = [
       "search",
       "checkbox",
@@ -50,7 +27,14 @@ export namespace UIComponentsNS {
       "warning",
       "close-square",
       "user",
-      "help"
+      "help",
+      "ruler",
+      "delivery-car",
+      "approved",
+      "kitchen",
+      "sofa",
+      "bath",
+      "bed"
     ] as const;
 
     export type Names = (typeof Icon.names)[number];

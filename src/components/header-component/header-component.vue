@@ -1,6 +1,8 @@
 <template>
   <header class="header-component">
-    <Logo size="m" />
+    <RouterLink :to="{ name: PageName.Home }">
+      <Logo size="m" />
+    </RouterLink>
     <div class="header-component__links">
       <RouterLink
         v-for="link in navBarLinks"
@@ -75,7 +77,7 @@ function openAccount() {
   background-color: var(--white);
   color: var(--gray-40);
   font-weight: var(--font-weight-medium);
-  z-index: 1;
+  z-index: 2;
   user-select: none;
 }
 
