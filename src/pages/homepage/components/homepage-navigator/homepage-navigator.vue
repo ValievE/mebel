@@ -10,6 +10,9 @@
         class="homepage-navigator__item-image"
         :images="[item.image]"
       />
+      <div class="homepage-navigator__item-icon-wrapper">
+        <Icon class="homepage-navigator__item-icon" name="chevron" />
+      </div>
       <div class="homepage-navigator__item-info">
         <div class="homepage-navigator__item-info-head">
           <Icon
@@ -27,7 +30,11 @@
       class="homepage-navigator__button"
       :to="{ name: PageName.Catalog }"
     >
-      <ButtonComponent icon-name="catalog" type="red">
+      <ButtonComponent
+        class="homepage-navigator__button-item"
+        icon-name="catalog"
+        type="red"
+      >
         В каталог
       </ButtonComponent>
     </RouterLink>
@@ -85,12 +92,13 @@ const items: HomepageNavigatorNS.Item[] = [
   padding: 20px;
   background-color: var(--white);
   border-radius: 24px;
-  width: fit-content;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
   gap: 24px;
   text-decoration: none;
-  flex-wrap: wrap;
   position: relative;
+  width: 100%;
+  max-width: 1440px;
 }
 .homepage-navigator__item {
   display: flex;
@@ -99,6 +107,9 @@ const items: HomepageNavigatorNS.Item[] = [
   padding-right: 24px;
   border-radius: 12px;
   transition: var(--transition-bg-color-100);
+  width: 100%;
+  overflow: hidden;
+  position: relative;
   &:hover {
     background-color: var(--gray-10);
   }
@@ -107,6 +118,10 @@ const items: HomepageNavigatorNS.Item[] = [
   width: 128px;
   height: 120px;
   border-radius: 12px;
+  flex-shrink: 0;
+}
+.homepage-navigator__item-icon-wrapper {
+  display: none;
 }
 .homepage-navigator__item-info-head {
   display: flex;
@@ -149,5 +164,32 @@ const items: HomepageNavigatorNS.Item[] = [
   position: absolute;
   left: 0;
   top: 95%;
+}
+
+@media screen and (max-width: 768px) {
+  .homepage-navigator__item-icon-wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    background-color: var(--red-10);
+    border-radius: 50%;
+  }
+  .homepage-navigator__item-icon {
+    margin: auto;
+    transform: rotate(270deg);
+    color: var(--red-50);
+  }
+  .homepage-navigator__button {
+    position: relative;
+    top: auto;
+    width: 100%;
+  }
+  .homepage-navigator__button-item {
+    width: 100%;
+  }
 }
 </style>

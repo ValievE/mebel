@@ -1,6 +1,6 @@
 <template>
   <header class="header-component">
-    <RouterLink :to="{ name: PageName.Home }">
+    <RouterLink class="header-component__logo" :to="{ name: PageName.Home }">
       <Logo size="m" />
     </RouterLink>
     <div class="header-component__links">
@@ -81,6 +81,10 @@ function openAccount() {
   user-select: none;
 }
 
+.header-component__logo {
+  height: 100%;
+}
+
 .header-component__links {
   display: flex;
   justify-content: space-between;
@@ -114,7 +118,7 @@ function openAccount() {
 
 @media screen and (max-width: 768px) {
   .header-component {
-    padding: 16px;
+    padding: 16px 16px 16px 32px;
     box-shadow: none;
     width: calc(100% - 32px);
     max-width: 100%;

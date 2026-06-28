@@ -1,5 +1,6 @@
 <template>
   <div class="homepage">
+    <div class="test1"></div>
     <img
       :class="{ homepage__image_hidden: !imgReady }"
       class="homepage__image"
@@ -91,6 +92,7 @@ const advantages: { text: string; icon: UIComponentsNS.Icon.Names }[] = [
   transition: var(--transition-opacity-300);
   opacity: 1;
   z-index: 0;
+  object-position: 50% 60%;
 }
 .homepage__image_hidden {
   opacity: 0;
@@ -156,6 +158,7 @@ const advantages: { text: string; icon: UIComponentsNS.Icon.Names }[] = [
   height: 48px;
   display: flex;
   border-radius: 48px;
+  flex-shrink: 0;
 }
 .homepage__info-advantages > *:nth-child(3n + 1) {
   .homepage__info-advantage-icon-wrapper {
@@ -187,6 +190,55 @@ const advantages: { text: string; icon: UIComponentsNS.Icon.Names }[] = [
   margin-top: 28px;
 }
 
+@media screen and (max-width: 1280px) {
+  .homepage__info {
+    padding: var(--header-height) 16px var(--footer-height);
+  }
+}
 @media screen and (max-width: 768px) {
+  .homepage {
+    background-color: var(--white);
+  }
+  .homepage__image {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #2d1110;
+    border-radius: 0 0 48px 48px;
+    z-index: 1;
+    top: 0;
+    overflow: hidden;
+    height: 40%;
+    box-shadow: var(--shadow);
+  }
+  .homepage__white {
+    box-shadow: 32px 0 80px 80px var(--white);
+    display: none;
+  }
+  .homepage__info {
+    top: calc(40% - 48px);
+    height: calc(60% + 48px);
+    padding-top: 64px;
+    justify-content: start;
+    overflow: auto;
+    z-index: 0;
+  }
+  .homepage__info-subtitle {
+    font-size: 14px;
+    line-height: 14px;
+  }
+  .homepage__info-title {
+    margin-top: 24px;
+    font-size: 40px;
+    line-height: 48px;
+  }
+  .homepage__info-text {
+    margin-top: 24px;
+    font-size: 16px;
+    line-height: 20px;
+    max-width: 728px;
+  }
+  .homepage__info-advantages {
+    gap: 16px;
+  }
 }
 </style>

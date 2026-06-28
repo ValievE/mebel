@@ -6,7 +6,7 @@
       selector_disabled: disabled
     }"
   >
-    <div class="selector__value" @click="toggleSelector">
+    <div ref="trigger" class="selector__value" @click="toggleSelector">
       <!--      TODO: toggleSelector & v-click-->
       <span class="selector__value-text">
         {{ valueText }}
@@ -48,14 +48,20 @@
 import { ref, computed } from "vue";
 import { type UIComponentsNS } from "@/types/types.ts";
 import Icon from "@/components/icon/icon.vue";
+import { useUiStore } from "@/stores/use-ui-store.ts";
+import { debounce } from "@/common/consts.ts";
 
 const props = defineProps<UIComponentsNS.Selector.Props<T>>();
 const emit = defineEmits<UIComponentsNS.Selector.Emits<T>>();
 
+const uiStore = useUiStore();
+
 const isOpen = ref(false);
+const trigger = ref<HTMLElement | null>(null);
 
 const valueText = computed<string>(() => {
-  if (!props.modelValue.length) return props.placeholder || "";
+  if (!props.modelValue.length || uiStore.isMobile)
+    return props.placeholder || "";
   if (props.modelValue.length === 1) {
     const item = props.options?.find(opt => props.modelValue.includes(opt.id));
     return props.placeholder + ": " + item?.name || "";
@@ -76,10 +82,13 @@ const selectOption = (option: T) => {
   emit("update:modelValue", getValue(option));
   toggleSelector();
 };
-const toggleSelector = () => {
-  if (props.disabled && !isOpen.value) return;
-  isOpen.value = !isOpen.value;
-};
+const toggleSelector = debounce(
+  () => {
+    if (props.disabled && !isOpen.value) return;
+    isOpen.value = !isOpen.value;
+  },
+  uiStore.isMobile ? 100 : 0
+);
 </script>
 
 <style lang="css">
@@ -148,5 +157,8 @@ const toggleSelector = () => {
 /* DISABLED */
 .selector_disabled .selector__value {
   background-color: var(--gray-30);
+}
+
+@media screen and (max-width: 768px) {
 }
 </style>
