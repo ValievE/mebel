@@ -1,6 +1,7 @@
 import { computed, ref } from "vue";
 import { defineStore } from "pinia";
 import { type CartStore, StoreNames } from "@/stores/types.ts";
+import type { CartLineInput } from "@/infrastructure/get-cart-items.ts";
 
 export const useCartStore = defineStore(StoreNames.Cart, () => {
   const cart = ref<Record<string, CartStore.Item>>({});
@@ -10,7 +11,11 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
     return Object.keys(cart.value) ?? [];
   });
 
-  const addItem = (id: string, price: number) => {
+  const addItem = (
+    id: string,
+    price: number,
+    options?: Pick<CartStore.Item, "size" | "material_id">
+  ) => {
     if (cart.value[id]) {
       increaseQuantity(id);
       return;
@@ -18,9 +23,26 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
     sum.value += price;
     cart.value[id] = {
       price,
-      quantity: 1
+      quantity: 1,
+      size: options?.size,
+      material_id: options?.material_id
     };
   };
+
+  const cartLines = (): CartLineInput[] =>
+    Object.entries(cart.value).map(([id, item]) => {
+      const line: CartLineInput = {
+        item_id: Number(id),
+        quantity: item.quantity
+      };
+      if (item.size) {
+        line.size = item.size;
+      }
+      if (item.material_id && item.material_id !== "default") {
+        line.material_id = item.material_id;
+      }
+      return line;
+    });
   const deleteItem = (id: string) => {
     if (!cart.value[id]) return;
     const itemSum = cart.value[id].price * cart.value[id].quantity;
@@ -47,7 +69,7 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
   const restoreSnapshot = (snapshot: Record<string, CartStore.Item>) => {
     cart.value = { ...snapshot };
     sum.value = Object.values(cart.value).reduce(
-      (acc, item) => acc + item.quantity * item.quantity,
+      (acc, item) => acc + item.price * item.quantity,
       0
     );
   };
@@ -62,7 +84,9 @@ export const useCartStore = defineStore(StoreNames.Cart, () => {
     sum,
     itemIDs,
     addItem,
+    cartLines,
     deleteItem,
+    changeQuantity,
     increaseQuantity,
     decreaseQuantity,
     restoreSnapshot,

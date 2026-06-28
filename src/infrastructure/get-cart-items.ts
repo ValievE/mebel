@@ -12,7 +12,7 @@ export type GetCartItemsResponseItem = Partial<{
   id: number;
   in_stock: number;
   title: string;
-  type: ExtFurnitureType;
+  types: ExtFurnitureType[];
   price: number;
   article: string;
   size: string;

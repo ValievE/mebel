@@ -167,6 +167,9 @@ const items: HomepageNavigatorNS.Item[] = [
 }
 
 @media screen and (max-width: 768px) {
+  .homepage-navigator {
+    grid-template-columns: 1fr;
+  }
   .homepage-navigator__item-icon-wrapper {
     position: absolute;
     top: 50%;

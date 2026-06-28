@@ -1,26 +1,21 @@
 import query from "@/infrastructure/query.ts";
 import { ExtFurnitureType } from "@/infrastructure/types.ts";
 import { CatalogSort, type FurnitureType } from "@/types/types.ts";
-import { AdaptCatalogSort } from "@/infrastructure/adapters.ts";
+import {
+  adaptCatalogFilter,
+  adaptCatalogSort
+} from "@/infrastructure/adapters.ts";
 
-export enum GetListSort {
-  PriceAsc = "price.asc",
-  PriceDesc = "price.desc",
-  TitleAsc = "title.asc",
-  TitleDesc = "title.desc",
-  Default = "id.asc"
-}
 export type GetListRequest = {
-  filter?: {
-    type: FurnitureType[];
-  };
+  filter?: FurnitureType[];
   sort?: CatalogSort;
 };
+
 export type GetListResponse = Array<
   Partial<{
     id: number;
     title: string;
-    type: ExtFurnitureType;
+    types: ExtFurnitureType[];
     images: string[];
     price: number;
     article: string;
@@ -31,11 +26,13 @@ export type GetListResponse = Array<
 export async function getList(
   payload?: GetListRequest
 ): Promise<GetListResponse> {
-  const params: Record<string, string> = {
-    sort: AdaptCatalogSort(payload?.sort)
+  const params: Record<string, string | string[]> = {
+    sort: String(adaptCatalogSort.toDto(payload?.sort))
   };
-  if (payload?.filter?.type !== undefined) {
-    params.type = String(payload.filter.type);
+  if (payload?.filter?.length) {
+    params.filter = payload?.filter.map(t =>
+      String(adaptCatalogFilter.toDto(t))
+    );
   }
   return query<GetListResponse>({
     point: `/api/v1/catalog`,

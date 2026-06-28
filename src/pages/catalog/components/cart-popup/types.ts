@@ -5,7 +5,7 @@ export namespace CartPopupNS {
     id: string;
     title: string;
     tags: Record<
-      "type" | "quantity" | "price",
+      "quantity" | "price",
       {
         text: string;
         type: UIComponentsNS.Style;

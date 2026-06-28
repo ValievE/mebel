@@ -16,7 +16,7 @@ export type ItemVariantSizeGroup = {
 export type GetItemResponse = Partial<{
   id: number;
   title: string;
-  type: ExtFurnitureType;
+  types: ExtFurnitureType[];
   in_stock: number;
   article: string;
   created_at: string;

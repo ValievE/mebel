@@ -9,7 +9,7 @@ export namespace ItemPopupNS {
     article: string;
     variants: ItemVariantSizeGroup[];
     images: string[];
-    type: FurnitureType;
+    type: FurnitureType[];
     isAdded?: boolean;
     pickedOptions: {
       material: string;

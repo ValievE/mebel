@@ -9,5 +9,7 @@ export namespace CartStore {
   export type Item = {
     quantity: number;
     price: number;
+    size?: string;
+    material_id?: string;
   };
 }

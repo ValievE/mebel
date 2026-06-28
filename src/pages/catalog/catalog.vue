@@ -97,8 +97,8 @@ import infrastructure from "@/infrastructure";
 import { type GetListRequest } from "@/infrastructure/get-list.ts";
 import {
   getCartItemsAdapter,
+  getItemSelectedPrice,
   getItemAdapter,
-  getItemMinPrice,
   getListAdapter
 } from "@/pages/catalog/adapters.ts";
 import CatalogItem from "@/pages/catalog/components/catalog-item/catalog-item.vue";
@@ -116,7 +116,6 @@ import type {
 import { useUiStore } from "@/stores/use-ui-store.ts";
 import CartPopup from "@/pages/catalog/components/cart-popup/cart-popup.vue";
 import { useCartStore } from "@/stores/use-cart-store.ts";
-import { type CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
 import { useAuthStore } from "@/stores/use-auth-store.ts";
 import {
   initGuestPaymentRequest,
@@ -157,7 +156,7 @@ const itemPopup: ItemPopupObject = reactive({
       title: "Название кухни 1234",
       parameters: {},
       images: [],
-      type: FurnitureType.Other,
+      type: [],
       id: "",
       pickedOptions: {
         material: "",
@@ -186,11 +185,12 @@ const itemPopup: ItemPopupObject = reactive({
       });
     },
     addToCart() {
-      cart.functions.addItem(
-        itemPopup.data.data.id,
-        getItemMinPrice(itemPopup.data.data)
-      );
-      itemPopup.data.data.isAdded = true;
+      const data = itemPopup.data.data;
+      cartStore.addItem(data.id, getItemSelectedPrice(data), {
+        size: data.pickedOptions.size,
+        material_id: data.pickedOptions.material
+      });
+      data.isAdded = true;
     },
     updateSize(value: string) {
       itemPopup.data.data.pickedOptions.size = value;
@@ -308,7 +308,7 @@ const cart: CartObject = reactive({
       try {
         [cart.popupData.data.items, cart.popupData.data.sum] =
           getCartItemsAdapter(
-            await infrastructure.getCartItems(cartStore.itemIDs)
+            await infrastructure.getCartItems(cartStore.cartLines())
           );
         cartStore.sum = cart.popupData.data.sum;
       } catch {
@@ -336,21 +336,19 @@ const cart: CartObject = reactive({
       const item = cart.popupData.data.items.find(i => i.id === payload.id);
       if (!item) return;
 
-      const changeQuantity = (item: CartPopupNS.Item) => {
-        if (payload.increase) {
-          if (item.quantity + 1 > item.inStock) return;
-          item.quantity += 1;
-          return;
-        }
-
-        if (item.quantity === 1) {
-          cart.functions.deleteItem(payload.id);
-          return;
-        }
+      if (payload.increase) {
+        if (item.quantity + 1 > item.inStock) return;
+        item.quantity += 1;
+        cartStore.changeQuantity(payload.id, true);
+      } else if (item.quantity === 1) {
+        cart.functions.deleteItem(payload.id);
+        return;
+      } else {
         item.quantity -= 1;
-      };
-      changeQuantity(item);
+        cartStore.changeQuantity(payload.id, false);
+      }
 
+      cart.popupData.data.sum = cartStore.sum;
       item.tags.quantity.text = "Кол-во: " + item.quantity;
       item.tags.price.text = item.price * item.quantity + "Р";
     },
@@ -496,10 +494,7 @@ const getItem = async (id: string) => {
 const checkout = async (guest: boolean) => {
   if (uiStore.loaders.checkout || !cartStore.itemIDs.length) return;
 
-  const items = cartStore.itemIDs.map(id => ({
-    item_id: Number(id),
-    quantity: cartStore.cart[id]?.quantity ?? 1
-  }));
+  const items = cartStore.cartLines();
   const returnUrl = `${window.location.origin}/catalog`;
 
   uiStore.loaders.checkout = true;
