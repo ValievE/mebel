@@ -1,5 +1,6 @@
 import { LayoutName, PageName } from "@/router/consts.ts";
 import {
+  CatalogSort,
   DocumentsTypeRoute,
   type ErrorType,
   FurnitureType,
@@ -73,4 +74,22 @@ export const debounce = <T extends (...arg: any[]) => any>(
       func(...arg);
     }, timeout);
   };
+};
+
+export const stringToFurnitureType = (value: string): FurnitureType | null => {
+  for (const key of Object.keys(FurnitureType)) {
+    if (FurnitureType[key as keyof typeof FurnitureType] === value) {
+      return FurnitureType[key as keyof typeof FurnitureType];
+    }
+  }
+  return null;
+};
+
+export const stringToCatalogSort = (value: string): CatalogSort | null => {
+  for (const key of Object.keys(CatalogSort)) {
+    if (CatalogSort[key as keyof typeof CatalogSort] === value) {
+      return CatalogSort[key as keyof typeof CatalogSort];
+    }
+  }
+  return null;
 };

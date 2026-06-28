@@ -205,12 +205,19 @@ export namespace UIComponentsNS {
 }
 
 export enum FurnitureType {
-  Kitchen = "Kitchen",
-  LivingRoom = "LivingRoom",
-  Bathroom = "Bathroom",
-  Bedroom = "Bedroom",
-  Wardrobe = "Wardrobe",
-  Other = "Other"
+  Kitchen = "kitchen",
+  LivingRoom = "living-room",
+  Bathroom = "bathroom",
+  Bedroom = "bedroom",
+  Wardrobe = "wardrobe",
+  Other = "other"
+}
+export enum CatalogSort {
+  PriceAsc = "price-asc",
+  PriceDesc = "price-desc",
+  TitleAsc = "title-asc",
+  TitleDesc = "title-desc",
+  Default = "default"
 }
 
 export type NavBarLink = {

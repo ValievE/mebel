@@ -1,6 +1,9 @@
 import type { ItemPopupNS } from "@/pages/catalog/components/item-popup/types.ts";
-import { FurnitureType, type UIComponentsNS } from "@/types/types.ts";
-import { GetListSort } from "@/infrastructure/get-list.ts";
+import {
+  CatalogSort,
+  FurnitureType,
+  type UIComponentsNS
+} from "@/types/types.ts";
 import type { CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
 import { type CheckoutPopupNS } from "@/pages/catalog/components/checkout-popup/types.ts";
 
@@ -16,10 +19,10 @@ export type ItemPopupObject = {
 };
 
 export type SortSelector = {
-  items: UIComponentsNS.Selector.Option<GetListSort>[];
-  value: GetListSort[];
+  items: UIComponentsNS.Selector.Option<CatalogSort>[];
+  value: CatalogSort[];
   functions: {
-    updateValue(id: GetListSort[]): Promise<void>;
+    updateValue(id: CatalogSort[]): Promise<void>;
   };
 };
 export type FilterSelector = {

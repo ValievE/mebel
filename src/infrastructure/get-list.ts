@@ -1,6 +1,7 @@
 import query from "@/infrastructure/query.ts";
 import { ExtFurnitureType } from "@/infrastructure/types.ts";
-import type { FurnitureType } from "@/types/types.ts";
+import { CatalogSort, type FurnitureType } from "@/types/types.ts";
+import { AdaptCatalogSort } from "@/infrastructure/adapters.ts";
 
 export enum GetListSort {
   PriceAsc = "price.asc",
@@ -11,9 +12,9 @@ export enum GetListSort {
 }
 export type GetListRequest = {
   filter?: {
-    type: FurnitureType;
+    type: FurnitureType[];
   };
-  sort?: GetListSort;
+  sort?: CatalogSort;
 };
 export type GetListResponse = Array<
   Partial<{
@@ -31,7 +32,7 @@ export async function getList(
   payload?: GetListRequest
 ): Promise<GetListResponse> {
   const params: Record<string, string> = {
-    sort: payload?.sort || GetListSort.Default
+    sort: AdaptCatalogSort(payload?.sort)
   };
   if (payload?.filter?.type !== undefined) {
     params.type = String(payload.filter.type);

@@ -94,7 +94,7 @@ import ScrollContainer from "@/components/scroll-container/scroll-container.vue"
 import Selector from "@/components/selector/selector.vue";
 import WarningBadge from "@/components/warning-badge/warning-badge.vue";
 import infrastructure from "@/infrastructure";
-import { type GetListRequest, GetListSort } from "@/infrastructure/get-list.ts";
+import { type GetListRequest } from "@/infrastructure/get-list.ts";
 import {
   getCartItemsAdapter,
   getItemAdapter,
@@ -103,8 +103,7 @@ import {
 } from "@/pages/catalog/adapters.ts";
 import CatalogItem from "@/pages/catalog/components/catalog-item/catalog-item.vue";
 import { type CatalogItemNS } from "@/pages/catalog/components/catalog-item/types.ts";
-import type { ErrorType } from "@/types/types.ts";
-import { FurnitureType } from "@/types/types.ts";
+import { CatalogSort, type ErrorType, FurnitureType } from "@/types/types.ts";
 import ItemPopup from "@/pages/catalog/components/item-popup/item-popup.vue";
 
 import type {
@@ -126,19 +125,18 @@ import {
 import { createGuestOrder } from "@/infrastructure/create-guest-order.ts";
 import { usePaymentReturn } from "@/composables/use-payment-return.ts";
 import { validator } from "@/common/validator.ts";
-import { debounce, furnitureName, getErrorText } from "@/common/consts.ts";
+import {
+  debounce,
+  furnitureName,
+  getErrorText,
+  stringToCatalogSort,
+  stringToFurnitureType
+} from "@/common/consts.ts";
 import CheckoutPopup from "@/pages/catalog/components/checkout-popup/checkout-popup.vue";
+import { useRoute, useRouter } from "vue-router";
 
-const catalogItems = ref<CatalogItemNS.Props[]>([]);
-const error = ref<string>("");
-const deliveryCities = ref<string[]>([]);
-
-const citiesHint = computed(() =>
-  deliveryCities.value.length
-    ? `Доступные населённые пункты: ${deliveryCities.value.join(", ")}`
-    : undefined
-);
-
+const route = useRoute();
+const router = useRouter();
 const uiStore = useUiStore();
 const cartStore = useCartStore();
 const authStore = useAuthStore();
@@ -169,11 +167,23 @@ const itemPopup: ItemPopupObject = reactive({
   },
   functions: {
     open(id) {
+      router.replace({
+        query: {
+          ...route.query,
+          product: id
+        }
+      });
       uiStore.openPopup(itemPopup.data.id);
       getItem(id);
     },
     close() {
       uiStore.closePopup(itemPopup.data.id);
+      router.replace({
+        query: {
+          ...route.query,
+          product: undefined
+        }
+      });
     },
     addToCart() {
       cart.functions.addItem(
@@ -196,27 +206,27 @@ const itemPopup: ItemPopupObject = reactive({
 const sortSelector: SortSelector = reactive({
   items: [
     {
-      id: GetListSort.PriceAsc,
+      id: CatalogSort.PriceAsc,
       name: "По возрастанию цены"
     },
     {
-      id: GetListSort.PriceDesc,
+      id: CatalogSort.PriceDesc,
       name: "По убыванию цены"
     },
     {
-      id: GetListSort.TitleAsc,
+      id: CatalogSort.TitleAsc,
       name: "По названию (А–Я)"
     },
     {
-      id: GetListSort.TitleDesc,
+      id: CatalogSort.TitleDesc,
       name: "По названию (Я–А)"
     },
     {
-      id: GetListSort.Default,
+      id: CatalogSort.Default,
       name: "По-умолчанию"
     }
   ],
-  value: [GetListSort.Default],
+  value: [CatalogSort.Default],
   functions: {
     async updateValue(id) {
       if (!id[1]) return;
@@ -224,6 +234,16 @@ const sortSelector: SortSelector = reactive({
         sort: id[1]
       });
       sortSelector.value = [id[1]];
+      await router.replace({
+        query: {
+          ...route.query,
+          sort:
+            sortSelector.value.length &&
+            sortSelector.value[0] !== CatalogSort.Default
+              ? sortSelector.value[0]
+              : undefined
+        }
+      });
     }
   }
 });
@@ -257,10 +277,10 @@ const filterSelector: FilterSelector = reactive({
   value: [],
   functions: {
     async updateValue(id) {
-      // await getList({
-      //   sort: id
-      // });
       filterSelector.value = id;
+      await router.replace({
+        query: { ...route.query, filter: id.join(",") }
+      });
     }
   }
 });
@@ -391,7 +411,18 @@ const checkoutPopup: CheckoutPopupObject = reactive({
   }
 });
 
+const catalogItems = ref<CatalogItemNS.Props[]>([]);
+const error = ref<string>("");
+const deliveryCities = ref<string[]>([]);
+
+const citiesHint = computed(() =>
+  deliveryCities.value.length
+    ? `Доступные населённые пункты: ${deliveryCities.value.join(", ")}`
+    : undefined
+);
+
 onMounted(async () => {
+  handleQuery();
   getList();
   void loadDeliveryCities();
   await handlePaymentReturn();
@@ -415,7 +446,6 @@ const loadDeliveryCities = async () => {
     deliveryCities.value = [];
   }
 };
-
 const applyCheckoutError = (e: unknown, guest: boolean) => {
   const err = e as ErrorType;
   const code = err.response?.data?.error?.code;
@@ -436,7 +466,6 @@ const applyCheckoutError = (e: unknown, guest: boolean) => {
 
   uiStore.addToast(message || "Не удалось оформить заказ", "error");
 };
-
 const getList = async (payload?: GetListRequest) => {
   uiStore.loaders.itemList = true;
   error.value = "";
@@ -507,6 +536,42 @@ const checkout = async (guest: boolean) => {
   } finally {
     uiStore.loaders.checkout = false;
   }
+};
+const handleQuery = () => {
+  if (route.query.filter) {
+    const filters = route.query.filter.toString().split(",");
+
+    filters.forEach(f => {
+      const filter = stringToFurnitureType(f);
+      if (filter) {
+        filterSelector.value.push(filter);
+      }
+    });
+  }
+  if (route.query.sort) {
+    const sort = route.query.sort.toString() || "";
+
+    const item = stringToCatalogSort(sort);
+    if (item) {
+      sortSelector.value = [item];
+    }
+  }
+  if (route.query.product) {
+    itemPopup.functions.open(route.query.product.toString() || "");
+  }
+  router.replace({
+    query: {
+      ...route.query,
+      filter: filterSelector.value.length
+        ? filterSelector.value.join(",")
+        : undefined,
+      sort:
+        sortSelector.value.length &&
+        sortSelector.value[0] !== CatalogSort.Default
+          ? sortSelector.value[0]
+          : undefined
+    }
+  });
 };
 </script>
 
