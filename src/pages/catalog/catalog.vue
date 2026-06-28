@@ -279,7 +279,7 @@ const filterSelector: FilterSelector = reactive({
     async updateValue(id) {
       filterSelector.value = id;
       await router.replace({
-        query: { ...route.query, filter: id.join(",") }
+        query: { ...route.query, filter: id.length ? id.join(",") : undefined }
       });
     }
   }

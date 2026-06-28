@@ -167,10 +167,10 @@ const clickHandler = () => {
   pointer-events: none;
   background-color: var(--gray-10);
   &.button-component_red {
-    background-color: var(--red-40);
+    background-color: var(--red-20);
   }
   &.button-component_orange {
-    background-color: var(--orange-40);
+    background-color: var(--orange-20);
   }
 }
 </style>

@@ -100,3 +100,24 @@
   filter: contrast(100%);
   opacity: 1;
 }
+
+/* animation_blinking */
+
+.animation_blinking {
+  animation: animation_blinking 2s infinite ease-in-out;
+}
+
+@keyframes animation_blinking {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  90% {
+    scale: 3;
+    opacity: 0;
+  }
+  100% {
+    scale: 3;
+    opacity: 0;
+  }
+}

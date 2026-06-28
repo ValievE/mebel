@@ -7,7 +7,9 @@
     }"
   >
     <div ref="trigger" class="selector__value" @click="toggleSelector">
-      <!--      TODO: toggleSelector & v-click-->
+      <div v-if="modelValue.length" class="selector__value-indicator">
+        <div class="selector__value-indicator-blinker animation_blinking"></div>
+      </div>
       <span class="selector__value-text">
         {{ valueText }}
       </span>
@@ -107,6 +109,23 @@ const toggleSelector = debounce(
   align-items: center;
   width: 100%;
   user-select: none;
+}
+.selector__value-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: var(--orange-50);
+  border-radius: 50%;
+  border: 2px solid var(--white);
+}
+.selector__value-indicator-blinker {
+  width: 100%;
+  height: 100%;
+  background-color: var(--red-50);
+  border-radius: 50%;
+  z-index: -1;
 }
 .selector__value-text {
   color: var(--white);
