@@ -1,20 +1,21 @@
 <template>
   <form class="item-form" @submit.prevent="emit('save')">
-    <section class="item-form__section">
+    <section class="item-form__section item-form__section_row">
       <h2 class="item-form__section-title">Основное</h2>
       <InputComponent
         v-model="form.title"
+        class="item-form__section-input"
         label="Название"
         required
         :disabled="saving"
       />
       <InputComponent
         v-model="form.article"
+        class="item-form__section-input"
         label="Артикул"
         :disabled="saving"
       />
     </section>
-
     <section class="item-form__section">
       <h2 class="item-form__section-title">Тип мебели</h2>
       <div class="item-form__types">
@@ -29,7 +30,6 @@
         </Checkbox>
       </div>
     </section>
-
     <section class="item-form__section">
       <h2 class="item-form__section-title">Изображения</h2>
       <ImageUploadField
@@ -66,7 +66,6 @@
         Добавить фото
       </ButtonComponent>
     </section>
-
     <section class="item-form__section">
       <h2 class="item-form__section-title">Параметры</h2>
       <div
@@ -74,31 +73,37 @@
         :key="'param-' + index"
         class="item-form__row"
       >
+        <h3 class="item-form__row-title">{{ "Параметр " + (index + 1) }}</h3>
+        <InputComponent
+          class="item-form__row-input"
+          :model-value="form.parameters[index] ?? ''"
+          label="Название"
+          :disabled="saving"
+          @update:model-value="form.parameters[index] = $event"
+        />
         <InputComponent
           :model-value="form.parameters[index] ?? ''"
-          :label="'Параметр ' + (index + 1)"
+          class="item-form__row-input"
+          label="Значение"
           :disabled="saving"
           @update:model-value="form.parameters[index] = $event"
         />
         <ButtonComponent
           type="white"
-          size="s"
+          size="m"
+          icon-name="trash-full"
           :disabled="saving || form.parameters.length === 1"
           @click.prevent="removeParameter(index)"
-        >
-          Удалить
-        </ButtonComponent>
+        />
       </div>
       <ButtonComponent
-        type="white"
-        size="s"
+        type="orange"
         :disabled="saving"
         @click.prevent="addParameter"
       >
         Добавить параметр
       </ButtonComponent>
     </section>
-
     <section v-if="!form.sizes.length" class="item-form__section">
       <h2 class="item-form__section-title">Цена и остаток</h2>
       <p class="item-form__hint">
@@ -119,7 +124,6 @@
         />
       </div>
     </section>
-
     <section class="item-form__section">
       <h2 class="item-form__section-title">Размеры и материалы</h2>
       <div
@@ -128,90 +132,62 @@
         class="item-form__size-block"
       >
         <div class="item-form__row">
-          <InputComponent
-            v-model="sizeGroup.size"
-            label="Размер"
-            :disabled="saving"
-          />
           <ButtonComponent
-            type="white"
-            size="s"
+            type="red"
             :disabled="saving"
             @click.prevent="removeSize(sizeIndex)"
           >
             Удалить размер
           </ButtonComponent>
+          <InputComponent
+            v-model="sizeGroup.size"
+            label="Размер"
+            :disabled="saving"
+          />
         </div>
-
-        <div
+        <MaterialItem
           v-for="(material, matIndex) in sizeGroup.materials"
           :key="'mat-' + sizeIndex + '-' + matIndex"
-          class="item-form__material-block"
-        >
-          <InputComponent
-            v-model="material.name"
-            label="Материал"
-            :disabled="saving"
-          />
-          <ImageUploadField
-            v-model="material.image"
-            label="Фото материала"
-            :disabled="saving"
-          />
-          <div class="item-form__row item-form__row_inputs">
-            <InputComponent
-              :model-value="String(material.price)"
-              label="Цена, ₽"
-              type="number"
-              :disabled="saving"
-              @update:model-value="material.price = Number($event) || 0"
-            />
-            <InputComponent
-              :model-value="String(material.inStock)"
-              label="Остаток"
-              type="number"
-              :disabled="saving"
-              @update:model-value="material.inStock = Number($event) || 0"
-            />
-          </div>
-          <ButtonComponent
-            type="white"
-            size="s"
-            :disabled="saving"
-            @click.prevent="removeMaterial(sizeIndex, matIndex)"
-          >
-            Удалить материал
-          </ButtonComponent>
-        </div>
-
+          class="item-form__row-material-item"
+          :name="material.name"
+          :image="material.image"
+          :price="material.price"
+          :in-stock="material.inStock"
+          :saving="saving"
+          @delete="removeMaterial(sizeIndex, matIndex)"
+          @update:name="material.name = $event"
+          @update:image="material.image = $event"
+          @update:price="material.price = $event"
+          @update:inStock="material.inStock = $event"
+        />
         <ButtonComponent
           type="white"
-          size="s"
+          class="item-form__row-button"
           :disabled="saving"
           @click.prevent="addMaterial(sizeIndex)"
         >
-          Добавить материал
+          + Добавить материал
         </ButtonComponent>
       </div>
 
-      <ButtonComponent
-        type="white"
-        size="s"
-        :disabled="saving"
-        @click.prevent="addSize"
-      >
-        Добавить размер
+      <ButtonComponent type="white" :disabled="saving" @click.prevent="addSize">
+        + Добавить размер
       </ButtonComponent>
     </section>
 
     <div class="item-form__actions">
-      <ButtonComponent type="red" size="m" wide :disabled="saving">
+      <ButtonComponent
+        class="item-form__actions-button"
+        type="red"
+        size="m"
+        :disabled="saving"
+      >
         {{ isEdit ? "Сохранить" : "Создать" }}
       </ButtonComponent>
       <ButtonComponent
         type="white"
+        class="item-form__actions-button"
         size="m"
-        wide
         :disabled="saving"
         @click.prevent="emit('cancel')"
       >
@@ -229,10 +205,11 @@ import Checkbox from "@/components/checkbox/checkbox.vue";
 import ImageUploadField from "@/components/image-upload-field/image-upload-field.vue";
 import { furnitureName } from "@/common/consts.ts";
 import { FurnitureType } from "@/types/types.ts";
-import type { BackofficeNS } from "@/pages/backoffice-list/types.ts";
+import { type BackofficeForm } from "@/pages/backoffice-form/components/item-form/types.ts";
+import MaterialItem from "@/pages/backoffice-form/components/item-form/components/material-item.vue";
 
-const props = defineProps<BackofficeNS.ItemFormProps>();
-const emit = defineEmits<BackofficeNS.ItemFormEmits>();
+const props = defineProps<BackofficeForm.Props>();
+const emit = defineEmits<BackofficeForm.Emits>();
 
 const form = props.form;
 
@@ -282,7 +259,7 @@ const removeParameter = (index: number) => {
   form.parameters.splice(index, 1);
 };
 
-const emptyMaterial = (): BackofficeNS.MaterialOption => ({
+const emptyMaterial = (): BackofficeForm.MaterialOption => ({
   name: "",
   image: "",
   price: 0,
@@ -322,18 +299,26 @@ const removeMaterial = (sizeIndex: number, matIndex: number) => {
 .item-form {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  max-width: 720px;
-  padding: 24px 24px 24px 0;
+  gap: 24px;
+  padding: 0 24px 24px 0;
+  width: 100%;
 }
 .item-form__section {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+.item-form__section_row {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 .item-form__section-title {
   font-size: var(--font-size-l);
   font-weight: var(--font-weight-semibold);
+  width: 100%;
+}
+.item-form__section-input {
+  flex: 1;
 }
 .item-form__types {
   display: flex;
@@ -345,11 +330,25 @@ const removeMaterial = (sizeIndex: number, matIndex: number) => {
 }
 .item-form__row {
   display: flex;
-  align-items: flex-end;
+  flex-wrap: wrap;
   gap: 12px;
+  align-items: center;
 }
-.item-form__row_inputs {
-  align-items: flex-start;
+.item-form__row-title {
+  width: 100%;
+  font-size: var(--font-size-m);
+  color: var(--gray-20);
+  font-weight: var(--font-weight-medium);
+}
+.item-form__row-input {
+  flex: 1;
+}
+.item-form__row-material-item:not(:last-of-type) {
+  border-bottom: 1px solid var(--gray-20);
+  padding-bottom: 16px;
+}
+.item-form__row-button {
+  margin: 16px auto 0;
 }
 .item-form__row_upload {
   align-items: flex-start;
@@ -365,23 +364,17 @@ const removeMaterial = (sizeIndex: number, matIndex: number) => {
   border: 1px solid var(--gray-20);
   border-radius: 16px;
 }
-.item-form__material-block {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 12px;
-  background: var(--gray-10);
-}
 .item-form__hint {
   color: var(--gray-60);
   font-size: var(--font-size-s);
 }
 .item-form__actions {
   display: flex;
-  flex-direction: column;
   gap: 12px;
   padding-top: 8px;
+}
+.item-form__actions-button {
+  flex: 1;
 }
 
 @media screen and (max-width: 768px) {

@@ -4,19 +4,20 @@
     :class="{ 'image-upload-field_disabled': disabled || uploading }"
   >
     <span v-if="label" class="image-upload-field__label">{{ label }}</span>
-
     <div v-if="previewUrl" class="image-upload-field__preview-wrap">
-      <img class="image-upload-field__preview" :src="previewUrl" :alt="label" />
+      <ImagePreviewer
+        class="image-upload-field__preview"
+        :images="[previewUrl]"
+      />
       <ButtonComponent
         v-if="!disabled && !uploading"
-        type="white"
+        type="red"
         size="s"
         @click.prevent="clear"
       >
-        Удалить
+        Удалить фото
       </ButtonComponent>
     </div>
-
     <label class="image-upload-field__control">
       <input
         class="image-upload-field__input"
@@ -25,11 +26,11 @@
         :disabled="disabled || uploading"
         @change="onFileChange"
       />
+
       <span class="image-upload-field__button">
         {{ uploading ? "Загрузка…" : previewUrl ? "Заменить" : "Выбрать файл" }}
       </span>
     </label>
-
     <span v-if="error" class="image-upload-field__error">{{ error }}</span>
   </div>
 </template>
@@ -39,6 +40,7 @@ import { computed, ref } from "vue";
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import { resolveMediaUrl } from "@/common/media-url.ts";
 import { adminUploadImage } from "@/infrastructure/admin-upload.ts";
+import ImagePreviewer from "@/components/image-previewer/image-previewer.vue";
 
 const props = defineProps<{
   modelValue: string;
@@ -93,15 +95,13 @@ const clear = () => {
 }
 .image-upload-field__preview-wrap {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 12px;
 }
 .image-upload-field__preview {
   width: 120px;
   height: 120px;
-  object-fit: cover;
   border-radius: 12px;
-  background: var(--gray-10);
 }
 .image-upload-field__control {
   display: inline-flex;
@@ -116,8 +116,7 @@ const clear = () => {
   display: none;
 }
 .image-upload-field__button {
-  display: inline-flex;
-  padding: 10px 16px;
+  padding: 0 8px;
   border-radius: 12px;
   background: var(--gray-10);
   font-size: var(--font-size-s);

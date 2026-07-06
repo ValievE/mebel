@@ -3,13 +3,13 @@ import type {
   AdminListItem,
   AdminSaveItemRequest
 } from "@/infrastructure/admin-items.ts";
-import type { BackofficeNS } from "@/pages/backoffice-list/types.ts";
 import { adaptCatalogFilter } from "@/infrastructure/adapters.ts";
 import { furnitureName } from "@/common/consts.ts";
 import { FurnitureType } from "@/types/types.ts";
 import { type BackofficeItemNS } from "@/pages/backoffice-list/components/backoffice-item/types.ts";
+import { type BackofficeForm } from "@/pages/backoffice-form/components/item-form/types.ts";
 
-export const emptyForm = (): BackofficeNS.Form => ({
+export const emptyForm = (): BackofficeForm.Form => ({
   title: "",
   article: "",
   types: [],
@@ -21,7 +21,7 @@ export const emptyForm = (): BackofficeNS.Form => ({
   sizes: []
 });
 
-export const formToDto = (form: BackofficeNS.Form): AdminSaveItemRequest => ({
+export const formToDto = (form: BackofficeForm.Form): AdminSaveItemRequest => ({
   title: form.title.trim(),
   article: form.article.trim(),
   types: form.types.map(t => adaptCatalogFilter.toDto(t)),
@@ -46,7 +46,7 @@ export const formToDto = (form: BackofficeNS.Form): AdminSaveItemRequest => ({
     .filter(s => s.materials.length)
 });
 
-export const detailToForm = (detail: AdminItemDetail): BackofficeNS.Form => ({
+export const detailToForm = (detail: AdminItemDetail): BackofficeForm.Form => ({
   title: detail.title || "",
   article: detail.article || "",
   types: (detail.types || []).map(t => adaptCatalogFilter.fromDto(t)),
