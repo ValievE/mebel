@@ -64,6 +64,9 @@ export default {
   ) {
     return import("./admin-items.ts").then(m => m.adminUpdateItem(id, payload));
   },
+  adminDeleteItem(id: number) {
+    return import("./admin-items.ts").then(m => m.adminDeleteItem(id));
+  },
   adminUploadImage(file: File) {
     return import("./admin-upload.ts").then(m => m.adminUploadImage(file));
   }

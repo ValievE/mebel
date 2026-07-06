@@ -60,6 +60,12 @@ const router = createRouter({
               path: Routes[PageName.Backoffice].path,
               component: Routes[PageName.Backoffice].component,
               meta: Routes[PageName.Backoffice].meta
+            },
+            {
+              name: Routes[PageName.BackofficeItem].name,
+              path: Routes[PageName.BackofficeItem].path,
+              component: Routes[PageName.BackofficeItem].component,
+              meta: Routes[PageName.BackofficeItem].meta
             }
           ]
         },

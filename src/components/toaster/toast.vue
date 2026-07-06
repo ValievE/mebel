@@ -1,5 +1,11 @@
 <template>
-  <div class="toast">
+  <div
+    class="toast"
+    :class="{
+      toast_success: props.type === 'success',
+      toast_info: props.type === 'info'
+    }"
+  >
     <p class="toast__text">
       <span v-if="titleText" class="toast__text-title">
         {{ titleText }} <br />
@@ -37,5 +43,13 @@ const titleText = props.type === "error" ? "Ошибка!" : "";
 }
 .toast__text-title {
   font-weight: var(--font-weight-medium);
+}
+
+.toast_success {
+  background-color: var(--orange-50);
+}
+
+.toast_info {
+  background-color: var(--gray-30);
 }
 </style>

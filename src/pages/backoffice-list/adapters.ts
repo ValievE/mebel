@@ -3,11 +3,11 @@ import type {
   AdminListItem,
   AdminSaveItemRequest
 } from "@/infrastructure/admin-items.ts";
-import type { BackofficeNS } from "@/pages/backoffice/types.ts";
+import type { BackofficeNS } from "@/pages/backoffice-list/types.ts";
 import { adaptCatalogFilter } from "@/infrastructure/adapters.ts";
 import { furnitureName } from "@/common/consts.ts";
 import { FurnitureType } from "@/types/types.ts";
-import { type BackofficeItemNS } from "@/pages/backoffice/components/backoffice-item/types.ts";
+import { type BackofficeItemNS } from "@/pages/backoffice-list/components/backoffice-item/types.ts";
 
 export const emptyForm = (): BackofficeNS.Form => ({
   title: "",

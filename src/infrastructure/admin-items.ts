@@ -76,3 +76,10 @@ export async function adminUpdateItem(
     }
   }).then(res => res.data);
 }
+
+export async function adminDeleteItem(id: number): Promise<void> {
+  await query({
+    point: `/api/v1/admin/items/${id}`,
+    config: { method: "DELETE" }
+  });
+}

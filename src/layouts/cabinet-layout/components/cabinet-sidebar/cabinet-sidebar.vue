@@ -70,7 +70,7 @@ const UIStore = useUiStore();
   color: var(--gray-70);
 }
 .cabinet-sidebar__links-item:not(:last-child) {
-  border-bottom: 1px solid var(--gray-30);
+  border-bottom: 1px solid var(--gray-10);
 }
 .cabinet-cabinet-sidebar__footer {
   padding: 0 24px 24px;

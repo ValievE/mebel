@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { type BackofficeItemNS } from "@/pages/backoffice/components/backoffice-item/types.ts";
+import { type BackofficeItemNS } from "@/pages/backoffice-list/components/backoffice-item/types.ts";
 import ImagePreviewer from "@/components/image-previewer/image-previewer.vue";
 import ButtonComponent from "@/components/button-component/button-component.vue";
 

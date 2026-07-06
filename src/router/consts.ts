@@ -13,9 +13,12 @@ export enum PageName {
   Orders = "orders",
   Settings = "settings",
   Backoffice = "backoffice",
+  BackofficeItem = "backoffice-item",
   NotFound = "not-found",
   Legal = "legal"
 }
+
+export const BACKOFFICE_CREATE_ID = "new";
 
 export const Routes = {
   [LayoutName.Narrow]: {
@@ -62,7 +65,13 @@ export const Routes = {
   [PageName.Backoffice]: {
     name: PageName.Backoffice,
     path: "backoffice",
-    component: () => import("@/pages/backoffice/backoffice.vue"),
+    component: () => import("@/pages/backoffice-list/backoffice.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  [PageName.BackofficeItem]: {
+    name: PageName.BackofficeItem,
+    path: "backoffice/:id",
+    component: () => import("@/pages/backoffice-form/backoffice-form.vue"),
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   [PageName.NotFound]: {

@@ -57,7 +57,12 @@
           Удалить
         </ButtonComponent>
       </div>
-      <ButtonComponent type="white" size="s" :disabled="saving" @click.prevent="addImage">
+      <ButtonComponent
+        type="white"
+        size="s"
+        :disabled="saving"
+        @click.prevent="addImage"
+      >
         Добавить фото
       </ButtonComponent>
     </section>
@@ -189,7 +194,12 @@
         </ButtonComponent>
       </div>
 
-      <ButtonComponent type="white" size="s" :disabled="saving" @click.prevent="addSize">
+      <ButtonComponent
+        type="white"
+        size="s"
+        :disabled="saving"
+        @click.prevent="addSize"
+      >
         Добавить размер
       </ButtonComponent>
     </section>
@@ -219,7 +229,7 @@ import Checkbox from "@/components/checkbox/checkbox.vue";
 import ImageUploadField from "@/components/image-upload-field/image-upload-field.vue";
 import { furnitureName } from "@/common/consts.ts";
 import { FurnitureType } from "@/types/types.ts";
-import type { BackofficeNS } from "@/pages/backoffice/types.ts";
+import type { BackofficeNS } from "@/pages/backoffice-list/types.ts";
 
 const props = defineProps<BackofficeNS.ItemFormProps>();
 const emit = defineEmits<BackofficeNS.ItemFormEmits>();
