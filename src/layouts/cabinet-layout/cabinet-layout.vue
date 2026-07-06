@@ -20,7 +20,7 @@ import { useAuthStore } from "@/stores/use-auth-store.ts";
 import { PageName } from "@/router/consts.ts";
 import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
 import CabinetSidebar from "@/layouts/cabinet-layout/components/cabinet-sidebar/cabinet-sidebar.vue";
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 import { type CabinetSidebarNS } from "@/layouts/cabinet-layout/components/cabinet-sidebar/types.ts";
 import { useCabinetLayout } from "@/stores/use-cabinet-layout.ts";
 
@@ -28,11 +28,8 @@ const auth = useAuthStore();
 const router = useRouter();
 const layoutStore = useCabinetLayout();
 
-const sidebar: CabinetSidebarNS.Props = reactive({
-  userName: auth.user
-    ? `${auth.user.first_name} ${auth.user.last_name}`.trim()
-    : "",
-  items: [
+const sidebarItems = computed(() => {
+  const items: CabinetSidebarNS.Props["items"] = [
     {
       id: "orders",
       route: PageName.Orders,
@@ -43,7 +40,26 @@ const sidebar: CabinetSidebarNS.Props = reactive({
       route: PageName.Settings,
       title: "Настройки"
     }
-  ],
+  ];
+  if (auth.isAdmin) {
+    items.push({
+      id: "backoffice",
+      route: PageName.Backoffice,
+      title: "Бэкофис"
+    });
+  }
+  return items;
+});
+
+const sidebar: CabinetSidebarNS.Props = reactive({
+  get userName() {
+    return auth.user
+      ? `${auth.user.first_name} ${auth.user.last_name}`.trim()
+      : "";
+  },
+  get items() {
+    return sidebarItems.value;
+  },
   loading: false
 });
 

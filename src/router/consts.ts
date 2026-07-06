@@ -12,6 +12,7 @@ export enum PageName {
   Delivery = "delivery",
   Orders = "orders",
   Settings = "settings",
+  Backoffice = "backoffice",
   NotFound = "not-found",
   Legal = "legal"
 }
@@ -57,6 +58,12 @@ export const Routes = {
     name: PageName.Settings,
     path: "settings",
     component: () => import("@/pages/settings/settings.vue")
+  },
+  [PageName.Backoffice]: {
+    name: PageName.Backoffice,
+    path: "backoffice",
+    component: () => import("@/pages/backoffice/backoffice.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   [PageName.NotFound]: {
     name: PageName.NotFound,

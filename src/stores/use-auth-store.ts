@@ -30,6 +30,8 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
     () => accessToken.value.length > 0 && user.value !== null
   );
 
+  const isAdmin = computed(() => Boolean(user.value?.is_admin));
+
   async function refreshAccessToken(): Promise<boolean> {
     try {
       const data = await refresh();
@@ -114,6 +116,7 @@ export const useAuthStore = defineStore(StoreNames.Auth, () => {
     user,
     bootstrapped,
     isAuthenticated,
+    isAdmin,
     setAccessToken,
     bootstrap,
     login,

@@ -48,5 +48,23 @@ export default {
     return import("./delivery/suggest-address.ts").then(m => {
       return m.suggestAddress(payload);
     });
+  },
+  adminListItems() {
+    return import("./admin-items.ts").then(m => m.adminListItems());
+  },
+  adminGetItem(id: number) {
+    return import("./admin-items.ts").then(m => m.adminGetItem(id));
+  },
+  adminCreateItem(payload: import("./admin-items.ts").AdminSaveItemRequest) {
+    return import("./admin-items.ts").then(m => m.adminCreateItem(payload));
+  },
+  adminUpdateItem(
+    id: number,
+    payload: import("./admin-items.ts").AdminSaveItemRequest
+  ) {
+    return import("./admin-items.ts").then(m => m.adminUpdateItem(id, payload));
+  },
+  adminUploadImage(file: File) {
+    return import("./admin-upload.ts").then(m => m.adminUploadImage(file));
   }
 };

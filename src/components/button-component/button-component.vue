@@ -51,9 +51,9 @@ const iconSize = computed<number>(() => {
   }
 });
 
-const clickHandler = () => {
+const clickHandler = (e: Event) => {
   if (props.disabled) return;
-  emit("click");
+  emit("click", e);
 };
 </script>
 

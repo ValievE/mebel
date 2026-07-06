@@ -54,6 +54,12 @@ const router = createRouter({
               name: Routes[PageName.Settings].name,
               path: Routes[PageName.Settings].path,
               component: Routes[PageName.Settings].component
+            },
+            {
+              name: Routes[PageName.Backoffice].name,
+              path: Routes[PageName.Backoffice].path,
+              component: Routes[PageName.Backoffice].component,
+              meta: Routes[PageName.Backoffice].meta
             }
           ]
         },
@@ -83,6 +89,14 @@ router.beforeEach(async (to, _from, next) => {
   );
   if (requiresAuth && !auth.isAuthenticated) {
     next({ name: PageName.Catalog });
+    return;
+  }
+
+  const requiresAdmin = to.matched.some(
+    record => record.meta.requiresAdmin === true
+  );
+  if (requiresAdmin && !auth.isAdmin) {
+    next({ name: PageName.Orders });
     return;
   }
   next();

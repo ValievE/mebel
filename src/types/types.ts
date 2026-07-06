@@ -34,7 +34,8 @@ export namespace UIComponentsNS {
       "kitchen",
       "sofa",
       "bath",
-      "bed"
+      "bed",
+      "trash-full"
     ] as const;
 
     export type Names = (typeof Icon.names)[number];
@@ -54,7 +55,7 @@ export namespace UIComponentsNS {
       wide?: boolean;
     };
     export type Emits = {
-      (e: "click"): void;
+      (e: "click", event: Event): void;
     };
   }
 
