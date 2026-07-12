@@ -76,17 +76,17 @@
         <h3 class="item-form__row-title">{{ "Параметр " + (index + 1) }}</h3>
         <InputComponent
           class="item-form__row-input"
-          :model-value="form.parameters[index] ?? ''"
+          :model-value="form.parameters[index]?.key ?? ''"
           label="Название"
           :disabled="saving"
-          @update:model-value="form.parameters[index] = $event"
+          @update:model-value="updateParameterKey(index, $event)"
         />
         <InputComponent
-          :model-value="form.parameters[index] ?? ''"
+          :model-value="form.parameters[index]?.value ?? ''"
           class="item-form__row-input"
           label="Значение"
           :disabled="saving"
-          @update:model-value="form.parameters[index] = $event"
+          @update:model-value="updateParameterValue(index, $event)"
         />
         <ButtonComponent
           type="white"
@@ -248,12 +248,24 @@ const removeImage = (index: number) => {
 };
 
 const addParameter = () => {
-  form.parameters.push("");
+  form.parameters.push({ key: "", value: "" });
+};
+
+const updateParameterKey = (index: number, value: string) => {
+  const parameter = form.parameters[index];
+  if (!parameter) return;
+  parameter.key = value;
+};
+
+const updateParameterValue = (index: number, value: string) => {
+  const parameter = form.parameters[index];
+  if (!parameter) return;
+  parameter.value = value;
 };
 
 const removeParameter = (index: number) => {
   if (form.parameters.length === 1) {
-    form.parameters[0] = "";
+    form.parameters[0] = { key: "", value: "" };
     return;
   }
   form.parameters.splice(index, 1);

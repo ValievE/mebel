@@ -21,7 +21,7 @@ export type GetItemResponse = Partial<{
   article: string;
   created_at: string;
   images: string[];
-  parameters: Record<string, string>;
+  parameters: string[];
   variants: ItemVariantSizeGroup[];
 }>;
 

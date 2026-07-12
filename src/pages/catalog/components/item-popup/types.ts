@@ -6,7 +6,7 @@ export namespace ItemPopupNS {
   export type Data = {
     id: string;
     title: string;
-    parameters: Record<string, string>;
+    parameters: string[];
     article: string;
     variants: ItemVariantSizeGroup[];
     images: string[];

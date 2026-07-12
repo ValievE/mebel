@@ -5,18 +5,17 @@
   >
     <span v-if="label" class="image-upload-field__label">{{ label }}</span>
     <div v-if="previewUrl" class="image-upload-field__preview-wrap">
+      <ButtonComponent
+        v-if="!disabled && !uploading"
+        class="image-upload-field__preview-button"
+        icon-name="close"
+        size="s"
+        @click.prevent="clear"
+      />
       <ImagePreviewer
         class="image-upload-field__preview"
         :images="[previewUrl]"
       />
-      <ButtonComponent
-        v-if="!disabled && !uploading"
-        type="red"
-        size="s"
-        @click.prevent="clear"
-      >
-        Удалить фото
-      </ButtonComponent>
     </div>
     <label class="image-upload-field__control">
       <input
@@ -97,6 +96,14 @@ const clear = () => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  position: relative;
+  width: fit-content;
+}
+.image-upload-field__preview-button {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  z-index: 2;
 }
 .image-upload-field__preview {
   width: 120px;

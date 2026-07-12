@@ -25,11 +25,11 @@
       <ScrollContainer class="item-popup__info-parameters">
         <p class="item-popup__info-parameters-list">
           <span
-            v-for="(parameterValue, parameterKey) in props.data.parameters"
-            :key="parameterKey"
+            v-for="parameter in props.data.parameters"
+            :key="parameter"
             class="item-popup__info-parameters-list-item"
           >
-            {{ parameterKey }}: {{ parameterValue }}
+            {{ parameter }}
           </span>
         </p>
         <div class="item-popup__info-parameters-configurator">

@@ -5,26 +5,27 @@
       <strong>{{ props.userName }}</strong>
     </p>
     <div class="cabinet-sidebar__links">
-      <RouterLink
-        v-for="link in props.items"
-        :key="link.id"
-        class="cabinet-sidebar__links-item"
-        exact-active-class="cabinet-sidebar__links-item_active"
-        :to="{ name: link.route }"
-      >
-        {{ link.title }}
-      </RouterLink>
+      <ScrollContainer class="cabinet-sidebar__links-scroll">
+        <div class="cabinet-sidebar__links-items">
+          <RouterLink
+            v-for="link in props.items"
+            :key="link.id"
+            class="cabinet-sidebar__links-item"
+            exact-active-class="cabinet-sidebar__links-item_active"
+            :to="{ name: link.route }"
+          >
+            {{ link.title }}
+          </RouterLink>
+          <ButtonComponent
+            class="cabinet-sidebar__links-button"
+            type="red"
+            @click="$emit('logout')"
+          >
+            Выйти
+          </ButtonComponent>
+        </div>
+      </ScrollContainer>
     </div>
-    <footer class="cabinet-cabinet-sidebar__footer">
-      <ButtonComponent
-        class="cabinet-cabinet-sidebar__footer-button"
-        wide
-        type="red"
-        @click="$emit('logout')"
-      >
-        Выйти
-      </ButtonComponent>
-    </footer>
   </div>
 </template>
 
@@ -32,6 +33,7 @@
 import { type CabinetSidebarNS } from "@/layouts/cabinet-layout/components/cabinet-sidebar/types.ts";
 import ButtonComponent from "@/components/button-component/button-component.vue";
 import { useUiStore } from "@/stores/use-ui-store.ts";
+import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
 
 defineProps<{ props: CabinetSidebarNS.Props }>();
 defineEmits<CabinetSidebarNS.Emits>();
@@ -69,24 +71,18 @@ const UIStore = useUiStore();
 .cabinet-sidebar__links-item_active {
   color: var(--gray-70);
 }
-.cabinet-sidebar__links-item:not(:last-child) {
+.cabinet-sidebar__links-item:not(:last-of-type) {
   border-bottom: 1px solid var(--gray-10);
 }
-.cabinet-cabinet-sidebar__footer {
-  padding: 0 24px 24px;
+.cabinet-sidebar__links-button {
+  margin: 12px auto 0;
+  width: calc(100% - 24px);
 }
 @media screen and (max-width: 768px) {
   .cabinet-sidebar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 48px;
-    align-items: center;
-    justify-items: center;
-    gap: 4px;
     padding: 16px;
   }
   .cabinet-layout__title {
-    grid-column: 1/-1;
     padding: 0;
     width: 100%;
 
@@ -95,19 +91,22 @@ const UIStore = useUiStore();
     }
   }
   .cabinet-sidebar__links {
-    grid-column: 1/3;
     width: 100%;
-    padding: 0;
+    padding: 16px 0 0;
+  }
+  .cabinet-sidebar__links-scroll {
+    border-radius: 16px;
+  }
+  .cabinet-sidebar__links-items {
     display: flex;
-    align-items: center;
-    gap: 4px;
+    gap: 8px;
   }
   .cabinet-sidebar__links-item {
+    padding: 10px 16px;
     background-color: var(--gray-10);
     border-radius: 128px;
     text-align: center;
-  }
-  .cabinet-sidebar__links-item:not(:last-child) {
+    width: fit-content;
     border-bottom: none;
   }
   .cabinet-sidebar__links-item_active {
@@ -117,13 +116,9 @@ const UIStore = useUiStore();
       background-color: var(--gray-20);
     }
   }
-  .cabinet-cabinet-sidebar__footer {
-    padding: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .cabinet-cabinet-sidebar__footer-button {
-    height: 100%;
+  .cabinet-sidebar__links-button {
+    margin: 0;
+    width: fit-content;
   }
 }
 </style>

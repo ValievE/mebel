@@ -7,6 +7,10 @@ export namespace BackofficeForm {
     price: number;
     inStock: number;
   };
+  export type Parameter = {
+    key: string;
+    value: string;
+  };
   export type SizeGroup = {
     size: string;
     materials: MaterialOption[];
@@ -17,7 +21,7 @@ export namespace BackofficeForm {
     types: FurnitureType[];
     coverImage: string;
     images: string[];
-    parameters: string[];
+    parameters: Parameter[];
     price: number;
     inStock: number;
     sizes: SizeGroup[];

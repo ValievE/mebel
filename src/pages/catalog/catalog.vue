@@ -154,7 +154,7 @@ const itemPopup: ItemPopupObject = reactive({
       article: "",
       variants: [],
       title: "Название кухни 1234",
-      parameters: {},
+      parameters: [],
       images: [],
       type: [],
       id: "",

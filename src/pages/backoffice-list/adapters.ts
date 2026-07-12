@@ -9,13 +9,38 @@ import { FurnitureType } from "@/types/types.ts";
 import { type BackofficeItemNS } from "@/pages/backoffice-list/components/backoffice-item/types.ts";
 import { type BackofficeForm } from "@/pages/backoffice-form/components/item-form/types.ts";
 
+const emptyParameter = (): BackofficeForm.Parameter => ({
+  key: "",
+  value: ""
+});
+
+export const parameterToLine = (parameter: BackofficeForm.Parameter): string => {
+  const key = parameter.key.trim();
+  const value = parameter.value.trim();
+  if (!key) {
+    return "";
+  }
+  return `${key}: ${value}`;
+};
+
+export const lineToParameter = (line: string): BackofficeForm.Parameter => {
+  const colonIndex = line.indexOf(":");
+  if (colonIndex === -1) {
+    return { key: line.trim(), value: "" };
+  }
+  return {
+    key: line.slice(0, colonIndex).trim(),
+    value: line.slice(colonIndex + 1).trim()
+  };
+};
+
 export const emptyForm = (): BackofficeForm.Form => ({
   title: "",
   article: "",
   types: [],
   coverImage: "",
   images: [],
-  parameters: [""],
+  parameters: [emptyParameter()],
   price: 0,
   inStock: 0,
   sizes: []
@@ -27,7 +52,7 @@ export const formToDto = (form: BackofficeForm.Form): AdminSaveItemRequest => ({
   types: form.types.map(t => adaptCatalogFilter.toDto(t)),
   cover_image: form.coverImage.trim(),
   images: form.images.map(i => i.trim()).filter(Boolean),
-  parameters: form.parameters.map(p => p.trim()).filter(Boolean),
+  parameters: form.parameters.map(parameterToLine).filter(Boolean),
   price: form.price,
   in_stock: form.inStock,
   sizes: form.sizes
@@ -52,7 +77,9 @@ export const detailToForm = (detail: AdminItemDetail): BackofficeForm.Form => ({
   types: (detail.types || []).map(t => adaptCatalogFilter.fromDto(t)),
   coverImage: detail.cover_image || "",
   images: detail.images?.length ? [...detail.images] : [],
-  parameters: detail.parameters?.length ? [...detail.parameters] : [""],
+  parameters: detail.parameters?.length
+    ? detail.parameters.map(lineToParameter)
+    : [emptyParameter()],
   price: detail.price || 0,
   inStock: detail.in_stock || 0,
   sizes: (detail.sizes || []).map(s => ({
