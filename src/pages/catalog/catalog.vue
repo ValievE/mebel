@@ -353,6 +353,8 @@ const cart: CartObject = reactive({
       item.tags.price.text = item.price * item.quantity + "Р";
     },
     async checkout() {
+      uiStore.addToast("В данный момент оплата недоступна", "error");
+      return;
       checkoutPopup.functions.open();
     }
   }
