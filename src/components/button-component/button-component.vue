@@ -30,10 +30,11 @@ const customClasses = computed<string[]>(() => {
   const classes: string[] = [];
 
   classes.push(`button-component_${props.size}`);
+  classes.push(`button-component_${props.type}`);
 
   if (isIconOnly.value) classes.push("button-component_square");
   if (props.disabled) classes.push("button-component_disabled");
-  if (props.type === "red") classes.push("button-component_red");
+  if (props.wide) classes.push("button-component_wide");
 
   return classes;
 });
@@ -46,14 +47,13 @@ const iconSize = computed<number>(() => {
     case "xl":
       return 32;
     default:
-      return 16;
+      return 20;
   }
 });
 
-const clickHandler = (e: MouseEvent) => {
-  e.preventDefault();
+const clickHandler = (e: Event) => {
   if (props.disabled) return;
-  emit("click");
+  emit("click", e);
 };
 </script>
 
@@ -71,6 +71,7 @@ const clickHandler = (e: MouseEvent) => {
   background-color: var(--white);
   transition: var(--transition-bg-color-100);
   user-select: none;
+  flex-shrink: 0;
 
   &:hover {
     background-color: var(--gray-20);
@@ -79,11 +80,10 @@ const clickHandler = (e: MouseEvent) => {
     background-color: var(--gray-30);
   }
 }
-.button-component_disabled {
-  cursor: not-allowed;
-  pointer-events: none;
-  background-color: var(--gray-10);
+.button-component__text {
+  position: relative;
 }
+
 .button-component_square {
   aspect-ratio: 1;
 }
@@ -105,7 +105,7 @@ const clickHandler = (e: MouseEvent) => {
   }
 }
 .button-component_l {
-  padding: 10px 16px;
+  padding: 12px 16px;
   gap: 8px;
   & > * {
     font-size: var(--font-size-l);
@@ -113,7 +113,7 @@ const clickHandler = (e: MouseEvent) => {
   }
 }
 .button-component_xl {
-  padding: 12px 24px;
+  padding: 16px 24px;
   gap: 12px;
   & > * {
     font-size: var(--font-size-xl);
@@ -121,8 +121,56 @@ const clickHandler = (e: MouseEvent) => {
   }
 }
 .button-component_red {
-  background-color: var(--red-60);
+  background-color: var(--red-50);
   color: var(--white);
   box-shadow: none;
+  &:hover {
+    background-color: var(--red-70);
+  }
+  &:active {
+    background-color: var(--red-80);
+  }
+}
+.button-component_orange {
+  background-color: var(--orange-50);
+  color: var(--white);
+  box-shadow: none;
+  &:hover {
+    background-color: var(--orange-70);
+  }
+  &:active {
+    background-color: var(--orange-80);
+  }
+}
+.button-component_link {
+  box-shadow: none;
+  color: var(--gray-50);
+  background: none;
+  flex-direction: column;
+  gap: 2px;
+
+  &:hover {
+    background: none;
+    color: var(--gray-90);
+  }
+  &:active {
+    background: none;
+    color: var(--gray-60);
+  }
+}
+.button-component_wide {
+  width: 100%;
+}
+
+.button-component_disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  background-color: var(--gray-10);
+  &.button-component_red {
+    background-color: var(--red-20);
+  }
+  &.button-component_orange {
+    background-color: var(--orange-20);
+  }
 }
 </style>

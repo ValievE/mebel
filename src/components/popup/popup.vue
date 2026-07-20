@@ -1,6 +1,6 @@
 <template>
   <teleport to=".overlay">
-    <transition name="fade-100">
+    <Transition name="fade-100">
       <div
         v-if="uiStore.isPopupOpened(id)"
         class="popup-overlay"
@@ -9,7 +9,9 @@
         <div
           class="popup"
           :class="{
-            [`popup_${size}`]: size
+            [`popup_${size}`]: size,
+            'popup_content-height': contentHeight,
+            'popup_content-width': contentWidth
           }"
         >
           <ButtonComponent
@@ -31,8 +33,11 @@
             </div>
           </Transition>
         </div>
+        <div v-if="$slots['additional-popup']" class="additional-popup">
+          <slot name="additional-popup" />
+        </div>
       </div>
-    </transition>
+    </Transition>
   </teleport>
 </template>
 
@@ -61,6 +66,7 @@ const uiStore = useUiStore();
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(15px);
+  gap: 24px;
 }
 
 .popup {
@@ -86,11 +92,53 @@ const uiStore = useUiStore();
 
 .popup__loader,
 .popup__content {
+  width: 100%;
+  height: 100%;
+}
+
+.popup__loader {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+}
+
+.popup__content {
+  overflow: auto;
+  max-height: 100%;
+}
+
+.popup_content-width {
+  width: fit-content;
+  max-width: 100%;
+  .popup__content {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+  }
+}
+
+.popup_content-height {
+  max-height: 100%;
+  height: fit-content;
+  .popup__content {
+    position: relative;
+    max-height: 100%;
+    height: fit-content;
+  }
+}
+
+.additional-popup {
+  width: 256px;
+  height: fit-content;
+  max-height: 90%;
+  background-color: var(--white);
+  box-shadow: var(--shadow);
+  position: relative;
+  max-width: 100%;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 768px) {
@@ -100,6 +148,15 @@ const uiStore = useUiStore();
     min-height: 0;
     max-height: 100%;
     border-radius: 0;
+  }
+
+  .popup .popup__content {
+    height: 100%;
+    width: 100%;
+  }
+
+  .additional-popup {
+    display: none;
   }
 }
 </style>

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { LayoutName, PageName, Routes } from "@/router/consts.ts";
+import { useAuthStore } from "@/stores/use-auth-store.ts";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +31,48 @@ const router = createRouter({
           name: Routes[PageName.Catalog].name,
           path: Routes[PageName.Catalog].path,
           component: Routes[PageName.Catalog].component
+        },
+        {
+          name: Routes[LayoutName.Cabinet].name,
+          path: Routes[LayoutName.Cabinet].path,
+          component: Routes[LayoutName.Cabinet].component,
+          meta: Routes[LayoutName.Cabinet].meta,
+          beforeEnter: (to, _, next) => {
+            if (to.name === LayoutName.Cabinet) {
+              next({ name: PageName.Orders });
+              return;
+            }
+            next();
+          },
+          children: [
+            {
+              name: Routes[PageName.Orders].name,
+              path: Routes[PageName.Orders].path,
+              component: Routes[PageName.Orders].component
+            },
+            {
+              name: Routes[PageName.Settings].name,
+              path: Routes[PageName.Settings].path,
+              component: Routes[PageName.Settings].component
+            },
+            {
+              name: Routes[PageName.Backoffice].name,
+              path: Routes[PageName.Backoffice].path,
+              component: Routes[PageName.Backoffice].component,
+              meta: Routes[PageName.Backoffice].meta
+            },
+            {
+              name: Routes[PageName.BackofficeItem].name,
+              path: Routes[PageName.BackofficeItem].path,
+              component: Routes[PageName.BackofficeItem].component,
+              meta: Routes[PageName.BackofficeItem].meta
+            }
+          ]
+        },
+        {
+          name: Routes[PageName.Legal].name,
+          path: Routes[PageName.Legal].path,
+          component: Routes[PageName.Legal].component
         }
       ]
     },
@@ -39,6 +82,30 @@ const router = createRouter({
       redirect: Routes[PageName.NotFound].redirect
     }
   ]
+});
+
+router.beforeEach(async (to, _from, next) => {
+  const auth = useAuthStore();
+  if (!auth.bootstrapped) {
+    await auth.bootstrap();
+  }
+
+  const requiresAuth = to.matched.some(
+    record => record.meta.requiresAuth === true
+  );
+  if (requiresAuth && !auth.isAuthenticated) {
+    next({ name: PageName.Catalog });
+    return;
+  }
+
+  const requiresAdmin = to.matched.some(
+    record => record.meta.requiresAdmin === true
+  );
+  if (requiresAdmin && !auth.isAdmin) {
+    next({ name: PageName.Orders });
+    return;
+  }
+  next();
 });
 
 export default router;

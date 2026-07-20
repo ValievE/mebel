@@ -5,7 +5,8 @@ export namespace CatalogItemNS {
     id: string;
     title: string;
     price: number;
-    type: FurnitureType;
+    type: FurnitureType[];
     image: string;
+    multipleVariants?: boolean;
   };
 }

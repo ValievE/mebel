@@ -1,6 +1,14 @@
+.fade-100-leave-active,
+.fade-300-leave-active {
+  position: absolute;
+}
+
 .fade-100-enter-active,
-.fade-100-leave-active {
-  transition: opacity 0.1s ease;
+.fade-100-leave-active,
+.fade-100-move {
+  transition-property: transform, opacity;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in-out;
 }
 
 .fade-100-enter-from,
@@ -9,8 +17,11 @@
 }
 
 .fade-300-enter-active,
-.fade-300-leave-active {
-  transition: opacity 0.3s ease;
+.fade-300-leave-active,
+.fade-300-move {
+  transition-property: transform, opacity;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in-out;
 }
 
 .fade-300-enter-from,
@@ -67,4 +78,46 @@
 .slide-upside-down-leave-to {
   opacity: 0;
   transform: translateY(-24px);
+}
+
+/* flashlight */
+
+.flashlight-enter-active,
+.flashlight-leave-active {
+  transition-property: filter, opacity !important;
+  transition-duration: 0.1s !important;
+  transition-timing-function: ease-in-out !important;
+}
+
+.flashlight-enter-from,
+.flashlight-leave-to {
+  filter: contrast(200%);
+  opacity: 0.5;
+}
+
+.flashlight-leave-from,
+.flashlight-enter-to {
+  filter: contrast(100%);
+  opacity: 1;
+}
+
+/* animation_blinking */
+
+.animation_blinking {
+  animation: animation_blinking 2s infinite ease-in-out;
+}
+
+@keyframes animation_blinking {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  90% {
+    scale: 3;
+    opacity: 0;
+  }
+  100% {
+    scale: 3;
+    opacity: 0;
+  }
 }

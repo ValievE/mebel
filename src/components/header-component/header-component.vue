@@ -1,6 +1,8 @@
 <template>
   <header class="header-component">
-    <Logo size="m" />
+    <RouterLink class="header-component__logo" :to="{ name: PageName.Home }">
+      <Logo size="m" />
+    </RouterLink>
     <div class="header-component__links">
       <RouterLink
         v-for="link in navBarLinks"
@@ -11,13 +13,50 @@
       >
         {{ link.text }}
       </RouterLink>
+      <p
+        v-if="!auth.isAuthenticated"
+        class="header-component__links-item"
+        @click="openAccount"
+      >
+        Кабинет
+      </p>
     </div>
+    <ButtonComponent
+      class="header-component__burger-button"
+      icon-name="more-2"
+      size="m"
+      @click="$emit('openDocumentsPopup')"
+    />
   </header>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import Logo from "@/components/logo/logo.vue";
-import { navBarLinks } from "@/common/consts.ts";
+import { useAuthStore } from "@/stores/use-auth-store.ts";
+import { useUiStore } from "@/stores/use-ui-store.ts";
+import { PageName } from "@/router/consts.ts";
+import { getNavBarLinks } from "@/common/consts.ts";
+import { computed } from "vue";
+import ButtonComponent from "@/components/button-component/button-component.vue";
+
+defineEmits<{
+  (e: "openDocumentsPopup"): void;
+}>();
+
+const auth = useAuthStore();
+const ui = useUiStore();
+const router = useRouter();
+
+const navBarLinks = computed(() => getNavBarLinks(auth.isAuthenticated));
+
+function openAccount() {
+  if (auth.isAuthenticated) {
+    router.push({ name: PageName.Orders });
+    return;
+  }
+  ui.openPopup("login");
+}
 </script>
 
 <style lang="css">
@@ -38,13 +77,18 @@ import { navBarLinks } from "@/common/consts.ts";
   background-color: var(--white);
   color: var(--gray-40);
   font-weight: var(--font-weight-medium);
-  z-index: 1;
+  z-index: 2;
   user-select: none;
+}
+
+.header-component__logo {
+  height: 100%;
 }
 
 .header-component__links {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 32px;
 }
 
@@ -53,6 +97,7 @@ import { navBarLinks } from "@/common/consts.ts";
   transition: var(--transition-color-100);
   color: var(--gray-50);
   user-select: none;
+  cursor: pointer;
 
   &:hover {
     color: var(--gray-90);
@@ -67,18 +112,27 @@ import { navBarLinks } from "@/common/consts.ts";
   color: var(--gray-90);
 }
 
+.header-component__burger-button {
+  display: none;
+}
+
 @media screen and (max-width: 768px) {
   .header-component {
-    justify-content: center;
-    padding: 16px 48px;
+    padding: 16px 16px 16px 32px;
     box-shadow: none;
-    width: fit-content;
+    width: calc(100% - 32px);
     max-width: 100%;
     height: 80px;
+    top: 8px;
+    justify-content: space-between;
   }
 
   .header-component__links {
     display: none;
+  }
+
+  .header-component__burger-button {
+    display: flex;
   }
 }
 </style>

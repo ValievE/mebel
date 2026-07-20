@@ -1,22 +1,47 @@
 <template>
   <div class="overlay"></div>
   <Toaster :toasts="uiStore.toasts" @delete="uiStore.removeToast" />
-  <HeaderComponent />
-  <RouterView />
+  <HeaderComponent @openDocumentsPopup="uiStore.openPopup('documents')" />
+  <SocialMediaPopup @close="uiStore.closePopup('social-media-popup')" />
+  <Uikit @close="uiStore.closePopup('uikit')" />
+  <LoginPopup />
+  <div class="app-content">
+    <RouterView />
+  </div>
   <MobileNavBar />
+  <DocumentsPopup @close="uiStore.closePopup('documents')" />
+  <FooterComponent :absolute="isFooterAbsolute" />
 </template>
 <script setup lang="ts">
 import { useUiStore } from "@/stores/use-ui-store.ts";
-import { onMounted } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 import MobileNavBar from "@/components/mobile-nav-bar/mobile-nav-bar.vue";
 import HeaderComponent from "@/components/header-component/header-component.vue";
+import LoginPopup from "@/widgets/login-popup/login-popup.vue";
 import Toaster from "@/components/toaster/toaster.vue";
+import FooterComponent from "@/components/footer-component/footer-component.vue";
+import { useRoute } from "vue-router";
+import { LayoutName } from "@/router/consts.ts";
+import DocumentsPopup from "@/components/documents-popup/documents-popup.vue";
+import SocialMediaPopup from "@/components/social-media-popup/social-media-popup.vue";
+import Uikit from "@/components/uikit/uikit.vue";
 
 const uiStore = useUiStore();
+const route = useRoute();
+
+const isFooterAbsolute = computed(() =>
+  route.matched.some(i => i.name === LayoutName.Wide)
+);
 
 onMounted(() => {
   window.addEventListener("resize", () => {
     uiStore.isMobile = window.innerWidth <= 768;
   });
+
+  window.uikit = () => uiStore.openPopup("uikit");
+});
+
+onUnmounted(() => {
+  delete window.uikit;
 });
 </script>

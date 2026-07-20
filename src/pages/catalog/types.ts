@@ -1,7 +1,11 @@
 import type { ItemPopupNS } from "@/pages/catalog/components/item-popup/types.ts";
-import type { UIComponentsNS } from "@/types/types.ts";
-import { GetListField } from "@/infrastructure/get-list.ts";
+import {
+  CatalogSort,
+  FurnitureType,
+  type UIComponentsNS
+} from "@/types/types.ts";
 import type { CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
+import { type CheckoutPopupNS } from "@/pages/catalog/components/checkout-popup/types.ts";
 
 export type ItemPopupObject = {
   data: ItemPopupNS.Props;
@@ -9,14 +13,23 @@ export type ItemPopupObject = {
     open(id: string): void;
     close(): void;
     addToCart(): void;
+    updateSize(value: string): void;
+    updateMaterial(value: string): void;
   };
 };
 
 export type SortSelector = {
-  items: UIComponentsNS.Selector.Option<GetListField>[];
-  value: GetListField;
+  items: UIComponentsNS.Selector.Option<CatalogSort>[];
+  value: CatalogSort[];
   functions: {
-    updateValue(id: GetListField): Promise<void>;
+    updateValue(id: CatalogSort[]): Promise<void>;
+  };
+};
+export type FilterSelector = {
+  items: UIComponentsNS.Selector.Option<FurnitureType>[];
+  value: FurnitureType[];
+  functions: {
+    updateValue(id: FurnitureType[]): Promise<void>;
   };
 };
 
@@ -28,5 +41,19 @@ export type CartObject = {
     addItem(id: string, price: number): void;
     hasItem(id: string): boolean;
     deleteItem(id: string): void;
+    checkout(): Promise<void>;
+    changeQuantity(payload: { increase: boolean; id: string }): void;
+    changeAgreement(): void;
+  };
+};
+
+export type CheckoutPopupObject = {
+  data: CheckoutPopupNS.Props;
+  functions: {
+    open(): void;
+    close(): void;
+    accept(): Promise<void>;
+    updateEmail(value: string): void;
+    updateAddress(value: string): void;
   };
 };

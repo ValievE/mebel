@@ -23,7 +23,7 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-vue";
 
 .default-theme {
   --os-size: 5px;
-  --os-padding-perpendicular: 10px;
+  --os-padding-perpendicular: 0;
   --os-handle-border-radius: 15px;
   --os-padding-axis: 10px;
   --os-handle-bg: var(--red-50);

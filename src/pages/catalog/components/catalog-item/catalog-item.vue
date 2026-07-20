@@ -1,10 +1,11 @@
 <template>
   <article class="catalog-item">
     <ImagePreviewer class="catalog-item__img" :images="[props.image]" />
-    <Tag class="catalog-item__type">{{ furnitureName[props.type] }}</Tag>
     <footer class="catalog-item__footer">
       <Tag type="red">{{ props.title }}</Tag>
-      <Tag v-if="props.price" type="red">{{ props.price }}</Tag>
+      <Tag v-if="props.price" type="orange">
+        {{ price }}
+      </Tag>
     </footer>
   </article>
 </template>
@@ -12,10 +13,14 @@
 <script setup lang="ts">
 import { type CatalogItemNS } from "@/pages/catalog/components/catalog-item/types.ts";
 import Tag from "@/components/tag/tag.vue";
-import { furnitureName } from "@/common/consts.ts";
 import ImagePreviewer from "@/components/image-previewer/image-previewer.vue";
+import { computed } from "vue";
 
 const { props } = defineProps<{ props: CatalogItemNS.Props }>();
+
+const price = computed<string>(() => {
+  return `${props.multipleVariants ? "от " : ""}${props.price}₽`;
+});
 </script>
 
 <style lang="css">
@@ -65,9 +70,6 @@ const { props } = defineProps<{ props: CatalogItemNS.Props }>();
   top: 0;
   left: 0;
 }
-.catalog-item__type {
-  z-index: 1;
-}
 .catalog-item__footer {
   width: 100%;
   display: flex;
@@ -75,5 +77,6 @@ const { props } = defineProps<{ props: CatalogItemNS.Props }>();
   gap: 8px;
   justify-content: space-between;
   z-index: 1;
+  margin-top: auto;
 }
 </style>

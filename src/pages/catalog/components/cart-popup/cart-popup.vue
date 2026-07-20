@@ -14,6 +14,9 @@
               v-for="item in props.data.items"
               :key="item.id"
               :props="item"
+              @change:quantity="
+                $emit('change:quantity', { increase: $event, id: item.id })
+              "
               @click:item="$emit('click:item', item.id)"
               @delete="$emit('delete', item.id)"
             />
@@ -28,7 +31,40 @@
           {{ props.data.sum }}
         </span>
       </p>
-      <ButtonComponent type="red">Оплатить</ButtonComponent>
+      <ButtonComponent
+        :disabled="!props.data.agreement"
+        type="red"
+        @click="$emit('checkout')"
+      >
+        Оплатить
+      </ButtonComponent>
+      <Checkbox
+        class="cart-popup__footer-checkbox"
+        :model-value="props.data.agreement"
+        @update:modelValue="$emit('change:agreement')"
+      >
+        Нажимая «Оплатить», я принимаю условия
+        <RouterLink
+          class="login-popup__form-checkbox-link"
+          :to="{
+            name: PageName.Legal,
+            params: { id: DocumentsTypeRoute.Offer }
+          }"
+        >
+          Договора публичной оферты
+        </RouterLink>
+        и даю
+        <RouterLink
+          class="login-popup__form-checkbox-link"
+          :to="{
+            name: PageName.Legal,
+            params: { id: DocumentsTypeRoute.Offer }
+          }"
+        >
+          согласие на обработку персональных данных
+        </RouterLink>
+        .
+      </Checkbox>
     </footer>
   </Popup>
 </template>
@@ -39,6 +75,9 @@ import ButtonComponent from "@/components/button-component/button-component.vue"
 import ScrollContainer from "@/components/scroll-container/scroll-container.vue";
 import type { CartPopupNS } from "@/pages/catalog/components/cart-popup/types.ts";
 import CartItem from "@/pages/catalog/components/cart-popup/components/cart-item/cart-item.vue";
+import Checkbox from "@/components/checkbox/checkbox.vue";
+import { PageName } from "@/router/consts.ts";
+import { DocumentsTypeRoute } from "@/types/types.ts";
 
 const { props } = defineProps<{ props: CartPopupNS.Props }>();
 defineEmits<CartPopupNS.Emits>();
@@ -62,6 +101,7 @@ defineEmits<CartPopupNS.Emits>();
   padding: 24px 16px;
   display: flex;
   flex-direction: column;
+  position: relative;
   gap: 24px;
 }
 .cart-popup__footer {
@@ -69,9 +109,14 @@ defineEmits<CartPopupNS.Emits>();
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 .cart-popup__footer-text-sum {
   font-weight: var(--font-weight-semibold);
+}
+.cart-popup__footer-checkbox {
+  margin-top: 24px;
+  padding-bottom: 0;
 }
 
 @media screen and (max-width: 768px) {

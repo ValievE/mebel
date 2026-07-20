@@ -4,15 +4,23 @@ export namespace CartPopupNS {
   export type Item = {
     id: string;
     title: string;
-    tags: Array<{
-      text: string;
-      type: UIComponentsNS.Style;
-    }>;
+    tags: Record<
+      "quantity" | "price",
+      {
+        text: string;
+        type: UIComponentsNS.Style;
+        editable?: boolean;
+      }
+    >;
     image: string;
+    quantity: number;
+    price: number;
+    inStock: number;
   };
   export type Data = {
     items: Item[];
     sum: number;
+    agreement: boolean;
   };
   export type Props = {
     data: Data;
@@ -21,12 +29,16 @@ export namespace CartPopupNS {
   };
   export type Emits = {
     (e: "close"): void;
+    (e: "checkout"): void;
     (e: "accept"): void;
     (e: "delete", id: string): void;
     (e: "click:item", id: string): void;
+    (e: "change:quantity", payload: { increase: boolean; id: string }): void;
+    (e: "change:agreement"): void;
   };
   export type ItemEmits = {
     (e: "click:item"): void;
+    (e: "change:quantity", increase: boolean): void;
     (e: "delete", id: string): void;
   };
 }

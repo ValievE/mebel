@@ -1,7 +1,15 @@
 <template>
-  <div class="toast">
+  <div
+    class="toast"
+    :class="{
+      toast_success: props.type === 'success',
+      toast_info: props.type === 'info'
+    }"
+  >
     <p class="toast__text">
-      <span class="toast__text-title">{{ titleText }}</span> <br />
+      <span v-if="titleText" class="toast__text-title">
+        {{ titleText }} <br />
+      </span>
       {{ props.message }}
     </p>
     <ButtonComponent
@@ -26,7 +34,7 @@ const titleText = props.type === "error" ? "Ошибка!" : "";
 .toast {
   width: 100%;
   padding: 16px 20px;
-  background-color: var(--red-60);
+  background-color: var(--red-50);
   color: var(--white);
   box-shadow: var(--shadow);
   border-radius: 16px;
@@ -35,5 +43,13 @@ const titleText = props.type === "error" ? "Ошибка!" : "";
 }
 .toast__text-title {
   font-weight: var(--font-weight-medium);
+}
+
+.toast_success {
+  background-color: var(--orange-50);
+}
+
+.toast_info {
+  background-color: var(--gray-30);
 }
 </style>

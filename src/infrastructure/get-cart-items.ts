@@ -1,25 +1,48 @@
 import query from "@/infrastructure/query.ts";
 import { ExtFurnitureType } from "@/infrastructure/types.ts";
 
-export type GetCartItemsResponse = Array<
-  Partial<{
-    id: number;
-    title: string;
-    type: ExtFurnitureType;
-    price: number;
-    created_at: string;
-    images: string[];
-    parameters: Record<string, string>;
-  }>
->;
+export type CartLineInput = {
+  item_id: number;
+  quantity: number;
+  size?: string;
+  material_id?: string;
+};
 
+export type GetCartItemsResponseItem = Partial<{
+  id: number;
+  in_stock: number;
+  title: string;
+  types: ExtFurnitureType[];
+  price: number;
+  article: string;
+  size: string;
+  material: string;
+  material_id: string;
+  quantity: number;
+  line_total: number;
+  available: boolean;
+  images: string[];
+  parameters: Record<string, string>;
+}>;
+
+export type GetCartItemsResponse = GetCartItemsResponseItem[];
+
+type CartPreviewResponse = {
+  lines: GetCartItemsResponseItem[];
+};
+
+/** Загружает строки корзины с учётом выбранных размера и материала. */
 export async function getCartItems(
-  ids: string[]
+  lines: CartLineInput[]
 ): Promise<GetCartItemsResponse> {
-  return query<GetCartItemsResponse>({
-    point: `/rest/v1/items?id=in.(${ids.join(",")})`,
+  if (lines.length === 0) {
+    return [];
+  }
+  return query<CartPreviewResponse>({
+    point: `/api/v1/cart/preview`,
     config: {
-      method: "GET"
+      method: "POST",
+      data: { lines }
     }
-  }).then(res => res?.data);
+  }).then(res => res?.data?.lines ?? []);
 }
